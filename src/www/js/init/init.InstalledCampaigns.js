@@ -1,13 +1,16 @@
-Init.invokeOnReady(function() {
+Init.invokeOnReady(function () {
 
-    var onSuccess = function(){
-        $('#campaigns').append(Campaigns.render(true));
+    mwf.decorator.TopButton("Add Campaign", null, PageNavigation.openAvailableCampaignsView, true);
+
+    var onSuccess = function () {
+        $('#view').append(CampaignsController.renderInstalledCampaigns());
+        $("#view").append(mwf.decorator.SingleClickButton("Upload Queue", PageNavigation.openUploadQueueView));
     };
 
-    var onError = function(){
+    var onError = function () {
         MessageDialogController.showMessage("Unable to download campaigns. Please try again later.")
-    }
+    };
 
-    Campaigns.download(false, onSuccess, onError);
+    CampaignsModel.download(false, onSuccess, onError);
 
 });

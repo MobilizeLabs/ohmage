@@ -1,13 +1,20 @@
-Init.invokeOnReady( function() {
 
-    var onSuccess = function(){
-        $('#campaigns').append(Campaigns.render(false));
+Init.invokeOnReady( function () {
+
+    if (CampaignsModel.getInstalledCampaignsCount() > 0 ) {
+        mwf.decorator.TopButton("My Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
+    }
+    
+    var onSuccess = function () {
+        $("#view").append(CampaignsController.renderAvailableCampaigns());
     };
 
-    var onError = function(){
+    var onError = function () {
         MessageDialogController.showMessage("Unable to download campaigns. Please try again later.")
     };
 
-    Campaigns.download(false, onSuccess, onError);
+    CampaignsModel.download(false, onSuccess, onError);
+    
+    
 
 });
