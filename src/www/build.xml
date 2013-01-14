@@ -1,0 +1,36 @@
+<project name = "ohmageMFW"  basedir = ".">
+
+    <property name = "root" location = "" />
+    <property name = "js"   location = "${root}/js" />
+    <property name = "lib"   location = "${root}/lib" />
+
+    <taskdef name = "jslint"
+             classname="com.googlecode.jslint4java.ant.JSLintTask"
+             classpath="${root}/tools/jslint4java-2.0.2/jslint4java-2.0.2.jar" />
+
+    <taskdef name = "jscomp"
+             classname = "com.google.javascript.jscomp.ant.CompileTask"
+             classpath="${root}/tools/closure/compiler.jar"/>
+
+    <target name="compile">
+        <echo message="Starting compilation process..."></echo>
+
+        <concat destfile="${js}/build.js" encoding="UTF-8" >
+            <fileset dir = "${js}" includes = "**/*.js" excludes="build.js"/>
+        </concat>
+
+        <jscomp compilationLevel = "simple"
+                warning = "verbose"
+                debug = "false"
+                output="${js}/build.min.js">
+
+            <sources dir="${js}">
+                <file name="build.js"/>
+            </sources>
+
+
+        </jscomp>
+
+    </target>
+
+</project>
