@@ -19,6 +19,8 @@
 <tr><td><a href="help.html">help</a></td></tr>
 <tr><td><a href="change-password.html">change-password</a></td></tr>
 <tr><td><a href="reminders.html">reminders</a></td></tr>
+<tr><td><a href="gpsSetUp.html">profileGPSSetUp</a></td></tr>
+<tr><td><a href="switchServer.html">switchServer</a></td></tr>
 </tbody></table>
 </body>
 </html>
