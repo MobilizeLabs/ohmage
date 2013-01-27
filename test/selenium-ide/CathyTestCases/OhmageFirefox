@@ -8,17 +8,20 @@
 <body>
 <table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
 <tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="setEnv.html">setEnv</a></td></tr>
 <tr><td><a href="login.html">login</a></td></tr>
 <tr><td><a href="logout.html">logout</a></td></tr>
 <tr><td><a href="dashboard.html">dashboard</a></td></tr>
 <tr><td><a href="campaigns.html">campaigns</a></td></tr>
 <tr><td><a href="surveys.html">uploadSurveys-invaliDGPSLocation</a></td></tr>
-<tr><td><a href="OhmageFirefox">submitSurvey</a></td></tr>
 <tr><td><a href="queue.html">queue</a></td></tr>
 <tr><td><a href="profile.html">profile</a></td></tr>
 <tr><td><a href="help.html">help</a></td></tr>
 <tr><td><a href="change-password.html">change-password</a></td></tr>
 <tr><td><a href="reminders.html">reminders</a></td></tr>
+<tr><td><a href="gpsSetUp.html">profileGPSSetUp</a></td></tr>
+<tr><td><a href="switchServer.html">switchServer</a></td></tr>
+<tr><td><a href="gpsSetUp.html">submitToQueue</a></td></tr>
 </tbody></table>
 </body>
 </html>

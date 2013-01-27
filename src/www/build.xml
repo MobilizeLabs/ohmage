@@ -1,3 +1,4 @@
+<<<<<<< HEAD
     <project name = "ohmageMFW"  basedir = ".">
 
         <property name = "root" location = "" />
@@ -60,3 +61,54 @@
         <target name="run" depends="clean, lint, concat, min"></target>
 
     </project>
+=======
+<project name = "ohmageMFW"  basedir = ".">
+
+    <property name = "root" location = "" />
+    <property name = "js"   location = "${root}/js" />
+    <property name = "lib"   location = "${root}/lib" />
+
+    <taskdef name = "jslint"
+             classname="com.googlecode.jslint4java.ant.JSLintTask"
+             classpath="${root}/tools/jslint4java-2.0.2/jslint4java-2.0.2.jar" />
+
+    <taskdef name = "jscomp"
+             classname = "com.google.javascript.jscomp.ant.CompileTask"
+             classpath="${root}/tools/closure/compiler.jar"/>
+
+    <target name = "clean">
+        <echo message = "Cleaning files..."></echo>
+        <delete dir = "${js}/build.js"/>
+    </target>
+    
+    <target name = "lint">
+        <echo message = "Running source files through JSLint..."></echo>
+        <jslint>
+            <formatter type="plain" />
+            <fileset dir="${js}" includes="**/*.js" excludes="build.js" />
+        </jslint>
+    </target>
+    
+    <target name = "concat">
+        <echo message = "Combinging source files..."></echo>
+        <concat destfile = "${js}/build.js" encoding = "UTF-8" >
+            <fileset dir = "${js}" includes = "**/*.js" excludes = "build.js"/>
+        </concat>
+    </target>
+    
+    <target name="min">
+        <echo message="Running Google Closure..."></echo>
+        <jscomp compilationLevel = "simple"
+                warning = "verbose"
+                debug = "false"
+                output="${js}/build.min.js">
+            <sources dir="${js}">
+                <file name="build.js"/>
+            </sources>
+        </jscomp>
+    </target>
+    
+    <target name="build" depends="clean, lint, concat, min"></target>
+
+</project>
+>>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c

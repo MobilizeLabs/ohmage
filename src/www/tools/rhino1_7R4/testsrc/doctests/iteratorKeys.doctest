@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+<<<<<<< HEAD
 js> version(170)
 0
 js> var foo = {
@@ -13,4 +14,17 @@ js> var foo = {
 js> for each (let f in foo) {}
 false
 js> for (let f in foo) {}
+=======
+js> version(170)
+0
+js> var foo = {
+  >   __iterator__ : function(onlyKeys) {
+  >     print(onlyKeys);
+  >     yield [0, "a"];
+  >   }
+  > };
+js> for each (let f in foo) {}
+false
+js> for (let f in foo) {}
+>>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 true
