@@ -1,20 +1,12 @@
 /**
-<<<<<<< HEAD
  * PageNavigation provides the flexability for stateful JavaScript based page
  * transitions and allows developers to abstract files names from page names.
  *
  * @class PageNavigation
-=======
- * PageNavigation provides the flexability for stateful JavaScript based page 
- * transitions and allows developers to abstract files names from page names. 
- *  
- * @class PageNavigation 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  * @author Zorayr Khalapyan
  * @version 7/30/2012
  *
  */
-<<<<<<< HEAD
 var PageNavigation;
 var PageNavigationInitializer = function () {
     PageNavigation  = (function () {
@@ -240,230 +232,6 @@ var PageNavigationInitializer = function () {
     }());
 };
 
-=======
-var PageNavigation = (function(){
-    
-    var self = {};
-    
-    /**
-     * Stores key value pairs for a current page transition. Before redirecting 
-     * to a new page, previous values should be cleared.
-     */
-    var pageParameters = new LocalMap('page-parameters');
-    
-    /**
-     * Stores parameters before a transition. Before a page redirect, previous 
-     * values stored in the permanent storage will be erased and replaced by 
-     * these values.
-     */
-    var currentParameters = {};
-    
-    /**
-     * Clears all stored page parameters.
-     */
-    var resetSavedPageParameters = function(){
-        pageParameters.erase();
-    };
-    
-    /**
-     * Sets a page parameter for the current page transition. If both value and
-     * defaultValue parameters are not defined not the parameter will not be 
-     * set.
-     * @param name The key for the page parameter.
-     * @param value The value of the parameter to save.
-     * @param defaultValue Value that will be saved in case value parameter is 
-     *        not defined.
-     */
-    self.setPageParameter = function(name, value, defaultValue){
-        if( typeof(value) !== "undefined" ){
-            currentParameters[name] = new String(value);
-        }else if( typeof(defaultValue) !== "undefined" ){
-            currentParameters[name] = new String(defaultValue);
-        }
-    };
-    
-    self.unsetPageParameter = function(name){
-        pageParameters.release(name);
-    };
-
-    /**
-     * Method redirects the user to a specified URL.
-     * @param url The URL to redirect to. If null or undefined, the method exits
-     *            without redirecting the user.
-     */
-    self.redirect = function(url){
-        if( typeof(url) !== "undefined" ){
-            //resetSavedPageParameters();
-            pageParameters.importMap(currentParameters);    
-            document.location = url;
-        }
-    };
-    
-    /**
-     * Returns true if the specified parameter has been set.
-     */
-    self.isPageParameterSet = function(parameterName){
-        return self.getPageParameter(parameterName) !== null;
-    };
-    
-    /**
-     * Returns an object containing all stored key=>value pairs.
-     */
-    self.getPageParameters = function(){
-        return pageParameters.getMap();
-    };
-    
-    /**
-     * Retreives the value for the specified page parameter.
-     * @param name The key of the value to retreive.
-     */
-    self.getPageParameter = function(name){
-        return pageParameters.get(name);
-    };
-    
-    /**
-     * Redirects the user to the page that displays a list of set reminders and 
-     * allows users to select a reminder or create a new reminder.
-     */
-    self.openRemindersView = function(){
-        self.redirect("reminders.html");
-    };
-    
-    /**
-     * Opens the view for the specified reminder.
-     * @param uuid The UUID of the reminder to display.
-     */
-    self.openReminderView = function(uuid){
-        self.setPageParameter("uuid", uuid);
-        self.redirect("reminder.html");
-    };
-    
-    /**
-     * Redirects the user to a new reminder view.
-     */
-    self.openNewReminderView = function(){
-        self.unsetPageParameter("uuid");
-        self.redirect("reminder.html");
-    };
-
-
-    /**
-     * Redirects the user to the page that displays a list of installed
-     * campaigns.
-     */
-    self.openInstalledCampaignsView = function(){
-        self.redirect("installed-campaigns.html");
-    };
-    
-    /**
-     * Redirects the user to the page that displays a list of available 
-     * campaigns.
-     */
-    self.openAvailableCampaignsView = function(){
-        self.redirect("available-campaigns.html");
-    };
-
-    /**
-     * Redirects the user to the page that displays a list of surveys for the 
-     * specified campaign.
-     * @param campaignURN The unique identifier of the campaign to display.
-     */
-    self.openCampaignView = function(campaignURN){
-        self.setPageParameter("campaign-urn", campaignURN);
-        self.redirect("campaign.html");
-    };
-    
-    self.openServerChangeView = function() {
-        self.redirect( "change-server.html" );
-    };
-    
-    /**
-     * Redirects the user to the page that displays the campaign's surveys.
-     * @param campaignURN The unique identifier of the survey's campaign.
-     * @param surveyID The unique identifier of the survey to display.
-     */
-    self.openSurveyView = function(campaignURN, surveyID){
-        self.setPageParameter("campaign-urn", campaignURN);
-        self.setPageParameter("survey-id", surveyID);
-        self.redirect("survey.html");
-    };
-    
-    self.openPendingSurveysView = function(){
-        self.redirect("pending-surveys.html");
-    };
-    
-    /**
-     * Redirects the user to the page that displays a list of submitted but 
-     * not yet uploaded surveys.
-     */
-    self.openUploadQueueView = function(){
-        self.redirect("upload-queue.html");
-    };
-    
-    /**
-     * Opens survey response view that displays all the details about the 
-     * specified response.
-     */
-    self.openSurveyResponseView = function( surveyKey ) {
-        self.setPageParameter( "survey-key", surveyKey );
-        self.redirect( "survey-response-view.html" );
-    };
-
-    /**
-     * Redirects the user to tha authentication page.
-     */
-    self.openAuthenticationPage = function() {
-        self.redirect( "auth.html" );
-    };
-
-    /**
-     * Redirects users to the main dashboard.
-     */
-    self.openDashboard = function() {
-        self.redirect( "index.html" );
-    };
-    
-    self.openChangePasswordPage = function() {
-        self.redirect("change-password.html");
-    };
-    
-    self.openPrivacyPage = function() {
-        self.redirect("privacy.html");
-    };
-    
-    self.openProfilePage = function() {
-        self.redirect("profile.html");
-    };
-    
-    self.openHelpMenuView = function(){
-        self.redirect("help-menu.html");
-    };
-    
-    self.openHelpSectionView = function(index){
-        self.setPageParameter("help-section-index", index);
-        self.redirect("help-section.html");
-    };
-    
-    self.goBack = function(){        
-        if (typeof (navigator.app) !== "undefined") {
-            navigator.app.backHistory();
-        } else {
-            window.history.back();
-        }
-    };
-    
-    self.goForward = function(){
-        if (typeof (navigator.app) !== "undefined") {
-            navigator.app.forwardHistory();
-        } else {
-            window.history.forward();
-        }
-    };
-    
-    
-    return self;
-}());
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 /**
  * The server is designed to be as stateless as possible. Since the server does
@@ -476,11 +244,7 @@ var PageNavigation = (function(){
  *
  * @author Zorayr Khalapyan
  */
-<<<<<<< HEAD
 var UserAuthentication = function() {
-=======
-function UserAuthentication() {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     var that = {};
 
@@ -576,11 +340,7 @@ function UserAuthentication() {
 			"'}', " +
 			"'|', " +
 			"':'.";
-<<<<<<< HEAD
 
-=======
-                    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var sessionMap = new LocalMap('credentials');
     var session = function(name, value){
         if(typeof(value) !== "undefined"){
@@ -588,11 +348,7 @@ function UserAuthentication() {
         }
         return sessionMap.get(name);
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Return true if cookie with the specified name exists. Optionally,
      * redirects the user to the provided redirect URL in case the user is
@@ -630,29 +386,17 @@ function UserAuthentication() {
         return (new RegExp(PLAINTEXT_PASSWORD_PATTERN_STRING)).test(password);
     };
 
-<<<<<<< HEAD
     that.isUserLocked = function () {
         return that.getUsername() !== null;
     };
 
     that.setAuthErrorState = function (state) {
-=======
-    that.isUserLocked = function(){
-        return that.getUsername() != null;
-    }
-
-    that.setAuthErrorState = function(state){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         session(AUTH_ERROR_STATE_COOKIE_NAME, state);
     };
 
     that.isInAuthErrorState = function(){
         return session(AUTH_ERROR_STATE_COOKIE_NAME);
-<<<<<<< HEAD
     };
-=======
-    }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * Returns the authentication token if it exists, or null otherwise.
@@ -660,11 +404,7 @@ function UserAuthentication() {
      */
     that.getAuthToken = function(){
         return session(TOKEN_AUTH_COOKIE_NAME);
-<<<<<<< HEAD
     };
-=======
-    }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * Returns the hashed password if it exists, or null otherwise.
@@ -672,11 +412,7 @@ function UserAuthentication() {
      */
     that.getHashedPassword = function(){
         return session(HASH_AUTH_COOKIE_NAME);
-<<<<<<< HEAD
     };
-=======
-    }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * Logs out the currently logged in user. This method is authentication
@@ -685,11 +421,7 @@ function UserAuthentication() {
      *
      */
     that.logout = function(){
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var message = "All data will be lost. Are you sure you would like to proceed?";
 
         MessageDialogController.showConfirm(message, function(yes){
@@ -701,15 +433,9 @@ function UserAuthentication() {
                 session(HASH_AUTH_COOKIE_NAME, null);
                 session(USERNAME_COOKIE_NAME, null);
                 session(AUTH_ERROR_STATE_COOKIE_NAME, null);
-<<<<<<< HEAD
 
                 //ToDo: Decouple these two lines from user authentication. Maybe
                 //in the form of event subscribers.
-=======
-                
-                //ToDo: Decouple these two lines from user authentication. Maybe
-                //in the form of event subscribers. 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 ReminderModel.cancelAll();
                 window.localStorage.clear();
                 window.localStorage['page-parameters'] = "{}";
@@ -718,13 +444,8 @@ function UserAuthentication() {
             }
         }, "Yes,No");
     };
-<<<<<<< HEAD
 
 
-=======
-    
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.checkpoint = function(){
         if(!that.isUserAuthenticated() || that.isInAuthErrorState() ){
             console.log("User failed checkpoint - redirecting to the authentication page.");
@@ -788,11 +509,7 @@ function UserAuthentication() {
      */
     that.getUsername = function(){
         return session(USERNAME_COOKIE_NAME);
-<<<<<<< HEAD
     };
-=======
-    }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * Checks if the user is authenticated via the hashed password method. If
@@ -890,7 +607,6 @@ function UserAuthentication() {
          );
 
     };
-<<<<<<< HEAD
 
     return that;
 };
@@ -1031,149 +747,6 @@ var ConfigManagerInitializer = function () {
     }());
 };
 
-=======
-    
-    return that;    
-}
-
-var auth = new UserAuthentication ();
-
-if(typeof(checkpoint) != 'undefined'){
-    auth.checkpoint();
-}
-
-var ConfigManager = (function () {
-
-    var that = {};
-
-    var configMap = LocalMap("config");
-
-    /**
-     * If set to true, will use test server for deployement.
-     */
-    var TEST_MODE = true;
-
-    /**
-     * List of available servers.
-     */
-    var SERVERS = [
-
-        //Test server.
-        "https://test.ohmage.org",
-
-        //Prod server.
-        "https://pilots.mobilizelabs.org"
-    ];
-
-    /**
-     * Configuration blueprint. To add new configuration value, add a new
-     * property to this object and an accessor function will be generated. The
-     * actual working values will be saved in a localStorage object.
-     */
-    var config = {
-
-        /**
-         * ohmage server URL.
-         */
-        SERVER_ENDPOINT : SERVERS[ (TEST_MODE) ? 0 : 1 ],
-
-        /**
-         * URL for reading campaigns.
-         */
-        CAMPAIGN_READ_URL : '/app/campaign/read',
-
-        /**
-         * URL for uploading surveys.
-         */
-        SURVEY_UPLOAD_URL : '/app/survey/upload',
-
-        /**
-         * Allows users to change their passwords.
-         */
-        PASSWORD_CHANGE_URL : '/app/user/change_password',
-
-        /**
-         * Enables GPS acquisition.
-         */
-        GPS_ENABLED : true,
-
-        /**
-         * If set to true, the user will be asked to either upload after submitting
-         * or wait and upload manually. This functionality is mostly useful for
-         * debugging upload queue.
-         */
-        CONFIRM_TO_UPLOAD_ON_SUBMIT : true,
-
-        /**
-         * Client property sent with AJAX requests.
-         */
-        CLIENT_NAME : "ohmage-mwf"
-
-    };
-
-    that.reset = function() {
-        configMap.importMap( config );
-    };
-
-    /**
-     * Generic method for accessing any available property.
-     */
-    that.getProperty = function ( propertyName ) {
-        return configMap.get( propertyName );
-    };
-
-    /**
-     * Returns a list of available servers.
-     */
-    that.getServers = function() {
-        return SERVERS;
-    };
-
-    var property, camelCaseGetterName, camelCaseSetterName;
-
-    var toCamelCase = function( g ) {
-        return g[1].toUpperCase();
-    };
-
-    /**
-     * Creates a closure function to return the specified value. This is used
-     * to iterate through all the config properties and create accessor
-     * functions to return the config's value.
-     */
-    var addPropertyGetter = function( propertyName ) {
-        return function(){
-            return that.getProperty( propertyName );
-        }
-    };
-
-    var addPropertySetter = function( propertyName ) {
-      return function( newConfigValue ) {
-          configMap.set( propertyName, newConfigValue );
-      };
-    };
-
-    for( property in config ) {
-
-        //Convert CONSTNAT_CASE to camelCase.
-        camelCaseGetterName = ("get_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase );
-        camelCaseSetterName = ("set_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase );
-
-        //Create accessor functions to allow users to get and set config values.
-        that[ camelCaseGetterName ] = addPropertyGetter( property );
-        that[ camelCaseSetterName ] = addPropertySetter( property );
-    }
-
-    //Transfer any values in config that have not been saved in localStorage.
-    for( var key in config ) {
-        if ( !configMap.isSet( key ) ) {
-            configMap.set( key, config[ key ] );
-        }
-    }
-
-    return that;
-
-})();
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var CampaignController = function ( campaignModel ) {
 
     var that = {};
@@ -1203,10 +776,7 @@ var CampaignController = function ( campaignModel ) {
 CampaignController.openSurveyViewHandler = function (campaignURN, surveyID) {
     PageNavigation.openSurveyView(campaignURN, surveyID);
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 /**
  * Singleton Model!
  */
@@ -1277,7 +847,6 @@ var CampaignsController = (function () {
 
     return that;
 
-<<<<<<< HEAD
 }());
 
 var ChangeServerController = function () {
@@ -1288,22 +857,10 @@ var ChangeServerController = function () {
           ConfigManager.setServerEndpoint(changeServerView.getSelectedServer());
           console.log("ChangeServerController: Saved a new server endpoint [" + ConfigManager.getServerEndpoint() + "].");
           MessageDialogController.showMessage("Your selection has been saved.", PageNavigation.openAuthenticationPage);
-=======
-})();
-var ChangeServerController = function() {
-  var that = {};
-  that.renderChangeServerView = function() {
-      var changeServerView = ChangeServerView( ConfigManager.getServers() );  
-      changeServerView.saveButtonHandler = function() {
-          ConfigManager.setServerEndpoint( changeServerView.getSelectedServer() );
-          console.log( "ChangeServerController: Saved a new server endpoint [" + ConfigManager.getServerEndpoint() + "]." );
-          MessageDialogController.showMessage( "Your selection has been saved.", PageNavigation.openAuthenticationPage );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       };
       return changeServerView.render();
   };
   return that;
-<<<<<<< HEAD
 };
 
 var HelpController = function(){
@@ -1311,27 +868,15 @@ var HelpController = function(){
 
     var helpModel  = new HelpModel();
 
-=======
-};var HelpController = function(){
-    var self = {};
-    
-    var helpModel  = new HelpModel();
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     self.renderHelpMenu = function(){
         var helpMenuView = new HelpMenuView(helpModel.getAllSections());
         return helpMenuView.render();
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     self.renderHelpSection = function(index){
         var helpSectionView = new HelpSectionView(helpModel.getHelpSection(index));
         return helpSectionView.render();
     };
-<<<<<<< HEAD
 
     return self;
 };
@@ -1340,14 +885,6 @@ var MessageDialogController = (function () {
 
     var that = {};
 
-=======
-    
-    return self;  
-};var MessageDialogController = (function () {
-    
-    var that = {};
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Invokes the method 'fun' if it is a valid function. In case the function
      * method is null, or undefined then the error will be silently ignored.
@@ -1360,11 +897,7 @@ var MessageDialogController = (function () {
             fun( args );
         }
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.showMessage = function( message, callback, title, buttonName ) {
 
         title = title || "ohmage";
@@ -1401,18 +934,11 @@ var MessageDialogController = (function () {
                 var _callback = function(index){
                     if( callback ) {
 
-<<<<<<< HEAD
                         if (DeviceDetection.isDeviceiOS()) {
                             index = buttonList.length - index;
                         }
 
                         callback( index === 1 );
-=======
-                        if(DeviceDetection.isDeviceiOS())
-                            index = buttonList.length - index;
-
-                        callback( index == 1 );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     }
                 };
 
@@ -1427,7 +953,6 @@ var MessageDialogController = (function () {
         } else {
             invoke( callback, confirm( message ) );
         }
-<<<<<<< HEAD
 
     };
 
@@ -1442,38 +967,16 @@ var ProfileController = function() {
         PageNavigation.openChangePasswordPage();
     };
 
-=======
-        
-    };
-
-    return that;
-    
-})();var ProfileController = function() {
-    var that = {};
-    
-    that.changePasswordHandler = function() {
-        PageNavigation.openChangePasswordPage();
-    };
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.enableGpsHandler = function() {
         ConfigManager.setGpsEnabled( true );
         PageNavigation.openProfilePage();
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.disableGpsHandler = function() {
         ConfigManager.setGpsEnabled( false );
         PageNavigation.openProfilePage();
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.clearCustomizedChoicesHandler = function() {
         var confirmMessage = "Are you sure you would like to clear all your custom choices?";
         var confirmButtonLabels = "Yes,No";
@@ -1485,36 +988,23 @@ var ProfileController = function() {
         };
         MessageDialogController.showConfirm( confirmMessage, confirmCallback, confirmButtonLabels );
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.logoutAndClearDataHandler = function() {
         if( auth.logout() ) {
             PageNavigation.openAuthenticationPage();
         }
     };
-<<<<<<< HEAD
 
     that.renderProfileView = function() {
 
         var profileView = ProfileView();
 
-=======
-    
-    that.renderProfileView = function() {
-      
-        var profileView = ProfileView();
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         //Attach handlers to the view.
         profileView.changePasswordHandler = that.changePasswordHandler;
         profileView.clearCustomizedChoicesHandler = that.clearCustomizedChoicesHandler;
         profileView.logoutAndClearDataHandler = that.logoutAndClearDataHandler;
         profileView.disableGpsHandler = that.disableGpsHandler;
         profileView.enableGpsHandler = that.enableGpsHandler;
-<<<<<<< HEAD
 
         return profileView.render();
     };
@@ -1522,24 +1012,12 @@ var ProfileController = function() {
     return that;
 };
 
-=======
-        
-        return profileView.render();
-    };
-    
-    return that;
-};
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var PromptController = function( surveyController, container ) {
 
     var that = {};
 
     var surveyModel = surveyController.getSurveyModel();
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * An array of prompts associated with the current survey.
      */
@@ -1582,24 +1060,15 @@ var PromptController = function( surveyController, container ) {
 
     var overrideBackButtonFunctionality = function(){
         if(DeviceDetection.isDeviceAndroid()){
-<<<<<<< HEAD
             Init.invokeOnReady(function(){
-=======
-            invokeOnReady(function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                console.log("Overriding back button on Android devices for current survey navigation.");
                document.addEventListener("backbutton", androidBackButtonCallbackWrapper, true);
         });
       }
     };
 
-<<<<<<< HEAD
     var resetBackButtonFunctionality = function () {
         if (DeviceDetection.isDeviceAndroid()) {
-=======
-    var resetBackButtonFunctionality = function(){
-        if(DeviceDetection.isDeviceAndroid()){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             document.removeEventListener("backbutton", androidBackButtonCallbackWrapper, false);
         }
     };
@@ -1665,28 +1134,17 @@ var PromptController = function( surveyController, container ) {
         }
 
         //Save the response.
-<<<<<<< HEAD
         surveyResponse.respond(prompt.getID(), prompt.getResponse(), prompt.getType() === "photo");
-=======
-        surveyResponse.respond( prompt.getID(), prompt.getResponse(), prompt.getType() == "photo" );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         return true;
     };
 
     var nextPrompt = function(skipped){
         if(processResponse(skipped)){
-<<<<<<< HEAD
             currentPromptIndex += 1;
             while(currentPromptIndex < prompts.length && failsCondition()){
                 surveyResponse.promptNotDisplayed(getCurrentPrompt().getID());
                 currentPromptIndex += 1;
-=======
-            currentPromptIndex++;
-            while(currentPromptIndex < prompts.length && failsCondition()){
-                surveyResponse.promptNotDisplayed(getCurrentPrompt().getID());
-                currentPromptIndex++;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             }
             render();
         }
@@ -1694,20 +1152,12 @@ var PromptController = function( surveyController, container ) {
 
     var previousPrompt = function(){
         if(currentPromptIndex > 0){
-<<<<<<< HEAD
             currentPromptIndex -= 1;
-=======
-            currentPromptIndex--;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
 
         //Skip all prompts that fail the condition.
         while(currentPromptIndex > 0 && failsCondition()){
-<<<<<<< HEAD
             currentPromptIndex -= 1;
-=======
-            currentPromptIndex--;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
 
         render();
@@ -1721,13 +1171,8 @@ var PromptController = function( surveyController, container ) {
         var panel = document.createElement('div');
 
         //If the prompt is skippable, then enable the skip button.
-<<<<<<< HEAD
         if (!submitPage && getCurrentPrompt().isSkippable()) {
             panel.appendChild(mwf.decorator.SingleClickButton(getCurrentPrompt().getSkipLabel(), function () {
-=======
-        if(!submitPage && getCurrentPrompt().isSkippable()){
-            panel.appendChild(mwf.decorator.SingleClickButton(getCurrentPrompt().getSkipLabel(), function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 nextPrompt(true);
             }));
         }
@@ -1735,22 +1180,13 @@ var PromptController = function( surveyController, container ) {
         androidBackButtonCallback = previousPrompt;
 
         //Handle first prompt.
-<<<<<<< HEAD
         if (currentPromptIndex === 0) {
-=======
-        if(currentPromptIndex == 0){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             panel.appendChild(mwf.decorator.SingleClickButton("Next Prompt", function(){
                 nextPrompt(false);
             }));
 
-<<<<<<< HEAD
             androidBackButtonCallback = function () {
                 that.confirmSurveyExit(function () {
-=======
-            androidBackButtonCallback = function(){
-                that.confirmSurveyExit(function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     PageNavigation.goBack();
                 });
             };
@@ -1761,11 +1197,7 @@ var PromptController = function( surveyController, container ) {
 
         //Handle prompts in the middle.
         } else{
-<<<<<<< HEAD
             panel.appendChild(mwf.decorator.DoubleClickButton("Previous", previousPrompt, "Next", function () {
-=======
-            panel.appendChild(mwf.decorator.DoubleClickButton("Previous", previousPrompt, "Next", function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 nextPrompt(false);
             }));
         }
@@ -1773,11 +1205,7 @@ var PromptController = function( surveyController, container ) {
         return panel;
     };
 
-<<<<<<< HEAD
     var render = function () {
-=======
-    var render = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         //Clear the current contents of the main container.
         container.innerHTML = "";
@@ -1819,20 +1247,12 @@ var PromptController = function( surveyController, container ) {
      *                 completed.
      */
     that.start = function( callback ) {
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         if( ConfigManager.getGpsEnabled() ) {
             //Update survey response geolocation information.
             surveyResponse.setLocation();
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         //Render the initial prompt.
         render();
 
@@ -1876,19 +1296,14 @@ var PromptController = function( surveyController, container ) {
     };
 
     return that;
-<<<<<<< HEAD
 };
 
 
 
-=======
-}
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 
 
 
-<<<<<<< HEAD
 var ReminderController = function (uuid) {
 
     var self = {};
@@ -1900,49 +1315,24 @@ var ReminderController = function (uuid) {
     };
 
     self.save = function (campaignURN, surveyID, title, date, supressionWindow, recurrences, excludeWeekends) {
-=======
-
-var ReminderController = function(uuid){
-  
-    var self = {};
-    
-    var model = (uuid)? new ReminderModel(uuid) : new ReminderModel();
-    
-    self.render = function(){
-        return (new ReminderView(model, self)).render();
-    };
-    
-    self.save = function(campaignURN, surveyID, title, date, supressionWindow, recurrences, excludeWeekends){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         model.setAssociation(campaignURN, surveyID);
         model.setSupressionWindow(supressionWindow);
         model.setExcludeWeekends(excludeWeekends);
         model.setTitle(title);
         model.setMessage("Reminder: " + title);
         model.cancelAllNotifications();
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         //Returns a new date that is 24 hours ahead of the specified day.
         var nextDay = function(date){
             return new Date(date.getTime() + (24 * 60 * 60 * 1000));
         };
-<<<<<<< HEAD
 
         //If the user has set an alarm with an initial date in the past, then
         //skip the current day. Otherwise, a notification will be triggered
-=======
-        
-        //If the user has set an alarm with an initial date in the past, then
-        //skip the current day. Otherwise, a notification will be triggered 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         //as soon as the reminder is set.
         if(date.getTime() < new Date().getTime()){
             date = nextDay(date);
         }
-<<<<<<< HEAD
         var i;
         for (i = 0; i < recurrences; i += 1) {
             if (model.excludeWeekends()) {
@@ -1968,37 +1358,10 @@ var ReminderController = function(uuid){
 var RemindersController = function () {
     var self = {};
     self.render = function () {
-=======
-        
-        for(var i = 0; i < recurrences; i++){
-            if(model.excludeWeekends()){
-                while(date.getDay() === 6 || date.getDay() === 0){
-                    date = nextDay(date);
-                }
-            } 
-            model.addNotification(date);
-            date = nextDay(date);
-        }
-        
-        model.save();
-    };
-       
-    self.getReminderCount = function(){
-        return getAllReminders().length;
-    };
-    
-    return self;
-};
-var RemindersController = function(){
-    var self = {};
-    
-    self.render = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var reminders = ReminderModel.getCurrentReminders();
         var view = new RemindersView(reminders);
         return view.render();
     };
-<<<<<<< HEAD
     return self;
 };
 
@@ -2006,14 +1369,6 @@ var ServiceController = (function() {
 
     var that = {};
 
-=======
-    
-    return self;
-};var ServiceController = ( function( ) {
-
-    var that = {};
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Invokes the method 'fun' if it is a valid function. In case the function
      * method is null, or undefined then the error will be silently ignored.
@@ -2026,21 +1381,12 @@ var ServiceController = (function() {
             fun( args );
         }
     };
-<<<<<<< HEAD
 
     var onSuccess = function (onSuccessCallback, onErrorCallback, url, redirectOnAuthError) {
 
         return function (response) {
 
             console.log("Received response for URL (" + url + ") with the following response data: " + window.JSON.stringify(response));
-=======
-    
-    var onSuccess = function( onSuccessCallback, onErrorCallback, url, redirectOnAuthError ) {
-        
-        return function( response ) {
-            
-            console.log("Received response for URL (" + url + ") with the following response data: " + JSON.stringify(response));
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
             switch( response.result ) {
 
@@ -2048,26 +1394,16 @@ var ServiceController = (function() {
                     invoke(onSuccessCallback, response);
                     break;
 
-<<<<<<< HEAD
                 case 'failure':
-=======
-                case 'failure':{
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     invoke(onErrorCallback, response);
 
                     //If the API request failed because of authentication related
                     //error, then redirect the user to the authentication page.
                     if( redirectOnAuthError ) {
-<<<<<<< HEAD
                         var i;
                         for (i = 0; i < response.errors.length; i+=1) {
                             if (response.errors[i].code === '0200') {
                                 auth.setAuthErrorState(true);
-=======
-                        for( var i = 0; i < response.errors.length; i++ ) {
-                            if(response.errors[i].code == '0200'){
-                                auth.setAuthErrorState( true );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                                 PageNavigation.openAuthenticationPage();
                                 break;
                             }
@@ -2076,7 +1412,6 @@ var ServiceController = (function() {
                     }
 
                     break;
-<<<<<<< HEAD
 
                 default:
                     invoke(onSuccess, response);
@@ -2088,31 +1423,12 @@ var ServiceController = (function() {
 
     };
 
-=======
-                }
-
-
-                default:
-                    invoke( onSuccess, response );
-                    break;
-            }
-            
-        };
-        
-        
-    };
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var onError = function( onErrorCallback, url ) {
         return function() {
             console.log("AJAX exception for url " + (ConfigManager.getServerEndpoint() + url));
             invoke( onErrorCallback, false );
         };
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     };
 
     /**
@@ -2128,11 +1444,7 @@ var ServiceController = (function() {
      * @param type      The AJAX call type i.e. POST/GET/DELETE.
      * @param url       The API URL extension i.e. /app/survey/upload.
      * @param data      The data sent with the AJAX call.
-<<<<<<< HEAD
      * @param dataType  The data type for the AJAX call i.e. XML, window.JSON, window.JSONP.
-=======
-     * @param dataType  The data type for the AJAX call i.e. XML, JSON, JSONP.
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
      * @param onSuccessCallback The callback on API call success.
      * @param onErrorCallback   The callback on API call error.
      * @param redirectOnAuthError
@@ -2140,15 +1452,9 @@ var ServiceController = (function() {
     that.serviceCall = function( type, url, data, dataType, onSuccessCallback, onErrorCallback, redirectOnAuthError ) {
 
         //By default, redirect the user to the login page on authentication error.
-<<<<<<< HEAD
         redirectOnAuthError = (typeof(redirectOnAuthError) === 'undefined')? true : redirectOnAuthError;
 
         console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + window.JSON.stringify(data));
-=======
-        redirectOnAuthError = (typeof(redirectOnAuthError) == 'undefined')? true : redirectOnAuthError;
-
-        console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + JSON.stringify(data));
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         $.ajax({
             type     : type,
@@ -2160,7 +1466,6 @@ var ServiceController = (function() {
         });
 
     };
-<<<<<<< HEAD
 
     return that;
 }());
@@ -2171,25 +1476,12 @@ var PendingSurveysController = function () {
     self.render = function () {
         var pendingSurveys = ReminderModel.getPendingSurveys();
         var onSurveyClickCallback = function (survey) {
-=======
-    
-    return that;
-    
-  
-} )();var PendingSurveysController = function(){
-    var self = {};
-    
-    self.render = function(){
-        var pendingSurveys = ReminderModel.getPendingSurveys();
-        var onSurveyClickCallback = function(survey){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             alert(survey.getID());
         };
         var surveyListView = new SurveyListView(pendingSurveys, "Pending Surveys", onSurveyClickCallback);
         surveyListView.setEmptyListViewParameters("You have no pending surveys.", "Please navigate to the reminders to set new notifications.", PageNavigation.openRemindersView);
         return surveyListView.render();
     };
-<<<<<<< HEAD
 
     return self;
 
@@ -2207,23 +1499,6 @@ var SurveyController = function (surveyModel) {
         ReminderModel.supressSurveyReminders(surveyModel.getID());
 
         var afterSurveyComplete = function () {
-=======
-    
-    return self;
-    
-};var SurveyController = function( surveyModel ) {
-
-    var that = {};
-    
-    /**
-     * Callback for when the user completes the survey.
-     */
-    var onSurveyComplete = function( surveyResponse ){
-
-        ReminderModel.supressSurveyReminders( surveyModel.getID() );
-
-        var afterSurveyComplete = function() {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             PageNavigation.goBack();
         };
 
@@ -2231,7 +1506,6 @@ var SurveyController = function (surveyModel) {
         var title = 'ohmage';
         var buttonLabels = 'Yes,No';
         var message = "Would you like to upload your response?";
-<<<<<<< HEAD
         var callback = function (yes) {
 
             //Yes upload my response now.
@@ -2241,45 +1515,22 @@ var SurveyController = function (surveyModel) {
 
                 var onSuccess = function () {
                     MessageDialogController.showMessage( "Successfully uploaded your survey response.", function () {
-=======
-        var callback = function( yes ) {
-
-            //Yes upload my response now. 
-            if( yes ) {
-
-                var uploader = new SurveyResponseUploadController( surveyModel, surveyResponse);
-
-                var onSuccess = function( response ) {
-                    MessageDialogController.showMessage( "Successfully uploaded your survey response.", function() {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                         SurveyResponseModel.deleteSurveyResponse( surveyResponse );
                         afterSurveyComplete();
                     });
 
                 };
 
-<<<<<<< HEAD
                 var onError = function () {
                     MessageDialogController.showMessage( "Unable to upload your survey response at this time.", afterSurveyComplete );
                 };
 
                 uploader.upload(onSuccess, onError, ConfigManager.getGpsEnabled());
-=======
-                var onError = function( error ) {
-                    MessageDialogController.showMessage( "Unable to upload your survey response at this time.", afterSurveyComplete );
-                };
-
-                uploader.upload( onSuccess, onError, ConfigManager.getGpsEnabled() );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
             } else {
                 afterSurveyComplete();
             }
-<<<<<<< HEAD
         };
-=======
-        }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         if( ConfigManager.getConfirmToUploadOnSubmit() ) {
             MessageDialogController.showConfirm( message, callback, buttonLabels, title );
@@ -2288,7 +1539,6 @@ var SurveyController = function (surveyModel) {
         }
 
     };
-<<<<<<< HEAD
 
     /**
      * If the survey is currently rendered, this stores the PromptController
@@ -2296,15 +1546,6 @@ var SurveyController = function (surveyModel) {
      */
     that.promptController = null;
 
-=======
-    
-    /**
-     * If the survey is currently rendered, this stores the PromptController 
-     * object used to iterate through different prompts.
-     */
-    that.promptController = null;
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Starts a new PromptController object with the current survey. This method
      * should be used to start off the survey. The prompts will be displayed one
@@ -2315,24 +1556,16 @@ var SurveyController = function (surveyModel) {
         //Start the actual survey.
         that.promptController = new PromptController( that, container );
         that.promptController.start( onSurveyComplete );
-<<<<<<< HEAD
 
         return that.promptController;
     };
 
-=======
-        
-        return that.promptController;
-    };
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Returns the survey model associated with this controller.
      */
     that.getSurveyModel = function() {
         return surveyModel;
     };
-<<<<<<< HEAD
 
     return that;
 
@@ -2348,21 +1581,6 @@ var SurveyResponseController = function (surveyResponseModel) {
 
 
     self.render = function () {
-=======
-    
-    return that;
-    
-};
-var SurveyResponseController = function(surveyResponseModel){
-    var self = {};
-    
-    
-    var campaign = new Campaign(surveyResponseModel.getCampaignURN());
-    var survey = campaign.getSurvey(surveyResponseModel.getSurveyID());
-    
-    
-    self.render = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         return new SurveyResponseView(self).render();
     };
 
@@ -2398,7 +1616,6 @@ var SurveyResponseController = function(surveyResponseModel){
             }
         }, "Yes,No");
     };
-<<<<<<< HEAD
 
     self.getSurvey = function(){
         return survey;
@@ -2416,32 +1633,11 @@ var SurveyResponseController = function(surveyResponseModel){
 };
 
 
-=======
-    
-    self.getSurvey = function(){
-        return survey;
-    };
-    
-    self.getSurveyResponseModel = function(){
-        return surveyResponseModel;
-    };
-    
-    self.getCampaign = function(){
-        return campaign;
-    };
-    
-    return self;
-};
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 /**
  * SurveyResponseUploadController is responsible for the actual upload of the response
  * data.
  */
-<<<<<<< HEAD
 var SurveyResponseUploadController = function (surveyModel, surveyResponse) {
-=======
-var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     var that = {};
 
@@ -2460,13 +1656,8 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
                         user                       : auth.getUsername(),
                         password                   : auth.getHashedPassword(),
                         client                     : ConfigManager.getClientName(),
-<<<<<<< HEAD
                         surveys                    : window.JSON.stringify([responseData.responses]),
                         images                     : window.JSON.stringify(responseData.images)
-=======
-                        surveys                    : JSON.stringify([responseData.responses]),
-                        images                     : JSON.stringify(responseData.images)
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                    };
 
         return data;
@@ -2502,7 +1693,6 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
             //then ask the user if he/she would like to retry the process.
             }else{
 
-<<<<<<< HEAD
                 var errorMessage = "Geolocation failed. Would you like to try again?";
 
                 MessageDialogController.showConfirm(errorMessage, function (yes) {
@@ -2510,24 +1700,11 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
                     //In case the user chooses to try the geolocation process
                     //again, then recursively call this function.
                     if (yes) {
-=======
-                var errorMessage = "Geolocation failed. Would you like to try again?"
-
-                MessageDialogController.showConfirm(errorMessage, function(yes){
-
-                    //In case the user chooses to try the geolocation process
-                    //again, then recursively call this function.
-                    if(yes){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                         setResponseLocation(callback);
 
                     //If the user is tired of trying and quits, invoke the
                     //callback indicating failure.
-<<<<<<< HEAD
                     } else {
-=======
-                    }else{
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                         callback(false);
                     }
                 }, "Yes,No");
@@ -2538,22 +1715,15 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
 
     };
 
-<<<<<<< HEAD
     var getFinalizedUploadResponse = function (callback, requireLocation) {
 
         var returnResponseData = function () {
-=======
-    var getFinalizedUploadResponse = function(callback, requireLocation){
-
-        var returnResponseData = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             callback(getResponseData());
         };
 
         //If the survey response does not have a valid location and the location
         //parameter is required, then ask the user if he/she wants to try to
         //get the GPS location for the survey.
-<<<<<<< HEAD
         if (!surveyResponse.isLocationAvailable() && requireLocation) {
 
             var message = "Survey '" + surveyModel.getTitle() + "' does not have a valid GPS location. Would you like to try set it?";
@@ -2569,32 +1739,11 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
                     });
 
                 } else {
-=======
-        if( !surveyResponse.isLocationAvailable() && requireLocation ) {
-
-            var message = "Survey '" + surveyModel.getTitle() + "' does not have a valid GPS location. Would you like to try set it?";
-
-            var confirmCallback = function( yes ) {
-
-                //If the user wants to get the current GPS location, then try
-                //to acquire the current GPS location.
-                if( yes ) {
-
-                    setResponseLocation(function(){
-                        returnResponseData();
-                    });
-
-                }else{
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     returnResponseData();
                 }
             };
 
-<<<<<<< HEAD
             MessageDialogController.showConfirm(message, confirmCallback, "Yes,No");
-=======
-            MessageDialogController.showConfirm( message, confirmCallback, "Yes,No" );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         //If validity of survey response location is not required or is
         //correctly set, then invoke the callback with the upload response data.
@@ -2612,7 +1761,6 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
      */
     that.upload = function( onSuccess, onError, requireLocation ) {
 
-<<<<<<< HEAD
         if (typeof(requireLocation) === "undefined") {
             requireLocation = new Date().getTime() - surveyResponse.getSubmitDate().getTime() < 120000;
         }
@@ -2623,35 +1771,15 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
                 Spinner.hide(function () {
                     if (onError) {
                         onError(error);
-=======
-        if( typeof(requireLocation) === "undefined" ) {
-            requireLocation = new Date().getTime() - surveyResponse.getSubmitDate().getTime() < 120000;
-        }
-
-        getFinalizedUploadResponse( function( data ) {
-
-            var _onError = function( error ) {
-                Spinner.hide( function() {
-                    if( onError ) {
-                        onError( error );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     }
                 });
             };
 
-<<<<<<< HEAD
             var _onSuccess = function (response) {
                 console.log("SurveyResponseUploadController: Successfully returned from single survey response upload script.");
                 Spinner.hide(function() {
                     if (onSuccess) {
                         onSuccess(response);
-=======
-            var _onSuccess = function( response ) {
-                console.log("SurveyResponseUploadController: Successfully returned from single survey response upload script.");
-                Spinner.hide( function() {
-                    if( onSuccess ) {
-                        onSuccess( response );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     }
                 });
             };
@@ -2687,7 +1815,6 @@ SurveyResponseUploadController.uploadAll = function( pendingResponses, uploadCom
 
     //Construct an array of IDs. This allows much easier access with an index
     //inside the recursive call.
-<<<<<<< HEAD
     var uuidList = [],
         uuid;
     for (uuid in pendingResponses) {
@@ -2698,33 +1825,16 @@ SurveyResponseUploadController.uploadAll = function( pendingResponses, uploadCom
         if (i >= uuidList.length) {
             Spinner.hide(function () {
                 if (typeof(uploadCompletedCallback) === "function") {
-=======
-    var uuidList = [];
-    for(var uuid in pendingResponses){
-        uuidList.push(uuid);
-    }
-
-    var upload = function(i) {
-
-        if( i >= uuidList.length ) {
-            Spinner.hide(function(){
-                if(typeof(uploadCompletedCallback) === "function"){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     uploadCompletedCallback(count);
                 }
             });
 
-<<<<<<< HEAD
         } else {
-=======
-        }else{
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
             //Get the current survey and surveyResponse object to upload.
             var survey = pendingResponses[uuidList[i]].survey;
             var surveyResponse = pendingResponses[uuidList[i]].response;
 
-<<<<<<< HEAD
             var uploadNextSurveyResponse = function () {
                 upload(i);
                 i += 1;
@@ -2732,23 +1842,11 @@ SurveyResponseUploadController.uploadAll = function( pendingResponses, uploadCom
 
             var onSuccess = function (response) {
                 count += 1;
-=======
-            var uploadNextSurveyResponse = function(){
-                upload(++i);
-            };
-
-            var onSuccess = function(response){
-                count++;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 SurveyResponseModel.deleteSurveyResponse(surveyResponse);
                 uploadNextSurveyResponse();
             };
 
-<<<<<<< HEAD
             var onError = function (error) {
-=======
-            var onError = function(error){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 uploadNextSurveyResponse();
             };
 
@@ -2761,7 +1859,6 @@ SurveyResponseUploadController.uploadAll = function( pendingResponses, uploadCom
     Spinner.show();
     upload(0);
 };
-<<<<<<< HEAD
 
 var SurveysController = (function () {
     var that = {};
@@ -2770,15 +1867,6 @@ var SurveysController = (function () {
 
 /**
  *
-=======
-var SurveysController = (function() {
-    var that = {};    
-    return that;
-})();
-
-/**
- * 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  */
 SurveysController.renderSurveyList = function () {
     var campaigns = CampaignsModel.getInstalledCampaigns(),
@@ -2786,24 +1874,15 @@ SurveysController.renderSurveyList = function () {
         campaignURN,
         noAvailableSurveysMenuItem;
     for (campaignURN in campaigns) {
-<<<<<<< HEAD
         if (campaigns[campaignURN].isRunning()) {
             CampaignView.renderSurveyList(campaigns[campaignURN], surveyMenu, CampaignController.openSurveyViewHandler);
         }
     }
     if (surveyMenu.size() === 0) {
-=======
-        if(campaigns[campaignURN].isRunning()){
-            CampaignView.renderSurveyList(campaigns[campaignURN], surveyMenu, CampaignController.openSurveyViewHandler);
-        }
-    }
-    if (surveyMenu.size() == 0) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         noAvailableSurveysMenuItem = surveyMenu.addMenuLinkItem("No Available Surveys", null, "Please install a campaign, to view available surveys.");
         TouchEnabledItemModel.bindTouchEvent(noAvailableSurveysMenuItem, noAvailableSurveysMenuItem, PageNavigation.openAvailableCampaignsView, "menu-highlight");
     }
     return surveyMenu;
-<<<<<<< HEAD
 };
 
 var UploadQueueController = function(){
@@ -2815,29 +1894,13 @@ var UploadQueueController = function(){
         PageNavigation.openUploadQueueView();
     };
 
-=======
-};var UploadQueueController = function(){
-    var that = {};
-    
-    var pendingResponses = SurveyResponseModel.getPendingResponses();
-    
-    var refreshView = function(){
-        PageNavigation.openUploadQueueView();
-    };
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.deleteAllCallback = function(){
         var message = "Are you sure you would like to delete all your responses?";
         var buttonLabels = 'Yes,No';
         var confirmationCallback = function(yes){
-<<<<<<< HEAD
             var uuid;
             if (yes) {
                 for(uuid in pendingResponses){
-=======
-            if(yes){
-                for(var uuid in pendingResponses){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     SurveyResponseModel.deleteSurveyResponse(pendingResponses[uuid].response);
                 }
                 refreshView();
@@ -2845,11 +1908,7 @@ var UploadQueueController = function(){
         };
         MessageDialogController.showConfirm(message, confirmationCallback, buttonLabels);
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.uploadAllCallback = function(){
         var uploadAllDoneCallback = function(successfulUploadCount){
             var message;
@@ -2857,35 +1916,22 @@ var UploadQueueController = function(){
                 message = "Unable to upload any surveys at this time.";
             }else{
                 message = "Successfully uploaded " + successfulUploadCount + " survey(s).";
-<<<<<<< HEAD
             }
-=======
-            }  
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             MessageDialogController.showMessage(message, function(){
                 refreshView();
             });
         };
         SurveyResponseUploadController.uploadAll( pendingResponses, uploadAllDoneCallback, ConfigManager.getGpsEnabled() );
     };
-<<<<<<< HEAD
 
     that.getPendingResponses = function() {
         return pendingResponses;
     };
 
-=======
-    
-    that.getPendingResponses = function() {
-        return pendingResponses;
-    };
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.render = function() {
         var uploadQueueView = new UploadQueueView(that);
         return uploadQueueView.render();
     };
-<<<<<<< HEAD
 
     return that;
 };
@@ -2911,400 +1957,11 @@ var Init = (function () {
         initialized = true;
     };
 
-=======
-    
-    return that;
-};
-Init.invokeOnReady( function() {
-
-    if( auth.isUserLocked() ) {
-
-        //If the user is in a locked state, force the username field to
-        //be read only.
-        $("#username").val(auth.getUsername())
-                      .attr('readonly', true);
-
-
-        mwf.decorator.TopButton("Switch User", null, function(){
-            if(auth.logout()){
-
-                $("#username").val("")
-                              .attr('readonly', false);
-
-                mwf.decorator.TopButton.remove();
-            }
-        }, true);
-    } else {
-        mwf.decorator.TopButton("Switch Server", null, PageNavigation.openServerChangeView, true);
-    }
-
-    var isInputValid = function(){
-
-        if($('#username').val().length == 0 && $('#password').val().length == 0){
-            MessageDialogController.showMessage('Please enter your username and password.', function(){
-                $('#username').focus();
-            });
-
-            return false;
-        }
-
-        if($('#username').val().length == 0){
-            MessageDialogController.showMessage('Please enter your username.', function(){
-                $('#username').focus();
-            });
-
-            return false;
-        }
-
-        if($('#password').val().length == 0){
-            MessageDialogController.showMessage('Please enter your password.', function(){
-                $('#password').focus();
-            });
-
-            return false;
-        }
-
-        return true;
-
-    };
-
-    var login = function(){
-        if(!isInputValid()){
-            return;
-        }
-
-        var username = $("#username").val();
-        var password = $("#password").val();
-
-        Spinner.show();
-
-        //On successful authentication, redirects the user to the dashboard.
-        auth.authenticateByHash(username, password, function(success, response){
-
-           Spinner.hide(function(){
-               if(success){
-                   PageNavigation.openDashboard();
-               }else if(response){
-                   MessageDialogController.showMessage( response );
-               }else{
-                   MessageDialogController.showMessage( "Unable to login. Please try again." );
-               }
-           });
-
-
-        }, false);
-    };
-
-    //Disable the form element from refreshing and instead try to login.
-    $("#auth-form").submit(function(e){
-        e.preventDefault();
-        login();
-        return false;
-    });
-
-});
-
-Init.invokeOnReady( function () {
-
-    if (CampaignsModel.getInstalledCampaignsCount() > 0 ) {
-        mwf.decorator.TopButton("My Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-    }
-    
-    var onSuccess = function () {
-        $("#view").append(CampaignsController.renderAvailableCampaigns());
-    };
-
-    var onError = function () {
-        MessageDialogController.showMessage("Unable to download campaigns. Please try again later.")
-    };
-
-    CampaignsModel.download(false, onSuccess, onError);
-    
-    
-
-});
-
- Init.invokeOnReady( function () {
-
-     var campaignURN = PageNavigation.getPageParameter('campaign-urn');
-
-     //If a specific campaign is not specified, take the user to the
-     //campaigns view where the user may be able to choose an appropriate
-     //campaign.
-     if (campaignURN === null) {
-         PageNavigation.goBack();
-     }
-
-     var campaignModel = CampaignModel(campaignURN);
-
-     document.getElementById('view').appendChild(CampaignController(campaignModel).renderCampaignView());
-
-     mwf.decorator.TopButton("My Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-
- });
-
-Init.invokeOnReady(function() {
-    $('#view').append((new ChangeServerController()).renderChangeServerView());
-});
-Init.invokeOnReady(function() {
-    $('#help-container').append((new HelpController()).renderHelpMenu());
-});
-Init.invokeOnReady( function() {
-    var helpController = new HelpController();
-    var sectionIndex = PageNavigation.getPageParameter('help-section-index');
-    if(sectionIndex === null){ PageNavigation.goBack(); }
-    $('#help-container').append(helpController.renderHelpSection(sectionIndex));
-});
-Init.invokeOnReady( function() {
-
-    mwf.decorator.TopButton("Logout" , null, auth.logout, true);
-
-    var queueSize = SurveyResponseModel.getUploadQueueSize();
-    var queueLabel = "Queue (" + queueSize + ")";
-
-    var dashboard = mwf.decorator.Menu();
-
-    dashboard.addMenuImageItem('Campaigns', 'installed-campaigns.html',    'img/dash/dash_campaigns.png');
-    dashboard.addMenuImageItem('Surveys',   'surveys.html',                'img/dash/dash_surveys.png');
-    dashboard.addMenuImageItem( queueLabel, 'upload-queue.html',           'img/dash/dash_upqueue.png');
-    dashboard.addMenuImageItem('Profile',   'profile.html',                'img/dash/dash_profile.png');
-    dashboard.addMenuImageItem('Help',      'help-menu.html',              'img/dash/dash_help.png');
-    dashboard.addMenuImageItem('Reminders', 'reminders.html',              'img/dash/dash_reminders.png');
-
-    if(DeviceDetection.isDeviceAndroid()){
-        var androidBackButtonCallback = function(){
-            navigator.app.exitApp();
-        };
-        $(window).bind('beforeunload', function() {
-           document.removeEventListener("backbutton", androidBackButtonCallback, false);
-        });
-        document.addEventListener("backbutton", androidBackButtonCallback, true);
-    }
-
-
-    $('#dashboard').append(dashboard);
-
-});
-
-Init.invokeOnReady(function () {
-
-    mwf.decorator.TopButton("Add Campaign", null, PageNavigation.openAvailableCampaignsView, true);
-
-    if (CampaignsModel.getInstalledCampaignsCount() > 0) {
-        $('#view').append(CampaignsController.renderInstalledCampaigns());
-        $("#view").append(mwf.decorator.SingleClickButton("Upload Queue", PageNavigation.openUploadQueueView));
-    } else {
-        PageNavigation.openAvailableCampaignsView();
-    }
-});
-
-Init.invokeOnReady(function() {
-
-    var isInputValid = function(){
-
-        if($('#current-password').val().length == 0){
-            MessageDialogController.showMessage('Please enter your current password.');
-            $('#current-password').focus();
-
-            return false;
-        }
-
-        if($('#new-password').val().length == 0){
-            MessageDialogController.showMessage('Please enter your new password.');
-            $('#new-password').focus();
-            return false;
-        }
-
-
-        if($('#confirm-password').val().length == 0){
-            MessageDialogController.showMessage('Please confirm your password.');
-            $('#confirm-password').focus();
-            return false;
-        }
-
-        if($('#new-password').val() != $('#confirm-password').val()){
-            MessageDialogController.showMessage('New password and password confirmation do not match.');
-            $('#confirm-password').focus();
-            return false;
-        }
-
-        if(!auth.isPasswordValid($('#new-password').val())){
-            MessageDialogController.showMessage(auth.getPasswordRequirements());
-            $('#new-password').focus();
-            return false;
-        }
-
-        return true;
-
-    };
-
-    $("#change-password").click(function(){
-
-        if(!isInputValid())
-            return;
-
-        var currentPassword = $("#current-password").val();
-        var newPassword     = $("#new-password").val();
-
-        var onSuccess = function() {
-            Spinner.hide(function(){
-                auth.setAuthErrorState(true);
-                MessageDialogController.showMessage('Your password has been successfully changed. Please login to continue.');
-                PageNavigation.openAuthenticationPage();
-            });
-
-
-        };
-
-        var onError = function(response){
-            Spinner.hide(function(){
-                if(response){
-                    MessageDialogController.showMessage(response.errors[0].text);
-                }else{
-                    MessageDialogController.showMessage('Network error occured. Please try again.');
-                }
-
-                $('#current-password').focus();
-            });
-
-
-
-        };
-
-        Spinner.show();
-
-        ServiceController.serviceCall(
-             "POST",
-             ConfigManager.getPasswordChangeUrl(),
-             {
-                 auth_token:   auth.getHashedPassword(),
-                 client:       ConfigManager.getClientName(),
-                 user:         auth.getUsername(),
-                 password:     currentPassword,
-                 new_password: newPassword
-
-             },
-             "JSON",
-             onSuccess,
-             onError,
-             false
-        );
-
-   });
-
-});
-Init.invokeOnReady(function() {
-    $("#pending-surveys").append(new PendingSurveysController().render());
-    $("#pending-surveys").append(mwf.decorator.SingleClickButton("Dashboard",  PageNavigation.openDashboard));
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-    $(document).unbind("backbutton");
-});
-Init.invokeOnReady(function() {
-
-    (function(){
-
-        var label = (auth.isUserAuthenticated()) ? "Dashboard" : "Login";
-        var goBack = function(){
-
-            if(auth.isUserAuthenticated()){
-                PageNavigation.openDashboard();
-            }else{
-                PageNavigation.openAuthenticationPage();
-            }
-
-        };
-
-        mwf.decorator.TopButton(label, null, goBack, true);
-
-        $("#go-back-button").append(mwf.decorator.SingleClickButton(label, goBack));
-
-    })();
-
-});
-Init.invokeOnReady(function() {
-    $('#view').append(ProfileController().renderProfileView());
-});
-Init.invokeOnReady(function() {
-    var controller = new ReminderController(PageNavigation.getPageParameter('uuid'));
-    $("#view-container").append(controller.render());
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-});
-Init.invokeOnReady(function() {
-    $("#reminders").append((new RemindersController()).render());
-    $("#reminders").append(mwf.decorator.DoubleClickButton("Dashboard", PageNavigation.openDashboard,
-                                                           "Pending", PageNavigation.openPendingSurveysView));
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-});
-Init.invokeOnReady(function() {
-
-    //Required for retreiving specific campaign configuration file.
-    var campaignURN = PageNavigation.getPageParameter('campaign-urn');
-
-    //Required for getting a specific survey from the campaign.
-    var surveyID    = PageNavigation.getPageParameter('survey-id');
-
-    //If a specific campaign is not specified, take the user to the
-    //campaigns view where the user may be able to choose an appropriate
-    //campaign.
-    if( campaignURN === null || surveyID === null ) {
-
-        PageNavigation.goBack();
-
-    } else {
-
-        PageNavigation.unsetPageParameter("survey-id");
-
-        var campaign = new CampaignModel( campaignURN );
-        var surveyModel = campaign.getSurvey( surveyID );
-
-        var surveyController = SurveyController( surveyModel );
-
-        var navigation = surveyController.start(document.getElementById('survey'));
-
-        mwf.decorator.TopButton("All Surveys", null, function(){
-            navigation.confirmSurveyExit(function() {
-                PageNavigation.openCampaignView(campaignURN, surveyID);
-            });
-        }, true);
-
-        $("#header-link").click(function() {
-            navigation.confirmSurveyExit(function() {
-                PageNavigation.openDashboard();
-            });
-        });
-    }
-});
-Init.invokeOnReady(function() {
-    var surveyKey = PageNavigation.getPageParameter('survey-key');
-    if(surveyKey === null){ PageNavigation.goBack(); }
-    var surveyResponse = SurveyResponseModel.restoreSurveyResponse(surveyKey);
-    var surveyResponseController = new SurveyResponseController(surveyResponse);
-    document.getElementById("survey-response-view").appendChild(surveyResponseController.render());
-    mwf.decorator.TopButton("Upload Queue", null, PageNavigation.openUploadQueueView, true);
-});    
-Init.invokeOnReady(function() {
-    $("#view").append(SurveysController.renderSurveyList());
-    $("#view").append(mwf.decorator.SingleClickButton("Upload Queue", PageNavigation.openUploadQueueView));
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView , true);
-
-});
-
-Init.invokeOnReady(function() {
-    var uploadQueueController = new UploadQueueController();
-    document.getElementById('upload-queue-menu').appendChild(uploadQueueController.render());
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-});
-var Init = (function() {
-
-    var that = {};
-
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
    /**
     * Method for invoking functions once the DOM and the device are ready.
     * This is a replacement function for the JQuery provided method i.e.
     * $(document).ready(...).
     */
-<<<<<<< HEAD
     that.invokeOnReady = function (callback) {
         $(document).ready(function () {
 
@@ -3317,34 +1974,16 @@ var Init = (function() {
             if (DeviceDetection.isOnDevice() && DeviceDetection.isNativeApplication()) {
                 document.addEventListener("deviceready", callback, false);
             } else if (callback && typeof( callback ) === 'function') {
-=======
-    that.invokeOnReady = function ( callback ) {
-        $(document).ready(function() {
-
-            //Wait for the device ready event only if the the application is running
-            //on a mobile browser embedded in a Cordova deployment.
-            if ( DeviceDetection.isOnDevice() && DeviceDetection.isNativeApplication() ) {
-                document.addEventListener("deviceready", callback, false);
-            } else if ( callback && typeof( callback ) === 'function' ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 callback();
             }
 
         });
-<<<<<<< HEAD
     };
 
     return that;
 
 }());
 var CustomPropertiesVault = function(prompt){
-=======
-    }
-
-    return that;
-
-})();var CustomPropertiesVault = function(prompt){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
    var self = {};
    
    var vault = new LocalMap(CustomPropertiesVault.VAULT_LOCAL_MAP_NAME);
@@ -3391,13 +2030,9 @@ CustomPropertiesVault.VAULT_LOCAL_MAP_NAME = 'custom-properties-vault';
 
 CustomPropertiesVault.deleteAllCustomProperties = function(){
     (new LocalMap(CustomPropertiesVault.VAULT_LOCAL_MAP_NAME)).erase(); 
-<<<<<<< HEAD
 };
 
 var CampaignModel = function (campaignURN) {
-=======
-};var CampaignModel = function (campaignURN) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     var that = {};
 
@@ -3430,7 +2065,6 @@ var CampaignModel = function (campaignURN) {
     that.getSurvey = function (id) {
 
        //Get a list of all the possible surveys.
-<<<<<<< HEAD
        var surveys = that.getSurveys(), i;
 
        //Iterate through the list of retrieved surveys. If a ID match is found,
@@ -3438,15 +2072,6 @@ var CampaignModel = function (campaignURN) {
        for (i = 0; i < surveys.length; i+=1) {
           if (surveys[i].id === id) {
               return SurveyModel(surveys[i], that);
-=======
-       var surveys = that.getSurveys();
-
-       //Iterate through the list of retrieved surveys. If a ID match is found,
-       //return the survey.
-       for (var i = 0; i < surveys.length; i++) {
-          if (surveys[i].id == id) {
-              return SurveyModel( surveys[i], that );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
           }
        }
 
@@ -3539,11 +2164,7 @@ CampaignModel.install = function (urn, onSuccess, onError) {
          _onError
     );
 
-<<<<<<< HEAD
 };
-=======
-}
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 CampaignModel.parse = function(campaignXML){
 
@@ -3570,7 +2191,6 @@ CampaignModel.parse = function(campaignXML){
 
     return json.campaign;
 
-<<<<<<< HEAD
 };
 
 /**
@@ -3723,154 +2343,6 @@ var CampaignsModelInitializer = function () {
 };
 
 
-=======
-}/**
- * Singleton Model!
- */
-var CampaignsModel = (function() {
-
-    var that = {};
-
-    /**
-     * Stores a list of all available campaigns.
-     */
-    var allCampaigns = new LocalMap("all-campaigns");
-
-    /**
-     * Stores a list of installed camapigns.
-     */
-    var installedCampaigns = new LocalMap("installed-campaigns");
-
-    /**
-     * Returns true campaign metadata has not been downloaded. This doesn't
-     * have anything to do installed campaigns.
-     * @return True if campaigns metadata has not been downloaded.
-     */
-    that.isEmpty = function () {
-        return allCampaigns.length() === 0;
-    };
-
-    /**
-     * Returns the number of currently installed campaigns.
-     * @return Number of currently installed campaigns.
-     */
-    that.getInstalledCampaignsCount = function () {
-        return installedCampaigns.length();
-    };
-
-    that.getCampaign = function (campaignURN) {
-        return CampaignModel(campaignURN);
-    };
-
-    /**
-     * Deletes the specified campaign from the local storage. This method will
-     * also delete all reminders associated with the provided campaign.
-     * @param urn Unique campaign identifier.
-     */
-    that.uninstallCampaign = function (urn) {
-        installedCampaigns.release(urn);
-        ReminderModel.deleteCampaignReminders(urn);
-    };
-
-    /**
-     * Returns all available campaigns even if they are installed.
-     */
-    that.getAllCampaigns = function () {
-        var campaigns = {};
-        for(var campaignURN in allCampaigns.getMap()){
-            campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
-        }
-        return campaigns;
-    };
-
-    that.getAvailableCampaigns = function() {
-        var campaigns = {};
-        for (var campaignURN in allCampaigns.getMap()) {
-            if( !installedCampaigns.isSet( campaignURN )){
-                campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
-            }
-        }
-        return campaigns;
-    };
-
-    /**
-     * Returns a list of campaign objects that the user has currently installed.
-     */
-    that.getInstalledCampaigns = function () {
-        var campaigns = {};
-        for (var campaignURN in installedCampaigns.getMap()) {
-            campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
-        }
-        return campaigns;
-    };
-
-    /**
-     * Downloads a list of campaigns.
-     */
-    that.download = function (force, onSuccess, onError) {
-
-        if (typeof(force) == undefined) {
-            force = false;
-        }
-
-
-        if (!force && !that.isEmpty()) {
-            if (onSuccess) {
-                onSuccess();
-            }
-            return;
-        }
-
-        var _onError = function (response) {
-            Spinner.hide(function(){
-                if(onError){
-                    onError(response);
-                }
-            });
-        };
-
-        var _onSuccess = function (response) {
-            Spinner.hide(function () {
-
-                if (response.result === "success") {
-
-                    var campaigns = new LocalMap("all-campaigns");
-
-                    campaigns.erase();
-
-                    for (var urn in response.data) {
-                        campaigns.set(urn, response.data[urn]);
-                    }
-
-                    if (onSuccess) {
-                        onSuccess();
-                    }
-                }
-            });
-
-
-        };
-
-        Spinner.show();
-
-        ServiceController.serviceCall(
-             "POST",
-             ConfigManager.getCampaignReadUrl(),
-             {
-                 user:          auth.getUsername(),
-                 password:      auth.getHashedPassword(),
-                 client:        ConfigManager.getClientName(),
-                 output_format: 'short'
-             },
-             "JSON",
-             _onSuccess,
-             _onError
-        );
-    };
-
-    return that;
-})();
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 
 var HelpModel = function(){
@@ -3878,27 +2350,13 @@ var HelpModel = function(){
     var helpSections = [
         {
          title:'Using the Dashboard',
-<<<<<<< HEAD
          text: 'Dashboard is the main page of the application. It allows quick access to campaigns, surveys, the upload queue, help tutorials and also allows users to log out.',
-=======
-         text: 'Dashboard is the main page of the application. It allows \n\
-                quick access to campaigns, surveys, the upload queue, help \n\
-                tutorials and also allows users to log out.',
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
          img:  'img/screenshots/dashboard.png'
         },
 
         {
          title:'Installing Campaigns',
-<<<<<<< HEAD
          text: 'To install a new campaign, navigate to the campaigns section from the dashboard, and click on one of the campaigns listed under the \'Available Campaigns\' menu. If there are currently no campaigns installed on the phone, you will automatically be redirected to the available campaigns section. ',
-=======
-         text: 'To install a new campaign, navigate to the campaigns section\n\
-                from the dashboard, and click on one of the campaigns listed \n\
-                under the \'Available Campaigns\' menu. If there are currently\n\
-                no campaigns installed on the phone, you will automatically be\n\
-                redirected to the available campaigns section. ',
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
          img:  'img/screenshots/installing-campaigns.png'
         },
 
@@ -3910,20 +2368,12 @@ var HelpModel = function(){
 
         {
          title:'Uploading Responses',
-<<<<<<< HEAD
          text: 'You can view responses that have not been uploaded in the upload queue section. Here you have the option to delete all the pending uploads, upload all responses, or upload/delete individual survey responses.',
-=======
-         text: 'You can view responses that have not been uploaded in the upload\n\
-                queue section. Here you have the option to delete all the pending\n\
-                uploads, upload all responses, or upload/delete individual survey\n\
-                responses.',
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
          img:  'img/screenshots/uploading-responses.png'
         },
 
         {
          title:'Changing Password',
-<<<<<<< HEAD
          text: 'Enter your current password, a new password and a confirmation of the new password to change your password. When your password is successfully changed, you will be directed to the login page where you can use your new password to login.',
          img:  'img/screenshots/changing-password.png'
         }
@@ -3941,28 +2391,6 @@ var HelpModel = function(){
 
 };
 
-=======
-         text: 'Enter your current password, a new password and a confirmation\n\
-                of the new password to change your password. When your password\n\
-                is successfully changed, you will be directed to the login page\n\
-                where you can use your new password to login.',
-         img:  'img/screenshots/changing-password.png'
-        }
-
-    ];
-    
-    self.getAllSections = function(){
-        return helpSections;
-    };
-    
-    self.getHelpSection = function(index){
-        return helpSections[index];
-    };
-    
-    return self;
-    
-};
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 /**
  * Represents an individual prompts.
  * @author Zorayr Khalapyan
@@ -3980,11 +2408,7 @@ var PromptModel = function (promptData, survey, campaign) {
      * Default handler for the current prompt. The handler knows how to display
      * the prompt and analyze the response.
      */
-<<<<<<< HEAD
     var handler = {};//new PromptHandler(that);
-=======
-    var handler = new PromptHandler(that);
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     var customPropertiesVault = null;
 
@@ -3998,7 +2422,6 @@ var PromptModel = function (promptData, survey, campaign) {
      * The method initlization the list of both specified and custom properties.
      * This method should be invoked when this prompt is initialized.
      */
-<<<<<<< HEAD
     var setProperties = function () {
         var customProperties, i;
         if (!promptData.properties || !promptData.properties.property) {
@@ -4010,19 +2433,6 @@ var PromptModel = function (promptData, survey, campaign) {
         }
         customProperties = customPropertiesVault.getCustomProperties();
         for (i = 0; i < customProperties.length; i+= 1) {
-=======
-    var setProperties = function(){
-        if(!promptData.properties || !promptData.properties.property){
-            properties = [];
-        } else if(!promptData.properties.property.length){
-            properties = [promptData.properties.property];
-        }else{
-            properties = promptData.properties.property;
-        }
-
-        var customProperties = customPropertiesVault.getCustomProperties();
-        for(var i = 0; i < customProperties.length; i++){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             properties.push(customProperties[i]);
         }
     };
@@ -4032,16 +2442,10 @@ var PromptModel = function (promptData, survey, campaign) {
      * prompt. The method returns true if the property is a duplicate, false
      * otherwise.
      */
-<<<<<<< HEAD
     var isDuplicatePropertyLabel = function (property) {
         var i;
         for (i = 0; i < properties.length; i+=1) {
             if (properties[i].label === property.label) {
-=======
-    var isDuplicatePropertyLabel = function(property){
-        for(var i = 0; i < properties.length; i++){
-            if(properties[i].label == property.label){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 return true;
             }
         }
@@ -4074,15 +2478,9 @@ var PromptModel = function (promptData, survey, campaign) {
                 break;
 
             case 'multi_choice':
-<<<<<<< HEAD
                 var keys = responseValue.toString().split(',');
                 var labels = [], key;
                 for (key in keys) {
-=======
-                var keys = new String(responseValue).split(',');
-                var labels = [];
-                for(var key in keys){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     labels.push(that.getProperty(key).label);
                 }
                 summary = labels.join(", ");
@@ -4092,11 +2490,7 @@ var PromptModel = function (promptData, survey, campaign) {
             default:
                 summary = responseValue;
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         return summary;
     };
 
@@ -4125,11 +2519,7 @@ var PromptModel = function (promptData, survey, campaign) {
             that.isValid();
         }
 
-<<<<<<< HEAD
         return errorMsg || false;
-=======
-        return (errorMsg)? errorMsg : false;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     };
 
     /**
@@ -4156,15 +2546,9 @@ var PromptModel = function (promptData, survey, campaign) {
     };
 
     that.getProperty = function(key){
-<<<<<<< HEAD
         var properties = that.getProperties(), i;
         for (i = 0; i < properties.length; i+=1) {
             if (properties[i].key === key) {
-=======
-        var properties = that.getProperties();
-        for(var i = 0; i < properties.length; i++){
-            if(properties[i].key == key){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 return properties[i];
             }
         }
@@ -4177,11 +2561,7 @@ var PromptModel = function (promptData, survey, campaign) {
      * @return minimum value allowed for the current prompt's response, or null
      *         if undefined.
      */
-<<<<<<< HEAD
     that.getMinValue = function () {
-=======
-    that.getMinValue = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var minProperty = that.getProperty("min");
         return minProperty !== null ? minProperty.label : null;
     };
@@ -4192,11 +2572,7 @@ var PromptModel = function (promptData, survey, campaign) {
      * @return maximum value allowed for the current prompt's response, or null
      *        if undefined.
      */
-<<<<<<< HEAD
     that.getMaxValue = function () {
-=======
-    that.getMaxValue = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var maxProperty = that.getProperty("max");
         return maxProperty !== null ? maxProperty.label : null;
     };
@@ -4205,7 +2581,6 @@ var PromptModel = function (promptData, survey, campaign) {
     * Adds a new property to this prompt. If the property label already exists,
     * then the method will have no side effects and will return false.
     */
-<<<<<<< HEAD
    that.addProperty = function (label, key) {
         //By default, property key is the index of the array.
         var property = { key:key || properties.length, label:label };
@@ -4215,17 +2590,6 @@ var PromptModel = function (promptData, survey, campaign) {
             return property;
         } else {
             return false;
-=======
-   that.addProperty = function(label, key){
-        //By default, property key is the index of the array.
-        var property = { key:key || properties.length, label:label };
-        if(!isDuplicatePropertyLabel(property)){
-            properties.push(property);
-            customPropertiesVault.addCustomProperty(property);
-            return property;
-        }else{
-            return false
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
     };
 
@@ -4306,13 +2670,9 @@ var PromptModel = function (promptData, survey, campaign) {
     }());
 
     return that;
-<<<<<<< HEAD
 };
 
 /**
-=======
-};/**
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  * @class ReminderModel
  * @author Zorayr Khalapyan
  * @version 8/13/2012
@@ -4322,11 +2682,7 @@ var ReminderModel = function( uuid ) {
     var that = {};
     var title = "";
     var campaignURN = "";
-<<<<<<< HEAD
     var surveyID = "";
-=======
-    var surveyID = ""
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var message = "";
     var ticker = "";
     var notificationAdapter = LocalNotificationAdapter;
@@ -4371,15 +2727,9 @@ var ReminderModel = function( uuid ) {
             ticker            : ticker,
             supression_window : supressionWindow,
             exclude_weekends  : excludeWeekends
-<<<<<<< HEAD
         }, i;
         reminderJSON.notifications = [];
         for (i = 0; i < notifications.length; i+=1) {
-=======
-        };
-        reminderJSON.notifications = [];
-        for(var i = 0; i < notifications.length; i++){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             reminderJSON.notifications.push({
                id   : notifications[i].id,
                time : notifications[i].date.getTime()
@@ -4401,11 +2751,7 @@ var ReminderModel = function( uuid ) {
             repeatDaily : false,
             id          : id
         };
-<<<<<<< HEAD
         console.log("ReminderModel: Notification was set with the following options - " + window.JSON.stringify(options));
-=======
-        console.log("ReminderModel: Notification was set with the following options - " + JSON.stringify(options));
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         notificationAdapter.add(options);
         notifications.push({id : id, date : date});
         return options;
@@ -4431,14 +2777,9 @@ var ReminderModel = function( uuid ) {
      * notifications, and add new reminders according to the user's
      * modification.
      */
-<<<<<<< HEAD
     that.cancelAllNotifications = function () {
         var i;
         for (i = 0; i < notifications.length; i+=1) {
-=======
-    that.cancelAllNotifications = function(){
-        for(var i = 0; i < notifications.length; i++){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             cancelNotification( notifications[i] );
         }
         notifications = [];
@@ -4461,7 +2802,6 @@ var ReminderModel = function( uuid ) {
      */
     that.suppress = function( date ){
         date = date || new Date();
-<<<<<<< HEAD
         var activeNotifications = [],
             i,
             suppressionWindowTime = supressionWindow * 60 * 60 * 1000,
@@ -4472,17 +2812,6 @@ var ReminderModel = function( uuid ) {
                 surveySuppressed = true;
             } else {
                 activeNotifications.push(notifications[i]);
-=======
-        var activeNotifications = [], i = 0;
-        var suppressionWindowTime = supressionWindow * 60 * 60 * 1000;
-        var surveySuppressed = false;
-        for( i; i < notifications.length; i++ ) {
-            if( notifications[i].date.getTime() - date.getTime() < suppressionWindowTime ) {
-                cancelNotification( notifications[i] );
-                surveySuppressed = true;
-            } else {
-                activeNotifications.push( notifications[i] );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             }
         }
         notifications = activeNotifications;
@@ -4500,11 +2829,7 @@ var ReminderModel = function( uuid ) {
      * Restores a reminder with the specified UUID from localStorage.
      */
     that.restore = function( storedUUID ){
-<<<<<<< HEAD
         var object       = ReminderModel.reminders.get(storedUUID), i;
-=======
-        var object       = ReminderModel.reminders.get(storedUUID);
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         uuid             = storedUUID;
         title            = object.title;
         campaignURN      = object.campaign_urn;
@@ -4514,11 +2839,7 @@ var ReminderModel = function( uuid ) {
         supressionWindow = object.supression_window;
         excludeWeekends  = object.exclude_weekends;
         notifications = [];
-<<<<<<< HEAD
         for (i = 0; i < object.notifications.length; i+=1) {
-=======
-        for(var i = 0; i < object.notifications.length; i++){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             notifications.push({
                 id   : object.notifications[i].id,
                 date : new Date( object.notifications[i].time )
@@ -4526,26 +2847,16 @@ var ReminderModel = function( uuid ) {
         }
     };
 
-<<<<<<< HEAD
     that.setAssociation = function (newCampaignURN, newSurveyID) {
         campaignURN = newCampaignURN;
         surveyID    = newSurveyID;
     };
 
     that.setMessage = function (newMessage) {
-=======
-    that.setAssociation = function(newCampaignURN, newSurveyID){
-        campaignURN = newCampaignURN
-        surveyID    = newSurveyID;
-    };
-
-    that.setMessage = function( newMessage ){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         message = newMessage;
         ticker  = newMessage;
     };
 
-<<<<<<< HEAD
     that.setTitle = function (newTitle) {
         title = newTitle;
     };
@@ -4555,17 +2866,6 @@ var ReminderModel = function( uuid ) {
     };
 
     that.setExcludeWeekends = function (newExcludeWeekends) {
-=======
-    that.setTitle = function( newTitle ){
-        title = newTitle;
-    };
-
-    that.setSupressionWindow = function( newSupressionWindow ){
-        supressionWindow = newSupressionWindow;
-    };
-
-    that.setExcludeWeekends = function( newExcludeWeekends ){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         excludeWeekends = newExcludeWeekends;
     };
 
@@ -4573,13 +2873,8 @@ var ReminderModel = function( uuid ) {
      * A remineder is expired if it doesn't have any more notificationss, or if
      * the last notification is in the past.
      */
-<<<<<<< HEAD
     that.isExpired = function () {
         return notifications.length === 0
-=======
-    that.isExpired = function(){
-        return notifications.length == 0
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             || notifications[notifications.length - 1].date.getTime() <= new Date().getTime();
     };
 
@@ -4602,7 +2897,6 @@ var ReminderModel = function( uuid ) {
     /**
      * Returns the date of the earliest set notification for this reminder.
      */
-<<<<<<< HEAD
     that.getDate = function () {
         return (notifications.length !== 0)? notifications[0].date : null;
     };
@@ -4616,21 +2910,6 @@ var ReminderModel = function( uuid ) {
     };
 
     that.getRecurrence = function () {
-=======
-    that.getDate = function(){
-        return (notifications.length !== 0)? notifications[0].date : null;
-    };
-
-    that.getSupressionWindow = function(){
-        return parseInt(supressionWindow);
-    };
-
-    that.excludeWeekends = function(){
-        return excludeWeekends;
-    };
-
-    that.getRecurrence = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         return notifications.length;
     };
 
@@ -4638,19 +2917,11 @@ var ReminderModel = function( uuid ) {
      * Returns current notifications.
      * @visibleForTesting
      */
-<<<<<<< HEAD
     that.getNotifications = function () {
         return notifications;
     };
 
     that.getMessage = function () {
-=======
-    that.getNotifications = function() {
-        return notifications;
-    };
-
-    that.getMessage = function() {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         return message;
     };
 
@@ -4658,11 +2929,7 @@ var ReminderModel = function( uuid ) {
      * Replaces the reference to the LocalNotificationAdapter.
      * @visibleForTesting
      */
-<<<<<<< HEAD
     that.setNotificationAdapter = function (newNotificationAdapter) {
-=======
-    that.setNotificationAdapter = function ( newNotificationAdapter ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         notificationAdapter = newNotificationAdapter;
     };
 
@@ -4701,16 +2968,10 @@ ReminderModel.reminders = new LocalMap("reminders");
  * Returns all saved reminders.
  */
 ReminderModel.getAllReminders = function(){
-<<<<<<< HEAD
     var remindersMap = ReminderModel.reminders.getMap(),
         allReminders = [],
         uuid;
     for(uuid in remindersMap){
-=======
-    var remindersMap = ReminderModel.reminders.getMap();
-    var allReminders = [];
-    for(var uuid in remindersMap){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         if(remindersMap.hasOwnProperty(uuid)){
             allReminders.push( new ReminderModel(uuid) );
         }
@@ -4723,13 +2984,8 @@ ReminderModel.getAllReminders = function(){
  */
 ReminderModel.cancelAll = function() {
     console.log("ReminderModel: Cancelling all reminders.");
-<<<<<<< HEAD
     var reminders = ReminderModel.getAllReminders(), i;
     for (i = 0; i < reminders.length; i+=1) {
-=======
-    var reminders = ReminderModel.getAllReminders();
-    for( var i = 0; i < reminders.length; i++ ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         reminders[i].deleteReminder();
     }
 };
@@ -4737,20 +2993,12 @@ ReminderModel.cancelAll = function() {
 /**
  * Supresses all reminders associated with the specified survey.
  */
-<<<<<<< HEAD
 ReminderModel.supressSurveyReminders = function (surveyID) {
     console.log("ReminderModel: Supressing all reminders for survey [" + surveyID + "].");
     var reminders = ReminderModel.getAllReminders(),
         i;
     for (i = 0; i < reminders.length; i += 1) {
         if (reminders[i].getSurveyID() === surveyID && reminders[i].suppress()) {
-=======
-ReminderModel.supressSurveyReminders = function( surveyID ) {
-    console.log("ReminderModel: Supressing all reminders for survey [" + surveyID + "].");
-    var reminders = ReminderModel.getAllReminders(), i = 0;
-    for(i; i < reminders.length; i++){
-        if(reminders[i].getSurveyID() === surveyID && reminders[i].suppress()){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             break;
         }
     }
@@ -4761,22 +3009,15 @@ ReminderModel.supressSurveyReminders = function( surveyID ) {
  */
 ReminderModel.deleteCampaignReminders = function(campaignURN){
     console.log("ReminderModel: Deleting all reminders associated with campaign [" + campaignURN + "].");
-<<<<<<< HEAD
     var reminders = ReminderModel.getAllReminders(),
         i;
     for (i = 0; i < reminders.length; i += 1) {
         if (reminders[i].getCampaignURN() === campaignURN) {
-=======
-    var reminders = ReminderModel.getAllReminders(), i = 0;
-    for(i; i < reminders.length; i++){
-        if(reminders[i].getCampaignURN() === campaignURN){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             reminders[i].deleteReminder();
         }
     }
 };
 
-<<<<<<< HEAD
 ReminderModel.getPendingSurveys = function () {
     var currentDate = new Date().getTime();
     var reminders = ReminderModel.getAllReminders();
@@ -4786,15 +3027,6 @@ ReminderModel.getPendingSurveys = function () {
     for(i = 0; i < reminders.length; i += 1){
         if(reminders[i].getDate().getTime() < currentDate){
             campaign = CampaignModel(reminders[i].getCampaignURN());
-=======
-ReminderModel.getPendingSurveys = function(){
-    var currentDate = new Date().getTime();
-    var reminders = ReminderModel.getAllReminders();
-    var campaign, surveys = [], i = 0;
-    for(i; i < reminders.length; i++){
-        if(reminders[i].getDate().getTime() < currentDate){
-            campaign = new Campaign(reminders[i].getCampaignURN());
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             surveys.push(campaign.getSurvey(reminders[i].getSurveyID()));
         }
     }
@@ -4804,7 +3036,6 @@ ReminderModel.getPendingSurveys = function(){
 /**
  * Returns all reminders that have at least single notification in the future.
  */
-<<<<<<< HEAD
 ReminderModel.getCurrentReminders = function () {
     var reminders = ReminderModel.getAllReminders(),
         currentReminders = [],
@@ -4817,18 +3048,6 @@ ReminderModel.getCurrentReminders = function () {
     return currentReminders;
 };
 var SurveyModel = function( surveyData, campaign ) {
-=======
-ReminderModel.getCurrentReminders = function() {
-    var reminders = ReminderModel.getAllReminders();
-    var currentReminders = [], i = 0;
-    for(i; i < reminders.length; i++){
-        if( !reminders[i].isExpired() ){
-            currentReminders.push( reminders[i] );
-        }
-    }
-    return currentReminders;
-};var SurveyModel = function( surveyData, campaign ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * This variable utilizes JavaScript's closure paradigm to allow private
@@ -4872,7 +3091,6 @@ ReminderModel.getCurrentReminders = function() {
      * Returns an array of prompt objects associated with this survey.
      */
     that.getPrompts = function(){
-<<<<<<< HEAD
         var promptList = surveyData.contentlist.prompt,
             prompts = [],
             i;
@@ -4882,16 +3100,6 @@ ReminderModel.getCurrentReminders = function() {
             }
         } else {
             prompts.push(PromptModel(promptList, that, campaign));
-=======
-        var promptList = surveyData.contentlist.prompt;
-        var prompts = new Array();
-        if(promptList.length){    
-            for(var i = 0; i < promptList.length; i++){
-                prompts[i] = new Prompt( promptList[i], that, campaign );
-            }
-        } else {
-            prompts.push( new Prompt(promptList, that, campaign) );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
         return prompts;
     };
@@ -4902,30 +3110,18 @@ ReminderModel.getCurrentReminders = function() {
      * @return Prompt object or null.
      */
     that.getPrompt = function( id ) {
-<<<<<<< HEAD
         var prompts = that.getPrompts(), i;
         for (i = 0; i < prompts.length; i+= 1) {
             if (prompts[ i ].getID() === id) {
-=======
-        var prompts = that.getPrompts();
-        for( var i = 0; i < prompts.length; i++ ) {
-            if( prompts[ i ].getID() == id ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 return prompts[ i ];
             }
         }
         return null;
     };
-<<<<<<< HEAD
 
     return that;
 };
 
-=======
-    
-    return that;
-}
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 /**
  * The class represents the responses gathered from the user for a particular
  * survey.
@@ -5013,11 +3209,7 @@ var SurveyResponseModel = function (id, uuid, urn){
      * @return true if the location for this survey response has been set.
      */
     that.isLocationAvailable = function () {
-<<<<<<< HEAD
         return that.data.location !== null;
-=======
-        return that.data.location != null;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     };
 
     that.manuallySetLocation = function (location) {
@@ -5127,17 +3319,10 @@ var SurveyResponseModel = function (id, uuid, urn){
      * @return Array of UUIDs.
      */
     that.getImageIds = function () {
-<<<<<<< HEAD
         var images = [], promptID, response;
         for (promptID in that.data._responses) {
             response = that.data._responses[promptID];
             if (response.isImage) {
-=======
-        var images = [];
-        for (var promptID in that.data._responses) {
-            var response = that.data._responses[promptID];
-            if(response.isImage){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 images.push(response.value);
             }
         }
@@ -5157,17 +3342,10 @@ var SurveyResponseModel = function (id, uuid, urn){
         //before getting uploaded to the surver.
         var responses = [];
 
-<<<<<<< HEAD
         var images = {}, promptID, response;
 
         for (promptID in that.data._responses) {
             response = that.data._responses[promptID];
-=======
-        var images = {};
-
-        for (var promptID in that.data._responses) {
-            var response = that.data._responses[promptID];
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             responses.push({
                 prompt_id: promptID,
                 value: response.value
@@ -5192,11 +3370,7 @@ var SurveyResponseModel = function (id, uuid, urn){
             //responses: (responses.length == 1)? responses[0]:responses
 
             responses: responses
-<<<<<<< HEAD
         };
-=======
-        }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         //Only set location, if available.
         if(that.data.location !== null){
@@ -5220,13 +3394,8 @@ var SurveyResponseModel = function (id, uuid, urn){
      * for conditional prompt evaluation.
      */
     that.getResponses = function () {
-<<<<<<< HEAD
         var data = {}, promptID;
         for (promptID in that.data._responses) {
-=======
-        var data = {};
-        for(var promptID in that.data._responses){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             data[promptID] = that.data._responses[promptID].value;
         }
         return data;
@@ -5291,11 +3460,7 @@ var SurveyResponseModel = function (id, uuid, urn){
     };
 
     return that;
-<<<<<<< HEAD
 };
-=======
-}
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 
 SurveyResponseModel.responses = new LocalMap("suvey-responses");
@@ -5336,15 +3501,9 @@ SurveyResponseModel.restoreSurveyResponse = function (survey_key) {
  */
 SurveyResponseModel.deleteSurveyResponse = function (surveyResponseModel) {
 
-<<<<<<< HEAD
     var images = surveyResponseModel.getImageIds(),
         i;
     for (i = 0; i < images.length; i += 1) {
-=======
-    //Delete response images.
-    var images = surveyResponseModel.getImageIds();
-    for(var i = 0; i < images.length; i++){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         SurveyResponseModel.deleteImage(images[i]);
     }
 
@@ -5374,50 +3533,29 @@ SurveyResponseModel.getImage = function (uuid) {
 
 SurveyResponseModel.deleteImage = function (uuid) {
     var images = SurveyResponseModel.getImages();
-<<<<<<< HEAD
     if (images[uuid]) {
         delete images[uuid];
     }
-=======
-    if(images[uuid])
-        delete images[uuid];
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     SurveyResponseModel.setImages(images);
 };
 
 SurveyResponseModel.setImages = function (images) {
-<<<<<<< HEAD
     window.localStorage.images = window.JSON.stringify(images);
 };
 
 SurveyResponseModel.getImages = function () {
     return (window.localStorage.images)? window.JSON.parse(window.localStorage.images) : {};
-=======
-    localStorage.images = JSON.stringify(images);
-};
-
-SurveyResponseModel.getImages = function () {
-    return (localStorage.images)? JSON.parse(localStorage.images) : {};
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 };
 
 /**
  * Returns all pending survey responses.
  */
 SurveyResponseModel.getPendingResponses = function () {
-<<<<<<< HEAD
     var pendingResponses = {}, uuid, response;
     for (uuid in SurveyResponseModel.responses.getMap()) {
         response = SurveyResponseModel.restoreSurveyResponse(uuid);
         //Skip survey responses that were not completed.
         if (!response.isSubmitted()) {
-=======
-    var pendingResponses = {};
-    for(var uuid in SurveyResponseModel.responses.getMap()){
-        var response = SurveyResponseModel.restoreSurveyResponse(uuid);
-        //Skip survey responses that were not completed.
-        if(!response.isSubmitted()){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             continue;
         }
         var campaign = CampaignsModel.getCampaign(response.getCampaignURN());
@@ -5425,29 +3563,17 @@ SurveyResponseModel.getPendingResponses = function () {
         pendingResponses[uuid] = {'survey': survey, 'response': response};
     }
     return pendingResponses;
-<<<<<<< HEAD
 };
-=======
-}
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 /**
  * Returns the number of survey responses that have not been submitted.
  */
 SurveyResponseModel.getUploadQueueSize = function () {
-<<<<<<< HEAD
     var size = 0, uuid, response;
     for (uuid in SurveyResponseModel.responses.getMap()) {
         response = SurveyResponseModel.restoreSurveyResponse(uuid);
         if (response.isSubmitted()) {
             size += 1;
-=======
-    var size = 0;
-    for(var uuid in SurveyResponseModel.responses.getMap()){
-        var response = SurveyResponseModel.restoreSurveyResponse(uuid);
-        if(response.isSubmitted()){
-            size++;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
     }
     return size;
@@ -5462,22 +3588,14 @@ SurveyResponseModel.SKIPPED_PROMPT_VALUE = "SKIPPED";
 * Value tag that indicates not displayed prompt response value.
 */
 SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE = "NOT_DISPLAYED";
-<<<<<<< HEAD
 
 var ConditionalParser = (function(){
-=======
-ConditionalParser = (function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
   /*
    * Generated by PEG.js 0.7.0.
    *
    * http://pegjs.majda.cz/
    */
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
   function quote(s) {
     /*
      * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a
@@ -5500,11 +3618,7 @@ ConditionalParser = (function(){
       .replace(/[\x00-\x07\x0B\x0E-\x1F\x80-\uFFFF]/g, escape)
       + '"';
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
   var result = {
     /*
      * Parses the input with a generated parser. If the parsing is successfull,
@@ -5523,11 +3637,7 @@ ConditionalParser = (function(){
         "value": parse_value,
         "conjunction": parse_conjunction
       };
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       if (startRule !== undefined) {
         if (parseFunctions[startRule] === undefined) {
           throw new Error("Invalid rule name: " + quote(startRule) + ".");
@@ -5535,50 +3645,28 @@ ConditionalParser = (function(){
       } else {
         startRule = "statement";
       }
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       var pos = 0;
       var reportFailures = 0;
       var rightmostFailuresPos = 0;
       var rightmostFailuresExpected = [];
-<<<<<<< HEAD
 
       function padLeft(input, padding, length) {
         var result = input;
 
-=======
-      
-      function padLeft(input, padding, length) {
-        var result = input;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var padLength = length - input.length;
         for (var i = 0; i < padLength; i++) {
           result = padding + result;
         }
-<<<<<<< HEAD
 
         return result;
       }
 
-=======
-        
-        return result;
-      }
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       function escape(ch) {
         var charCode = ch.charCodeAt(0);
         var escapeChar;
         var length;
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         if (charCode <= 0xFF) {
           escapeChar = 'x';
           length = 2;
@@ -5586,31 +3674,19 @@ ConditionalParser = (function(){
           escapeChar = 'u';
           length = 4;
         }
-<<<<<<< HEAD
 
         return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
       }
 
-=======
-        
-        return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
-      }
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       function matchFailed(failure) {
         if (pos < rightmostFailuresPos) {
           return;
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         if (pos > rightmostFailuresPos) {
           rightmostFailuresPos = pos;
           rightmostFailuresExpected = [];
         }
-<<<<<<< HEAD
 
         rightmostFailuresExpected.push(failure);
       }
@@ -5619,16 +3695,6 @@ ConditionalParser = (function(){
         var result0, result1, result2;
         var pos0, pos1;
 
-=======
-        
-        rightmostFailuresExpected.push(failure);
-      }
-      
-      function parse_statement() {
-        var result0, result1, result2;
-        var pos0, pos1;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         pos0 = pos;
         pos1 = pos;
         result0 = parse_sentence();
@@ -5661,19 +3727,11 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_sentence() {
         var result0, result1, result2;
         var pos0, pos1;
 
-=======
-      
-      function parse_sentence() {
-        var result0, result1, result2;
-        var pos0, pos1;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         pos0 = pos;
         pos1 = pos;
         result0 = parse_parenthetical();
@@ -5796,19 +3854,11 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_parenthetical() {
         var result0, result1, result2;
         var pos0, pos1;
 
-=======
-      
-      function parse_parenthetical() {
-        var result0, result1, result2;
-        var pos0, pos1;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         pos0 = pos;
         pos1 = pos;
         if (input.charCodeAt(pos) === 40) {
@@ -5854,19 +3904,11 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_expression() {
         var result0, result1, result2;
         var pos0, pos1;
 
-=======
-      
-      function parse_expression() {
-        var result0, result1, result2;
-        var pos0, pos1;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         pos0 = pos;
         pos1 = pos;
         result0 = parse_id();
@@ -5896,19 +3938,11 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_id() {
         var result0, result1;
         var pos0;
 
-=======
-      
-      function parse_id() {
-        var result0, result1;
-        var pos0;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         pos0 = pos;
         if (/^[a-zA-Z0-9_]/.test(input.charAt(pos))) {
           result1 = input.charAt(pos);
@@ -5944,17 +3978,10 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_condition() {
         var result0;
 
-=======
-      
-      function parse_condition() {
-        var result0;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         if (input.substr(pos, 4) === " == ") {
           result0 = " == ";
           pos += 4;
@@ -6021,19 +4048,11 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_value() {
         var result0, result1;
         var pos0;
 
-=======
-      
-      function parse_value() {
-        var result0, result1;
-        var pos0;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         pos0 = pos;
         if (/^[a-zA-Z0-9_]/.test(input.charAt(pos))) {
           result1 = input.charAt(pos);
@@ -6069,17 +4088,10 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
       function parse_conjunction() {
         var result0;
 
-=======
-      
-      function parse_conjunction() {
-        var result0;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         if (input.substr(pos, 5) === " and ") {
           result0 = " and ";
           pos += 5;
@@ -6102,19 +4114,11 @@ ConditionalParser = (function(){
         }
         return result0;
       }
-<<<<<<< HEAD
 
 
       function cleanupExpected(expected) {
         expected.sort();
 
-=======
-      
-      
-      function cleanupExpected(expected) {
-        expected.sort();
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var lastExpected = null;
         var cleanExpected = [];
         for (var i = 0; i < expected.length; i++) {
@@ -6125,11 +4129,7 @@ ConditionalParser = (function(){
         }
         return cleanExpected;
       }
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       function computeErrorPosition() {
         /*
          * The first idea was to use |String.split| to break the input up to the
@@ -6137,19 +4137,11 @@ ConditionalParser = (function(){
          * there. However IE's |split| implementation is so broken that it was
          * enough to prevent it.
          */
-<<<<<<< HEAD
 
         var line = 1;
         var column = 1;
         var seenCR = false;
 
-=======
-        
-        var line = 1;
-        var column = 1;
-        var seenCR = false;
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         for (var i = 0; i < Math.max(pos, rightmostFailuresPos); i++) {
           var ch = input.charAt(i);
           if (ch === "\n") {
@@ -6165,7 +4157,6 @@ ConditionalParser = (function(){
             seenCR = false;
           }
         }
-<<<<<<< HEAD
 
         return { line: line, column: column };
       }
@@ -6180,22 +4171,6 @@ ConditionalParser = (function(){
 
           function cond(leftValue, condition, rightValue){
 
-=======
-        
-        return { line: line, column: column };
-      }
-      
-          function concat(array){
-              return array.join("");
-          }
-      
-          function trim(string){
-              return string.replace(/^\s*([\S\s]*?)\s*$/, '$1');
-          }
-      
-          function cond(leftValue, condition, rightValue){
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
               switch(trim(condition)){
                   case '==':
                       return leftValue == rightValue;
@@ -6211,26 +4186,17 @@ ConditionalParser = (function(){
                       return leftValue <= rightValue;
                   default:
                       return false;
-<<<<<<< HEAD
 
               }
 
           }
 
-=======
-      
-              }
-      
-          }
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
           function conj(leftValue, conjunction, rightValue){
               switch(trim(conjunction)){
                   case 'and':
                       return leftValue && rightValue;
                   case 'or':
                       return leftValue || rightValue;
-<<<<<<< HEAD
 
               }
           }
@@ -6239,16 +4205,6 @@ ConditionalParser = (function(){
 
       var result = parseFunctions[startRule]();
 
-=======
-      
-              }
-          }
-      
-      
-      
-      var result = parseFunctions[startRule]();
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       /*
        * The parser is now in one of the following three states:
        *
@@ -6277,11 +4233,7 @@ ConditionalParser = (function(){
         var offset = Math.max(pos, rightmostFailuresPos);
         var found = offset < input.length ? input.charAt(offset) : null;
         var errorPosition = computeErrorPosition();
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         throw new this.SyntaxError(
           cleanupExpected(rightmostFailuresExpected),
           found,
@@ -6290,7 +4242,6 @@ ConditionalParser = (function(){
           errorPosition.column
         );
       }
-<<<<<<< HEAD
 
       return result;
     },
@@ -6305,22 +4256,6 @@ ConditionalParser = (function(){
     function buildMessage(expected, found) {
       var expectedHumanized, foundHumanized;
 
-=======
-      
-      return result;
-    },
-    
-    /* Returns the parser source code. */
-    toSource: function() { return this._source; }
-  };
-  
-  /* Thrown when a parser encounters a syntax error. */
-  
-  result.SyntaxError = function(expected, found, offset, line, column) {
-    function buildMessage(expected, found) {
-      var expectedHumanized, foundHumanized;
-      
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
       switch (expected.length) {
         case 0:
           expectedHumanized = "end of input";
@@ -6333,21 +4268,12 @@ ConditionalParser = (function(){
             + " or "
             + expected[expected.length - 1];
       }
-<<<<<<< HEAD
 
       foundHumanized = found ? quote(found) : "end of input";
 
       return "Expected " + expectedHumanized + " but " + foundHumanized + " found.";
     }
 
-=======
-      
-      foundHumanized = found ? quote(found) : "end of input";
-      
-      return "Expected " + expectedHumanized + " but " + foundHumanized + " found.";
-    }
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     this.name = "SyntaxError";
     this.expected = expected;
     this.found = found;
@@ -6356,20 +4282,12 @@ ConditionalParser = (function(){
     this.line = line;
     this.column = column;
   };
-<<<<<<< HEAD
 
   result.SyntaxError.prototype = Error.prototype;
 
   return result;
 })();
 /*
-=======
-  
-  result.SyntaxError.prototype = Error.prototype;
-  
-  return result;
-})();/*
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  * PEG.js 0.7.0
  *
  * http://pegjs.majda.cz/
@@ -10896,18 +8814,13 @@ return PEG;
 
 if (typeof module !== "undefined") {
   module.exports = PEG;
-<<<<<<< HEAD
 }
 
 var Base64 = {
-=======
-}var Base64 = {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * This implementation relies on Cordova 1.5 or above implementations.
      */
-<<<<<<< HEAD
     getBase64ImageFromInput : function (input, callback) {
         var imageReader = new FileReader();
         imageReader.onloadend = function (evt) {
@@ -10927,27 +8840,6 @@ var DateTimePicker = function () {
 
     var that = {};
 
-=======
-    getBase64ImageFromInput : function(input, callback) {
-
-        var imageReader = new FileReader();
-
-        imageReader.onloadend = function(evt) {
-            if(callback)
-                callback(evt.target.result);
-        };
-
-        imageReader.readAsDataURL(input);
-    },
-    
-    formatImageSrcString : function(base64){
-        return (base64.match(/(base64)/))? base64 : "data:image/jpeg;base64," + base64;
-    }
-       
-}
-var DateTimePicker = function(){
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Regular expression for validating the time component of a timestamp prompt.
      */
@@ -10971,13 +8863,8 @@ var DateTimePicker = function(){
                leftPad(date.getMonth() + 1) + "-" +
                leftPad(date.getDate());
     };
-<<<<<<< HEAD
 
     that.createDatePicker = function (date) {
-=======
-    
-    this.createDatePicker = function(date){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         date = date || new Date();
 
         var datePicker = document.createElement('input');
@@ -10990,11 +8877,7 @@ var DateTimePicker = function(){
         if(datePicker.type === 'text' || navigator.userAgent.match(/(Android)/)){
             $(datePicker).scroller({dateFormat:'yyyy-mm-dd', dateOrder:'yymmdd'});
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         datePicker.isValid = function(){
             return datePicker.value.match(DATE_REGEX);
         };
@@ -11002,11 +8885,7 @@ var DateTimePicker = function(){
         return datePicker;
     };
 
-<<<<<<< HEAD
     that.createTimePicker = function(date){
-=======
-    this.createTimePicker = function(date){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         date = date || new Date();
 
         var timePicker = document.createElement('input');
@@ -11017,7 +8896,6 @@ var DateTimePicker = function(){
         if(timePicker.type === 'text' || navigator.userAgent.match(/(Android)/)){
             $(timePicker).scroller({preset:'time', ampm: false, timeFormat:'HH:ii'});
         }
-<<<<<<< HEAD
 
         timePicker.isValid = function(){
             return timePicker.value.match(TIME_REGEX);
@@ -11044,33 +8922,6 @@ var DateTimePicker = function(){
 
 DateTimePicker.createDateTimeForm = function(title, datePicker, timePicker){
 
-=======
-        
-        timePicker.isValid = function(){
-            return timePicker.value.match(TIME_REGEX);
-        };
-        
-        timePicker.getInput = function(){
-            return timePicker.value;
-        };
-        
-        timePicker.getHours = function(){
-            return parseInt(timePicker.getInput().split(":")[0], 10);
-        };
-        
-        timePicker.getMinutes = function(){
-            return parseInt(timePicker.getInput().split(":")[1], 10);
-        };
-        
-        
-        return timePicker;
-    };
-
-};
-
-DateTimePicker.createDateTimeForm = function(title, datePicker, timePicker){
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var form = mwf.decorator.Form(title);
 
     form.addLabel("Select Date");
@@ -11089,10 +8940,7 @@ DateTimePicker.getPaddedTime = function(date){
     return date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "" ) + date.getMinutes();
 };
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 /**
  * The class encapsulates and facilitates device detection based on the current
  * device's user agent string.
@@ -11159,13 +9007,9 @@ var DeviceDetection = (function() {
 
     return self;
 
-<<<<<<< HEAD
 }());
 
 /**
-=======
-}());/**
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  * The class is designed to facilitate flexible permanent storage of key value
  * pairs utilzing HTML5 localStorage.
  *
@@ -11173,10 +9017,7 @@ var DeviceDetection = (function() {
  * @author Zorayr Khalapyan
  * @version 10/25/2012
  */
-<<<<<<< HEAD
 var localStorage = window.localStorage;
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var LocalMap = function ( name ) {
     var that = {};
 
@@ -11190,19 +9031,11 @@ var LocalMap = function ( name ) {
     }
 
     var setMap = function ( map ) {
-<<<<<<< HEAD
         localStorage[name] = window.JSON.stringify( map );
     };
 
     that.getMap = function () {
         return window.JSON.parse( localStorage[name] );
-=======
-        localStorage[name] = JSON.stringify( map );
-    };
-
-    that.getMap = function () {
-        return JSON.parse( localStorage[name] );
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     };
 
     /**
@@ -11235,31 +9068,19 @@ var LocalMap = function ( name ) {
         var map = that.getMap();
         var size = 0, key;
         for (key in map) {
-<<<<<<< HEAD
             if (map.hasOwnProperty(key)) {
                 size += 1;
             }
-=======
-            if (map.hasOwnProperty(key)) size++;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
         return size;
     };
 
     that.erase = function () {
-<<<<<<< HEAD
         window.localStorage[name] = window.JSON.stringify({});
     };
 
     that.isSet = function (name) {
         return that.get(name) !== null;
-=======
-        localStorage[name] = JSON.stringify({});
-    };
-
-    that.isSet = function (name) {
-        return that.get(name) != null;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     };
 
     that.release = function (name) {
@@ -11281,14 +9102,9 @@ var LocalMap = function ( name ) {
 };
 
 LocalMap.destroy = function () {
-<<<<<<< HEAD
     var item;
     for (item in localStorage) {
         if (localStorage.hasOwnProperty(item)) {
-=======
-    for ( var item in localStorage ) {
-        if ( localStorage.hasOwnProperty( item ) ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             delete localStorage[ item ];
         }
     }
@@ -11297,10 +9113,7 @@ LocalMap.destroy = function () {
 LocalMap.exists = function (name) {
     return (localStorage[name]) ? true : false;
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var LocalNotificationAdapter = (function(){
 
     var that = {};
@@ -11347,16 +9160,11 @@ var LocalNotificationAdapter = (function(){
     };
 
     return that;
-<<<<<<< HEAD
 }());
-=======
-})();
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 function goToPendingSurveys(){
     window.location = "pending-surveys.html";
 }
-<<<<<<< HEAD
 
 var Logger = (function () {
 
@@ -11365,8 +9173,6 @@ var Logger = (function () {
 Logger.log = function () {
     Console.log(arguments);
 };
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 /*
  * The conscucted HTML will have the following structure:
  *
@@ -11382,13 +9188,9 @@ Logger.log = function () {
  *  </div>
  *
  */
-<<<<<<< HEAD
 var Spinner = (function () {
 
     var that = {};
-=======
-var Spinner = new (function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     /**
      * Preload spinner image.
@@ -11425,11 +9227,7 @@ var Spinner = new (function(){
      * To hide the displayed spinner, use hide_spinner().
 
      */
-<<<<<<< HEAD
     that.show = function(cancelCallback){
-=======
-    this.show = function(cancelCallback){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         if(isLoading){
             console.log("Spinner: show() canceled because spinner is already active.");
@@ -11439,11 +9237,7 @@ var Spinner = new (function(){
         }
         console.log("Spinner: Showing spinner.");
 
-<<<<<<< HEAD
         //Force to reload the GIF - otherwise, the user will notice glitches.
-=======
-        //Force to reload the GIF - otherwise, the user will notice glitches. 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         $("#spinner-img").attr('src','')
                          .attr('src', 'img/spinner.gif' + "?" + new Date().getTime());
         $("#spinner-img").show();
@@ -11485,7 +9279,6 @@ var Spinner = new (function(){
      * The method resizes the translucent background image when the orientation of
      * the device changes.
      */
-<<<<<<< HEAD
     var detectOrientation = function () {
 
         if (!window.orientation || !isLoading) {
@@ -11495,15 +9288,6 @@ var Spinner = new (function(){
 
         //This is some crazy magic that I never want to visit again.
         if (currentOrientation === null || currentOrientation !== window.orientation) {
-=======
-    var detectOrientation = function(){
-
-        if(!window.orientation || !isLoading)
-            return;
-
-        //This is some crazy magic that I never want to visit again.
-        if(currentOrientation == null || currentOrientation != window.orientation){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             var width, height, topOffset;
 
             if(isPortrait()){
@@ -11566,11 +9350,7 @@ var Spinner = new (function(){
      * Removes the spinner transparent background and also the loading sign with the
      * cancel link.
      */
-<<<<<<< HEAD
     that.hide = function(callback){
-=======
-    this.hide = function(callback){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         if(!isLoading){
             console.log("Spinner: hide() canceled because spinner is already inactive.");
@@ -11583,16 +9363,11 @@ var Spinner = new (function(){
         }
 
         console.log("Spinner: Hiding spinner.");
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         var fadeOutCallback = function(){
           $("#spinner-background,#spinner-container").remove();
             if(callback){
                 callback();
-<<<<<<< HEAD
             }
         };
 
@@ -11602,17 +9377,6 @@ var Spinner = new (function(){
             $("#spinner-background").hide();
             $("#spinner-container").hide();
 
-=======
-            }  
-        };
-        
-        cancelLink.hide();
-        
-        if($("#spinner-container").is(":visible") === false){
-            $("#spinner-background").hide();
-            $("#spinner-container").hide();
-            
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             fadeOutCallback();
         }else{
             $("#spinner-background").fadeOut(25);
@@ -11620,19 +9384,12 @@ var Spinner = new (function(){
         }
 
         //Cancel orientation detection timer.
-<<<<<<< HEAD
         if (timer) {
             clearInterval(timer);
-=======
-        if(timer){
-            clearInterval(timer);
-            delete timer;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
     };
 
     function isLandscape(){
-<<<<<<< HEAD
         return ( window.orientation === 90 || window.orientation === -90 );
     }
 
@@ -11643,19 +9400,6 @@ var Spinner = new (function(){
     return that;
 }());
 /**
-=======
-        return ( window.orientation == 90 || window.orientation == -90 );
-    }
-
-    function isPortrait(){
-        return ( window.orientation == 0 || window.orientation == 180 );
-    }
-
-
-
-
-});/**
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  * @class TouchEnabledModel
  * @author Zorayr Khalapyan
  * @version 8/9/2012
@@ -11691,21 +9435,13 @@ var TouchEnabledItemModel = (function() {
 
         $(item).bind("touchmove", function(e){
             if($(highlightItem).is("." + onTouchHighlightClass)){
-<<<<<<< HEAD
                 moveCounter += 1;
-=======
-                moveCounter++;
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 var item = e.srcElement;
                 var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
                 var elm = $(item).offset();
                 var x = touch.pageX - elm.left;
                 var y = touch.pageY - elm.top;
-<<<<<<< HEAD
                 if (moveCounter > TOUCH_MOVE_SENSITIVITY || !((x < $(item).width() && x > 0) && (y < $(item).height() && y > 0))) {
-=======
-                if(moveCounter > TOUCH_MOVE_SENSITIVITY || !((x < $(item).width() && x > 0) && (y < $(item).height() && y > 0))){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     $(highlightItem).removeClass(onTouchHighlightClass);
                 }
             }
@@ -11732,7 +9468,6 @@ var TouchEnabledItemModel = (function() {
 
     return self;
 }());
-<<<<<<< HEAD
 
 var UUIDGen = {
 
@@ -11743,16 +9478,6 @@ var UUIDGen = {
         i;
 
         for (i = 0; i < 36; i+=1) {
-=======
-var UUIDGen = {
-
-    generate : function(){
-        // http://www.ietf.org/rfc/rfc4122.txt
-        var s = [];
-        var hexDigits = "0123456789abcdef";
-        
-        for (var i = 0; i < 36; i++) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
         }
 
@@ -11765,12 +9490,8 @@ var UUIDGen = {
 
         return s.join("");
     }
-<<<<<<< HEAD
 };
 /* 
-=======
-}/* 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
  * Original script by Josh Fraser (http://www.onlineaspect.com)
  * Continued and maintained by Jon Nylander at https://bitbucket.org/pellepim/jstimezonedetect
  *
@@ -12104,10 +9825,7 @@ jstz.olson.ambiguity_list = {
     'America/Godthab' : ['America/Miquelon', 'America/Godthab']
 };
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var CampaignView = function ( campaignModel ) {
     var that = {};
     that.deleteCampaignHandler = function () {};
@@ -12133,47 +9851,28 @@ CampaignView.renderSurveyList = function (campaignModel, surveyMenu, callback) {
             callback(campaignModel.getURN(), surveyID);
         };
     };
-<<<<<<< HEAD
     var surveys = campaignModel.getSurveys(),
         surveyMenuItem, i;
     for (i = 0; i < surveys.length; i+=1) {
-=======
-    var surveys = campaignModel.getSurveys();
-    var surveyMenuItem;
-    for (var i = 0; i < surveys.length; i++) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         surveyMenuItem = surveyMenu.addMenuLinkItem(surveys[i].title, null, surveys[i].description);
         TouchEnabledItemModel.bindTouchEvent(surveyMenuItem, surveyMenuItem, openSurveyViewCallback(surveys[i].id), "menu-highlight");
     }
     return surveyMenu;
 };
-<<<<<<< HEAD
 
 var CampaignsView = function (campaignsModel) {
 
     var that = {};
 
-=======
-var CampaignsView = function (campaignsModel) {
-    
-    var that = {};
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Callback for installing a new campaign.
      */
     var installNewCampaignHandlerCallback = function (campaignURN) {
         return function () {
             that.installNewCampaignHandler(campaignURN);
-<<<<<<< HEAD
         };
     };
 
-=======
-        }
-    };
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Callback for opening an already installed campaign.
      */
@@ -12182,33 +9881,19 @@ var CampaignsView = function (campaignsModel) {
             that.openMyCampaignHandler(campaignURN);
         };
     };
-<<<<<<< HEAD
 
     that.installNewCampaignHandler = function (campaignURN) {};
     that.openMyCampaignHandler = function (campaignURN) {};
     that.refreshCampaignsListHandler = function () {};
 
-=======
-    
-    that.installNewCampaignHandler = function (campaignURN) {};   
-    that.openMyCampaignHandler = function (campaignURN) {};
-    that.refreshCampaignsListHandler = function () {};
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Displays a list of installed campaigns.
      */
     that.renderMyCampaigns = function () {
         var myCampaignsMenu = mwf.decorator.Menu("My Campaigns"),
             installedCampaigns = campaignsModel.getInstalledCampaigns(),
-<<<<<<< HEAD
             campaignModel, campaignMenuItem, campaignURN;
         for (campaignURN in installedCampaigns) {
-=======
-            campaignModel,
-            campaignMenuItem;
-        for (var campaignURN in installedCampaigns) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             campaignModel = installedCampaigns[campaignURN];
             //Ignore inactive campaigns.
             if (campaignModel.isRunning()) {
@@ -12218,24 +9903,15 @@ var CampaignsView = function (campaignsModel) {
         }
         return myCampaignsMenu;
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     that.renderAvailableCampaigns = function () {
         var container = document.createElement("div"),
             availableCampaignsMenu = mwf.decorator.Menu("Available Campaigns"),
             availableCampaigns = campaignsModel.getAvailableCampaigns(),
             campaignModel,
-<<<<<<< HEAD
             campaignMenuItem,
             campaignURN;
         for (campaignURN in availableCampaigns) {
-=======
-            campaignMenuItem;
-        for (var campaignURN in availableCampaigns) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             campaignModel = availableCampaigns[campaignURN];
             //Ignore inactive campaigns.
             if (campaignModel.isRunning()) {
@@ -12248,7 +9924,6 @@ var CampaignsView = function (campaignsModel) {
         container.appendChild(mwf.decorator.SingleClickButton("Refresh Campaigns", that.refreshCampaignsListHandler));
         return container;
     };
-<<<<<<< HEAD
 
     return that;
 };
@@ -12256,19 +9931,10 @@ var ChangeServerView = function( servers ) {
 
     var that = {};
 
-=======
-    
-    return that;
-};var ChangeServerView = function( servers ) {
-    
-    var that = {};
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Handler for the save button. Should be implemented in the controller.
      */
     that.saveButtonHandler = function() {};
-<<<<<<< HEAD
 
     that.render = function( ) {
         var form = mwf.decorator.Form("Available Servers"),
@@ -12276,14 +9942,6 @@ var ChangeServerView = function( servers ) {
             option, i;
         for (i = 0; i < servers.length; i+=1) {
             option = document.createElement('option');
-=======
-    
-    that.render = function( ) {
-        var form = mwf.decorator.Form("Available Servers");
-        var select = document.createElement("select");
-        for( var i = 0; i < servers.length; i++ ){
-            var option = document.createElement('option');
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             option.value = servers[i];
             option.innerHTML = servers[i];
             select.appendChild(option);
@@ -12300,7 +9958,6 @@ var ChangeServerView = function( servers ) {
         return form;
     };
 
-<<<<<<< HEAD
     return that;
 };
 
@@ -12318,33 +9975,12 @@ var HelpMenuView = function(sections){
         for (i = 0; i < sections.length; i+=1) {
             menuItem = menu.addMenuLinkItem(sections[i].title, null, null);
             TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, openHelpSectionCallback(i), "menu-highlight");
-=======
-    return that;    
-};
-
-var HelpMenuView = function(sections){
-    var self = {};
-    self.render = function(){
-        var menu = mwf.decorator.Menu('Help Menu');
-        var menuItem; 
-        var openHelpSectionCallback = function(index){
-            return function(){
-                PageNavigation.openHelpSectionView(index);
-            }
-        };
-        for(var i = 0; i < sections.length; i++){
-            menuItem = menu.addMenuLinkItem(sections[i].title, null, null);
-            TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, openHelpSectionCallback(i), "menu-highlight");   
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
         return menu;
     };
     return self;
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var HelpSectionView = function (section) {
     var that = {};
     that.render = function () {
@@ -12365,10 +10001,7 @@ var HelpSectionView = function (section) {
     };  
     return that;
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 var ProfileView = function( ) {
     
     var that = {};
@@ -12402,7 +10035,6 @@ var ProfileView = function( ) {
     
     return that;
 };
-<<<<<<< HEAD
 
 var PromptView = (function () {
 
@@ -12461,88 +10093,27 @@ PromptView.createChoiceMenu = function (promptModel, isSingleChoice, isCustom) {
             menu.addMenuCheckboxItem(promptModel.getID(),       //Name
                                      properties[i].key,    //Value
                                      properties[i].label); //Label
-=======
-var PromptView = function ( promptModel ) {
-
-    var that = {};
-    
-    /**
-     * Returns true if rendering for the current prompt is supported.
-     * @return true if rendering for the current prompt is supported; false,
-     *         otherwise.
-     */
-    that.renderSupported = function(){
-       return typeof handlers[prompt.getType()] === 'function';
-    };
-
-    /**
-     *
-     */
-    that.render = function() {
-        return (this.renderSupported())? handlers[prompt.getType()](prompt) :
-                                         handlers.unsupported(prompt);
-    };
-    
-    return that;
-};
-
-PromptView.createChoiceMenu = function (promptModel, isSingleChoice, isCustom) {
-
-    var properties = promptModel.getProperties();
-
-    var menu = mwf.decorator.Menu(promptModel.getText());
-
-    for (var i = 0; i < properties.length; i += 1) {
-
-        //Handle single choice prompts.
-        if(isSingleChoice){
-            menu.addMenuRadioItem(prompt.getID(),        //Name
-                                    properties[i].key,     //Value
-                                    properties[i].label);  //Label
-
-        //Handle multiple choice prompts.
-        } else {
-            menu.addMenuCheckboxItem(prompt.getID(),       //Name
-                                        properties[i].key,    //Value
-                                        properties[i].label); //Label
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
 
     }
 
-<<<<<<< HEAD
     promptModel.getResponse = function () {
-=======
-
-    prompt.getResponse = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         //If the prompt type allows custom choice, then extract the value
         //of the user selection instead of the provided answer key.
         var type = (isCustom) ? 'label' : 'value';
 
         //Handle single choice answers.
-<<<<<<< HEAD
         if (isSingleChoice) {
-=======
-        if(isSingleChoice){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             return (menu.getSelectedOptions())[0][type];
 
         //Handle multiple choice answers.
         } else {
-<<<<<<< HEAD
             var responses = [],
                 selection = menu.getSelectedOptions(),
                 i;
 
             for (i = 0; i < selection.length; i += 1) {
-=======
-            var responses = [];
-            var selection = menu.getSelectedOptions();
-
-            for(var i = 0; i < selection.length; i++){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 responses.push(selection[i][type]);
             }
 
@@ -12555,29 +10126,17 @@ PromptView.createChoiceMenu = function (promptModel, isSingleChoice, isCustom) {
 
 };
 
-<<<<<<< HEAD
 PromptView.createCustomChoiceMenu = function (promptModel, choice_menu, isSingleChoice) {
-=======
-var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     //Add an option in the menu for creating new options.
     choice_menu.addMenuIconItem('Add custom option', null, 'img/plus.png');
 
-<<<<<<< HEAD
     choice_menu.getLastMenuItem().onclick = function () {
-=======
-    choice_menu.getLastMenuItem().onclick = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         form.style.display = 'block';
     };
 
     //Create the form for allowing the user to add a new option.
-<<<<<<< HEAD
     var form = mwf.decorator.Form('Custom Choice');
-=======
-    var form = mwfd.Form('Custom Choice');
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     //By default the custom choice form is hidden.
     form.style.display = 'none';
@@ -12585,11 +10144,7 @@ var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
     //Add a new text box input field for specifying the new choice.
     form.addTextBox('new-choice', 'new-choice');
 
-<<<<<<< HEAD
     var hideCustomChoiceMenu = function () {
-=======
-    var hideCustomChoiceMenu = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         //Hide the 'add option button'.
         form.style.display = 'none';
 
@@ -12598,36 +10153,21 @@ var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
 
     };
 
-<<<<<<< HEAD
     var addProperty = function () {
-=======
-    var addProperty = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         //Get the value specified by the user.
         var newChoice = document.getElementById('new-choice').value;
 
-<<<<<<< HEAD
         if (newChoice.length === 0) {
-=======
-        if(newChoice.length == 0){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             MessageDialogController.showMessage('Please specify an option to add.');
             return false;
         }
 
         //Create a new property with the value specified.
-<<<<<<< HEAD
         var prop = promptModel.addProperty(newChoice);
 
         //If the property is invalid, alert the user and cancel the add.
         if (!prop) {
-=======
-        var prop = prompt.addProperty(newChoice);
-
-        //If the property is invalid, alert the user and cancel the add.
-        if(!prop){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             MessageDialogController.showMessage('Option with that label already exists.');
             return false;
         }
@@ -12638,17 +10178,10 @@ var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
 
         //Depending on if the choices are single-choice or multiple-choice,
         //add either a radio button menu item or a checkbox menu item.
-<<<<<<< HEAD
         if (isSingleChoice) {
             choice_menu.addMenuRadioItem(promptModel.getID(), prop.key, prop.label);
         }else{
             choice_menu.addMenuCheckboxItem(promptModel.getID(), prop.key, prop.label);
-=======
-        if(isSingleChoice){
-            choice_menu.addMenuRadioItem(prompt.getID(), prop.key, prop.label);
-        }else{
-            choice_menu.addMenuCheckboxItem(prompt.getID(), prop.key, prop.label);
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
 
         hideCustomChoiceMenu();
@@ -12662,11 +10195,7 @@ var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
     form.addInputButton('Cancel', hideCustomChoiceMenu);
 
     //Cancel's form's default action to prevent the page from refreshing.
-<<<<<<< HEAD
     $(form).submit(function (e) {
-=======
-    $(form).submit(function(e){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         addProperty();
         e.preventDefault();
         return false;
@@ -12680,7 +10209,6 @@ var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
     return container;
 };
 
-<<<<<<< HEAD
 
 PromptView.renderHoursBeforeNow = function (promptModel) {
     return PromptView.renderNumberPrompt(promptModel);
@@ -12690,8 +10218,6 @@ PromptView.renderHoursBeforeNow = function (promptModel) {
 /**
  * return createCustomChoiceMenu(prompt, this.multi_choice(prompt, true), false);
  */
-=======
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 PromptView.renderMultiChoicePrompt = function (promptModel, isCustom) {
 
     var choiceMenu = PromptView.createChoiceMenu(promptModel, false, isCustom);
@@ -12709,23 +10235,14 @@ PromptView.renderMultiChoicePrompt = function (promptModel, isCustom) {
     return choiceMenu;
 };
 
-<<<<<<< HEAD
 
 PromptView.renderNumberPrompt = (function () {
 
-=======
-PromptView.renderNumberPrompt = (function () {
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * This value determines the range that will default to number picker.
      */
     var MAX_RANGE_FOR_NUMBER_PICKER = 20;
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     /**
      * Returns the default value for number prompts. If the default value for
      * the current prompt is not specified, then the method will use the minimum
@@ -12741,11 +10258,7 @@ PromptView.renderNumberPrompt = (function () {
             return 0;
         }
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var createNumberPicker = function (promptModel, defaultValue) {
 
         //Create the actual number counter field.
@@ -12783,11 +10296,7 @@ PromptView.renderNumberPrompt = (function () {
 
         updateSignStyle();
 
-<<<<<<< HEAD
         var menu = mwf.decorator.Menu(prompt.getText());
-=======
-        var menu = mwfd.Menu(prompt.getText());
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         //Add the plus sign to the menu and configure the click event handler
         //for this item.
@@ -12826,11 +10335,7 @@ PromptView.renderNumberPrompt = (function () {
         TouchEnabledItemModel.bindTouchEvent(menuMinusItem, minus, subtractCallback);
 
         var container = document.createElement('div');
-<<<<<<< HEAD
         container.appendChild(mwf.decorator.SingleClickButton("Switch to Number Input", function(){
-=======
-        container.appendChild(mwfd.SingleClickButton("Switch to Number Input", function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             container.innerHTML = "";
             container.appendChild(createNumberInput(promptModel.getResponse()));
         }));
@@ -12852,19 +10357,11 @@ PromptView.renderNumberPrompt = (function () {
         };
 
         var isInteger = function (s) {
-<<<<<<< HEAD
             return String(s).search (/^(\+|-)?\d+\s*$/) !== -1;
         };
 
         var isSign = function (s) {
             return String(s).search (/^(\+|-)?$/) !== -1;
-=======
-            return String(s).search (/^(\+|-)?\d+\s*$/) !== -1
-        };
-
-        var isSign = function (s) {
-            return String(s).search (/^(\+|-)?$/) !== -1
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         };
 
         var validateNumberInputKeyPress = function(evt) {
@@ -12893,11 +10390,7 @@ PromptView.renderNumberPrompt = (function () {
         textBox.value = defaultValue || getNumberPromptDefaultValue(promptModel);
         textBox.onkeypress = validateNumberInputKeyPress;
 
-<<<<<<< HEAD
         var form = mwf.decorator.Form(prompt.getText());
-=======
-        var form = mwfd.Form(prompt.getText());
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         form.addLabel(rangeMessage);
         form.addItem(textBox);
 
@@ -12914,11 +10407,7 @@ PromptView.renderNumberPrompt = (function () {
         };
 
         var container = document.createElement('div');
-<<<<<<< HEAD
         container.appendChild(mwf.decorator.SingleClickButton("Switch to Number Picker", function () {
-=======
-        container.appendChild(mwfd.SingleClickButton("Switch to Number Picker", function () {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
            container.innerHTML = "";
            container.appendChild(createNumberPicker(promptModel, (isValueInRange(textBox.value))? promptModel.getResponse():false));
         }));
@@ -12926,11 +10415,7 @@ PromptView.renderNumberPrompt = (function () {
         return container;
 
     };
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     return function (promptModel) {
         if (promptModel.getMaxValue() - promptModel.getMinValue() <= MAX_RANGE_FOR_NUMBER_PICKER) {
             return createNumberPicker(promptModel);
@@ -12939,12 +10424,8 @@ PromptView.renderNumberPrompt = (function () {
         }
     };
 
-<<<<<<< HEAD
 }());
 
-=======
-})();
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
 
 PromptView.renderPhotoPrompt = function (promptModel) {
@@ -12981,7 +10462,6 @@ PromptView.renderPhotoPrompt = function (promptModel) {
 
             var onSuccess = function (imageData) {
                 recordImage(imageData, true);
-<<<<<<< HEAD
             };
 
             var onFail = function (message) {
@@ -12990,16 +10470,6 @@ PromptView.renderPhotoPrompt = function (promptModel) {
 
             navigator.camera.getPicture(onSuccess, onFail, {quality: 25,
                 destinationType: navigator.Camera.DestinationType.DATA_URL
-=======
-            }
-
-            var onFail = function (message) {
-                MessageDialogController.showMessage('Failed because: ' + message);
-            }
-
-            navigator.camera.getPicture(onSuccess, onFail, {quality: 25,
-                destinationType: Camera.DestinationType.DATA_URL
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             });
         });
 
@@ -13025,11 +10495,7 @@ PromptView.renderPhotoPrompt = function (promptModel) {
                 MessageDialogController.showMessage("Please select an image.");
             }
 
-<<<<<<< HEAD
         };
-=======
-        }
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
         container.appendChild(fileInputForm);
     }
@@ -13051,18 +10517,12 @@ PromptView.renderPhotoPrompt = function (promptModel) {
 
 };
 
-<<<<<<< HEAD
 
 
 //return createCustomChoiceMenu(prompt, this.single_choice(prompt, true), true);
 PromptView.renderSingleChoicePrompt = function (promptModel, isCustom) {
     
     var choiceMenu = PromptView.createChoiceMenu(promptModel, true, isCustom);
-=======
-PromptView.renderSingleChoicePrompt = function (promptModel, isCustom) {
-    
-    var choiceMenu = createChoiceMenu(promptModel, true, isCustom);
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     promptModel.isValid = function () {
 
@@ -13076,13 +10536,9 @@ PromptView.renderSingleChoicePrompt = function (promptModel, isCustom) {
     return choiceMenu;
     
 };
-<<<<<<< HEAD
 
   
 
-=======
-  
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 PromptView.renderTextPrompt = function (promptModel) {
 
     //Get the minimum and maximum text length allowed values for this
@@ -13124,12 +10580,8 @@ PromptView.renderTextPrompt = function (promptModel) {
 
     return form;
 
-<<<<<<< HEAD
 };
 PromptView.renderTimestampPrompt = function (promptModel) {
-=======
-};PromptView.renderTimestampPrompt = function (promptModel) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     var date = new Date();
     var dateTimePicker = new DateTimePicker();
@@ -13156,12 +10608,8 @@ PromptView.renderTimestampPrompt = function (promptModel) {
 
     return DateTimePicker.createDateTimeForm(prompt.getText(), datePicker, timePicker);
 
-<<<<<<< HEAD
 };
 PromptView.renderUnsupportedPrompt = function (promptModel) {
-=======
-};PromptView.renderUnsupportedPrompt = function (promptModel) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
 
     var menu = mwf.decorator.Menu(promptModel.getText());
 
@@ -13172,7 +10620,6 @@ PromptView.renderUnsupportedPrompt = function (promptModel) {
     };
 
     return menu;
-<<<<<<< HEAD
 };
 var ReminderListView = function(reminders, listTitle, onReminderClickCallback){
     var self = {};
@@ -13190,198 +10637,12 @@ var ReminderListView = function(reminders, listTitle, onReminderClickCallback){
         var i, title, date, time, menuItem;
 
         for (i = 0; i < reminders.length; i += 1) {
-=======
-};PromptHandler.Handlers = function(){
-
-
-    var createChoiceMenu = function(prompt, isSingleChoice, isCustom){
-
-        var properties = prompt.getProperties();
-
-        var menu = mwfd.Menu(prompt.getText());
-
-        for(var i = 0; i < properties.length; i++){
-
-            //Handle single choice prompts.
-            if(isSingleChoice){
-                menu.addMenuRadioItem(prompt.getID(),        //Name
-                                      properties[i].key,     //Value
-                                      properties[i].label);  //Label
-
-            //Handle multiple choice prompts.
-            } else {
-                menu.addMenuCheckboxItem(prompt.getID(),       //Name
-                                         properties[i].key,    //Value
-                                         properties[i].label); //Label
-            }
-
-        }
-
-
-        prompt.getResponse = function(){
-
-            //If the prompt type allows custom choice, then extract the value
-            //of the user selection instead of the provided answer key.
-            var type = (isCustom) ? 'label' : 'value';
-
-            //Handle single choice answers.
-            if(isSingleChoice){
-                return (menu.getSelectedOptions())[0][type];
-
-            //Handle multiple choice answers.
-            } else {
-                var responses = [];
-                var selection = menu.getSelectedOptions();
-
-                for(var i = 0; i < selection.length; i++){
-                    responses.push(selection[i][type]);
-                }
-
-                return responses;
-            }
-
-        };
-
-        return menu;
-
-    };
-
-    var createCustomChoiceMenu = function(prompt, choice_menu, isSingleChoice){
-
-        //Add an option in the menu for creating new options.
-        choice_menu.addMenuIconItem('Add custom option', null, 'img/plus.png');
-
-        choice_menu.getLastMenuItem().onclick = function(){
-            form.style.display = 'block';
-        };
-
-        //Create the form for allowing the user to add a new option.
-        var form = mwfd.Form('Custom Choice');
-
-        //By default the custom choice form is hidden.
-        form.style.display = 'none';
-
-        //Add a new text box input field for specifying the new choice.
-        form.addTextBox('new-choice', 'new-choice');
-
-        var hideCustomChoiceMenu = function(){
-            //Hide the 'add option button'.
-            form.style.display = 'none';
-
-            //Clear the user input textbox.
-            document.getElementById('new-choice').value = "";
-
-        };
-
-        var addProperty = function(){
-
-            //Get the value specified by the user.
-            var newChoice = document.getElementById('new-choice').value;
-
-            if(newChoice.length == 0){
-                MessageDialogController.showMessage('Please specify an option to add.');
-                return false;
-            }
-
-            //Create a new property with the value specified.
-            var prop = prompt.addProperty(newChoice);
-
-            //If the property is invalid, alert the user and cancel the add.
-            if(!prop){
-                MessageDialogController.showMessage('Option with that label already exists.');
-                return false;
-            }
-
-            var addOptionItem = choice_menu.getLastMenuItem();
-
-            choice_menu.removeMenuItem(addOptionItem);
-
-            //Depending on if the choices are single-choice or multiple-choice,
-            //add either a radio button menu item or a checkbox menu item.
-            if(isSingleChoice){
-                choice_menu.addMenuRadioItem(prompt.getID(), prop.key, prop.label);
-            }else{
-                choice_menu.addMenuCheckboxItem(prompt.getID(), prop.key, prop.label);
-            }
-
-            hideCustomChoiceMenu();
-
-            choice_menu.addMenuItem(addOptionItem, true);
-
-            return true;
-        };
-
-        form.addInputButton('Create New Choice', addProperty);
-        form.addInputButton('Cancel', hideCustomChoiceMenu);
-
-        //Cancel's form's default action to prevent the page from refreshing.
-        $(form).submit(function(e){
-           addProperty();
-           e.preventDefault();
-           return false;
-        });
-
-        //This continer will hold both prexisting options and the new option
-        //form.
-        var container = document.createElement('div');
-        container.appendChild(choice_menu);
-        container.appendChild(form);
-        return container;
-    };
-
-
-
-
-
-
-    this.single_choice_custom = function(prompt){
-        return createCustomChoiceMenu(prompt, this.single_choice(prompt, true), true);
-    };
-
-    this.multi_choice_custom = function(prompt){
-        return createCustomChoiceMenu(prompt, this.multi_choice(prompt, true), false);
-    };
-
-    this.hours_before_now = function(prompt){
-        return this.number(prompt);
-    };
-
-
-   
-
-
-
-    
-
-
-
-
-}
-
-var ReminderListView = function(reminders, listTitle, onReminderClickCallback){
-    var self = {};
-    
-    self.render = function(menu){
-        
-        menu = menu || mwf.decorator.Menu(listTitle);
-        
-        var onReminderClickCallbackClosure = function(reminder){
-            return function(){
-                onReminderClickCallback(reminder);
-            }
-        };
-        
-        var i, title, date, time, menuItem;
-        
-        for(i = 0; i < reminders.length; i++){   
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             title = reminders[i].getTitle();
             date  = reminders[i].getDate();
             time   = "Reminder set for " + DateTimePicker.getPaddedTime(date) + ".";
             menuItem = menu.addMenuLinkItem(title, null, time);
             TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onReminderClickCallbackClosure(reminders[i]), "menu-highlight");
         }
-<<<<<<< HEAD
 
         return menu;
 
@@ -13401,25 +10662,6 @@ var ReminderView = function (reminder, controller) {
             var option = document.createElement('option');
             option.value = i;
             option.innerHTML = i + " hour" + ((i !== 1) ? "s" : "");
-=======
-        
-        return menu;
-        
-    };
-    
-    return self;
-};var ReminderView = function(reminder, controller){
-
-    var self = this;
-
-    var createSuppressionWindowSelectInput = function(){
-        var select = document.createElement('select');
-        select.className = "supression-window-select";
-        for(var i = 1; i <= 24; i++){
-            var option = document.createElement('option');
-            option.value = i;
-            option.innerHTML = i + " hour" + ((i != 1) ? "s" : "");
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             select.appendChild(option);
 
             if(i === reminder.getSupressionWindow()){
@@ -13432,7 +10674,6 @@ var ReminderView = function (reminder, controller) {
         return select;
     };
 
-<<<<<<< HEAD
     var createReminderRecurrenceSelectInput = function () {
         var select = document.createElement('select'),
             option,
@@ -13448,22 +10689,6 @@ var ReminderView = function (reminder, controller) {
             }
         }
         select.getInput = function () {
-=======
-    var createReminderRecurrenceSelectInput = function(){
-        var select = document.createElement('select');
-        select.className = "recurrence-select";
-        for(var i = 1; i < 31; i++){
-            var option = document.createElement('option');
-            option.value = i;
-            option.innerHTML = i;
-            select.appendChild(option);
-
-            if(i === reminder.getRecurrence()){
-                option.selected = "selected";
-            }
-        }
-        select.getInput = function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             return select.options[select.selectedIndex].value;
         };
         return select;
@@ -13479,7 +10704,6 @@ var ReminderView = function (reminder, controller) {
             return option;
         };
 
-<<<<<<< HEAD
         var select = document.createElement('select'),
         campaigns = CampaignsModel.getInstalledCampaigns(),
         survey, surveys, campaignURN, option, i, j;
@@ -13494,20 +10718,6 @@ var ReminderView = function (reminder, controller) {
                 for (j = 0; j < surveys.length; j+=1) {
                     survey = surveys[j];
                     option = createOption(survey.title, survey.id, campaignURN);
-=======
-        var select = document.createElement('select');
-        select.className = "reminder-survey-select";
-        var campaigns = Campaigns.getInstalledCampaigns();
-        select.appendChild(createOption("Select a Survey to Continue"));
-
-        for(var i = 0; i < campaigns.length; i++){
-            if(campaigns[i].isRunning()){
-                var surveys = campaigns[i].getSurveys();
-                var campaignURN = campaigns[i].getURN();
-                for(var j = 0; j < surveys.length; j++){
-                    var survey = surveys[j];
-                    var option = createOption(survey.title, survey.id, campaignURN);
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     if(reminder.getCampaignURN() === campaignURN && reminder.getSurveyID() === survey.id){
                         option.selected = "selected";
                     }
@@ -13607,7 +10817,6 @@ var ReminderView = function (reminder, controller) {
         MessageDialogController.showConfirm( confirmMessage, callback, "Yes,No" );
     };
 
-<<<<<<< HEAD
     that.render = function() {
         var timePicker = createTimePickerInput(),
             surveySelect = createSurveySelectInput(),
@@ -13616,16 +10825,6 @@ var ReminderView = function (reminder, controller) {
             weekendsCheckbox = createExcludeWeekendsChecbkoxInput(),
             inputs = mwf.decorator.Form("Create New Reminder");
 
-=======
-    self.render = function() {
-        var timePicker = createTimePickerInput();
-        var surveySelect = createSurveySelectInput();
-        var suppressionSelect = createSuppressionWindowSelectInput();
-        var recurrenceSelect = createReminderRecurrenceSelectInput();
-        var weekendsCheckbox = createExcludeWeekendsChecbkoxInput();
-
-        var inputs = mwf.decorator.Form("Create New Reminder");
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         inputs.addLabel("Reminder Survey");
         inputs.addItem(surveySelect);
         inputs.addLabel("Select Time");
@@ -13652,7 +10851,6 @@ var ReminderView = function (reminder, controller) {
 
     };
 
-<<<<<<< HEAD
     return that;
 };
 
@@ -13682,34 +10880,6 @@ var RemindersView = function (reminders) {
             TouchEnabledItemModel.bindTouchEvent(noAvailableSurveysMenuItem, noAvailableSurveysMenuItem, PageNavigation.openAvailableCampaignsView, "menu-highlight");
         } else if (reminders.length > 0) {
             for (i = 0; i < reminders.length; i+=1) {
-=======
-    return self;
-};var RemindersView = function(reminders){
-
-    var self = {};
-    
-    var newReminderCallback = function(){
-        PageNavigation.openNewReminderView();
-    };
-    
-    var editReminderCallback = function(reminder){
-        return function(){
-            PageNavigation.openReminderView(reminder.getUUID());
-        };
-    };
-    
-    self.render = function(){
-        
-        var numInstalledCampaigns = Campaigns.getInstalledCampaignsCount();
-        var menu = mwf.decorator.Menu("Available Reminders");
-        
-        if(numInstalledCampaigns === 0){
-            var noAvailableSurveysMenuItem = menu.addMenuLinkItem("No Available Surveys", null, "Please install a campaign, to create custom reminders.");
-            TouchEnabledItemModel.bindTouchEvent(noAvailableSurveysMenuItem, noAvailableSurveysMenuItem, PageNavigation.openAvailableCampaignsView, "menu-highlight"); 
-        }else if(reminders.length > 0){
-            var title, date, time, reminderMenuItem;
-            for(var i = 0; i < reminders.length; i++){   
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 title = reminders[i].getTitle();
                 date  = reminders[i].getDate();
                 time   = "Reminder set for " + DateTimePicker.getPaddedTime(date) + ".";
@@ -13720,7 +10890,6 @@ var RemindersView = function (reminders) {
             var noReminderFoundMenuItem = menu.addMenuLinkItem("No Reminder Found", null, "Click to add a new reminder.");
             TouchEnabledItemModel.bindTouchEvent(noReminderFoundMenuItem, noReminderFoundMenuItem, newReminderCallback, "menu-highlight");
         }
-<<<<<<< HEAD
 
         container.appendChild(menu);
         if (numInstalledCampaigns > 0) {
@@ -13742,35 +10911,11 @@ var SurveyListView = function(surveys, title, onSurveyClickCallback){
     var emptyListDetails = null;
     var emptyListClickCallback = null;
 
-=======
-        
-        var container = document.createElement('div');
-        container.appendChild(menu);
-        if(numInstalledCampaigns > 0){
-            container.appendChild(mwf.decorator.SingleClickButton("Add Reminder", newReminderCallback));
-        }
-        return container;
-        
-    };
-    
-    return self;
-};
-
-var SurveyListView = function(surveys, title, onSurveyClickCallback){
-    
-    var self = {};
-    
-    var emptyListText = "No Surveys Found";
-    var emptyListDetails = null;
-    var emptyListClickCallback = null;
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     self.setEmptyListViewParameters = function(listText, listDetails, listClickCallback){
         emptyListText = listText;
         emptyListDetails = listDetails;
         emptyListClickCallback = listClickCallback;
     };
-<<<<<<< HEAD
 
     self.render = function(menu){
 
@@ -13779,35 +10924,18 @@ var SurveyListView = function(surveys, title, onSurveyClickCallback){
         if (surveys.length > 0) {
             var onSurveyClickCallbackClosure = function (survey) {
                 return function () {
-=======
-    
-    self.render = function(menu){
-        
-        menu = menu || mwf.decorator.Menu(title);
-        var menuItem;
-        if(surveys.length > 0) {
-            var onSurveyClickCallbackClosure = function(survey){
-                return function(){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                     PageNavigation.openSurveyView(survey.getCampaign().getURN(), survey.getID());
                 };
             };
 
-<<<<<<< HEAD
             for(i = 0; i < surveys.length; i+=1){
                 menuItem = menu.addMenuLinkItem(surveys[i].getTitle(), null, surveys[i].getDescription());
                 TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallbackClosure(surveys[i]), "menu-highlight");
-=======
-            for(var i = 0; i < surveys.length; i++){
-                menuItem = menu.addMenuLinkItem(surveys[i].getTitle(), null, surveys[i].getDescription());
-                TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallbackClosure(surveys[i]), "menu-highlight");   
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             }
         }else if (emptyListText !== null) {
             menuItem = menu.addMenuLinkItem(emptyListText, null, emptyListDetails);
             TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, emptyListClickCallback, "menu-highlight");
         }
-<<<<<<< HEAD
 
         return menu;
     };
@@ -13815,14 +10943,6 @@ var SurveyListView = function(surveys, title, onSurveyClickCallback){
     return self;
 };
 var SurveyResponseView = function(surveyResponseController){
-=======
-        
-        return menu;
-    };
-    
-    return self;
-};var SurveyResponseView = function(surveyResponseController){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var self = {};
 
     var campaign = surveyResponseController.getCampaign();
@@ -13845,7 +10965,6 @@ var SurveyResponseView = function(surveyResponseController){
     };
 
     var renderUserResponsesView = function(){
-<<<<<<< HEAD
         var userResponsesView = mwf.decorator.Menu("User Responses"),
             promptID,
             prompt,
@@ -13856,15 +10975,6 @@ var SurveyResponseView = function(surveyResponseController){
 
             // Don't display prompts that were conditionally not displayed.
             if (value === SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE) {
-=======
-        var userResponsesView = mwf.decorator.Menu("User Responses");
-        for (var promptID in surveyResponseModel.data._responses) {
-            var prompt = survey.getPrompt(promptID);
-            var value  = surveyResponseModel.data._responses[promptID].value;
-
-            // Don't display prompts that were conditionally not displayed.
-            if( value === SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                 continue;
             }
 
@@ -13899,12 +11009,8 @@ var SurveyResponseView = function(surveyResponseController){
     };
 
     return self;
-<<<<<<< HEAD
 };
 var SurveyView = function( surveyModel ) {
-=======
-};var SurveyView = function( surveyModel ) {
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     
     var that = {};
     
@@ -13925,7 +11031,6 @@ var SurveyView = function( surveyModel ) {
     };
     
     return that;
-<<<<<<< HEAD
 };
 var UploadQueueView = function(uploadQueueController){
     var self = {};
@@ -13934,25 +11039,12 @@ var UploadQueueView = function(uploadQueueController){
 
     var uploadQueueMenuTitle = "Pending Uploads";
 
-=======
-};var UploadQueueView = function(uploadQueueController){
-    var self = {};
-    
-    var pendingResponses = uploadQueueController.getPendingResponses();
-    
-    var uploadQueueMenuTitle = "Pending Uploads";
-    
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     var renderEmptyUploadQueueView = function(){
         var emptyUploadQueueView = mwf.decorator.Content(uploadQueueMenuTitle);
         emptyUploadQueueView.addTextBlock('Upload queue is empty.');
         return emptyUploadQueueView;
     };
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
     self.render = function(){
         var queueMenu = mwf.decorator.Menu(uploadQueueMenuTitle);
         var onSurveyClickCallback = function(response){
@@ -13960,47 +11052,26 @@ var UploadQueueView = function(uploadQueueController){
                 PageNavigation.openSurveyResponseView(response.getSurveyKey());
             };
         };
-<<<<<<< HEAD
         var survey, response, details, menuItem, uuid;
         for(uuid in pendingResponses){
-=======
-        var survey, response, details, menuItem;
-        for(var uuid in pendingResponses){
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
             survey   = pendingResponses[uuid].survey;
             response = pendingResponses[uuid].response;
             details  = "Submitted on " + response.getSubmitDateString() + ".";
             menuItem = queueMenu.addMenuLinkItem(survey.getTitle(), null, details);
-<<<<<<< HEAD
             TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallback(response), "menu-highlight");
-=======
-            TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallback(response), "menu-highlight");   
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         }
 
         var container = document.createElement('div');
         if(queueMenu.size() > 0){
             container.appendChild(queueMenu);
-<<<<<<< HEAD
             container.appendChild(mwf.decorator.DoubleClickButton("Delete All", uploadQueueController.deleteAllCallback,
-=======
-            container.appendChild(mwf.decorator.DoubleClickButton("Delete All", uploadQueueController.deleteAllCallback, 
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
                                                                   "Upload All", uploadQueueController.uploadAllCallback));
         } else {
             container.appendChild(renderEmptyUploadQueueView());
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
         container.appendChild(mwf.decorator.SingleClickButton("Dashboard", PageNavigation.openDashboard));
         return container;
     };
     return self;
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 2fcd04824df73d25935bab28f07f3f455ec1568c
