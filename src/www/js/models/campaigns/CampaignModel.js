@@ -1,14 +1,15 @@
+
 var CampaignModel = function (campaignURN) {
-    
+
     var that = {};
-    
+
     var metadata = (new LocalMap("all-campaigns").get(campaignURN));
     var campaign = (new LocalMap("campaign-configurations")).get(campaignURN);
-    
+
     /**
      * Returns surveys associated with this campaign.
      */
-    that.getSurveys = function (){
+    that.getSurveys = function () {
 
         //Get the list of surveys from the campaign.
         var surveys  = campaign.surveys.survey;
@@ -31,13 +32,13 @@ var CampaignModel = function (campaignURN) {
     that.getSurvey = function (id) {
 
        //Get a list of all the possible surveys.
-       var surveys = that.getSurveys();
+       var surveys = that.getSurveys(), i;
 
        //Iterate through the list of retrieved surveys. If a ID match is found,
        //return the survey.
-       for (var i = 0; i < surveys.length; i++) {
-          if (surveys[i].id == id) {
-              return SurveyModel( surveys[i], that );
+       for (i = 0; i < surveys.length; i+=1) {
+          if (surveys[i].id === id) {
+              return SurveyModel(surveys[i], that);
           }
        }
 
@@ -74,4 +75,87 @@ var CampaignModel = function (campaignURN) {
     };
 
     return that;
+};
+
+/**
+ *
+ *
+ */
+CampaignModel.install = function (urn, onSuccess, onError) {
+
+    Spinner.show();
+
+    var _onError = function(response){
+
+        Spinner.hide(function(){
+            if(onError){
+                onError(response);
+            }
+        });
+    };
+
+    var _onSuccess = function(response) {
+
+        Spinner.hide(function(){
+
+            if(response.result === "success"){
+
+                var installedCampaigns = new LocalMap("installed-campaigns");
+                installedCampaigns.set(urn, Math.round(new Date().getTime() / 1000));
+
+                var campaignConfigurations = new LocalMap("campaign-configurations");
+                campaignConfigurations.set(urn, CampaignModel.parse(response.data[urn].xml));
+
+                if(onSuccess){
+                    onSuccess();
+                }
+            }
+        });
+
+
+
+    };
+
+    ServiceController.serviceCall(
+         "POST",
+         ConfigManager.getCampaignReadUrl(),
+         {
+             user:            auth.getUsername(),
+             password:        auth.getHashedPassword(),
+             client:          ConfigManager.getClientName(),
+             campaign_urn_list: urn,
+             output_format:   'long'
+         },
+         "JSON",
+         _onSuccess,
+         _onError
+    );
+
+};
+
+CampaignModel.parse = function(campaignXML){
+
+    /*
+     * There is apparently a very weird problem running JavaScript within
+     * PhoneGap – the engine is so restrictive that when encountering the word
+     * ‘default’, used within the prompt’s XML configuration file as a property
+     * storing the default value, it interprets it as a keyword crushing the
+     * system. This renders the XML2JSON conversion impossible. The only
+     * solution I currently found was to replace all ‘default’  parameters within
+     * the XML string to ‘def’ prior to converting to JSON. I am assuming the
+     * problem is from the XML2JSON plugin’s use of the dot operator instead of
+     * the array-access syntax to do the parsing, but debugging the plugin is
+     * not working – there are only two xml->json parsers and I have tested
+     * both. Everything works fine on the desktop side, but once placed within
+     * PhoneGap the bug comes up.
+     */
+    var cleanXML = campaignXML.replace(/<default>/g, "<defaultValue>")
+                              .replace(/<\/default>/g, "</defaultValue>")
+                              .replace(/<default\/>/g, "<defaultValue/>");
+
+    //Convert the XML configuration to a JSON representation.
+    var json = $.xml2json.parser(cleanXML);
+
+    return json.campaign;
+
 };

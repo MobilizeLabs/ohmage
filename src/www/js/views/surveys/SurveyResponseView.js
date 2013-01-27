@@ -21,13 +21,16 @@ var SurveyResponseView = function(surveyResponseController){
     };
 
     var renderUserResponsesView = function(){
-        var userResponsesView = mwf.decorator.Menu("User Responses");
-        for (var promptID in surveyResponseModel.data._responses) {
-            var prompt = survey.getPrompt(promptID);
-            var value  = surveyResponseModel.data._responses[promptID].value;
+        var userResponsesView = mwf.decorator.Menu("User Responses"),
+            promptID,
+            prompt,
+            value;
+        for (promptID in surveyResponseModel.data._responses) {
+            prompt = survey.getPrompt(promptID);
+            value  = surveyResponseModel.data._responses[promptID].value;
 
             // Don't display prompts that were conditionally not displayed.
-            if( value === SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE ) {
+            if (value === SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE) {
                 continue;
             }
 

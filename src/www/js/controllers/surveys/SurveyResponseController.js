@@ -1,12 +1,13 @@
-var SurveyResponseController = function(surveyResponseModel){
+
+var SurveyResponseController = function (surveyResponseModel) {
     var self = {};
-    
-    
-    var campaign = new Campaign(surveyResponseModel.getCampaignURN());
+
+
+    var campaign = CampaignModel(surveyResponseModel.getCampaignURN());
     var survey = campaign.getSurvey(surveyResponseModel.getSurveyID());
-    
-    
-    self.render = function(){
+
+
+    self.render = function () {
         return new SurveyResponseView(self).render();
     };
 
@@ -42,18 +43,18 @@ var SurveyResponseController = function(surveyResponseModel){
             }
         }, "Yes,No");
     };
-    
+
     self.getSurvey = function(){
         return survey;
     };
-    
+
     self.getSurveyResponseModel = function(){
         return surveyResponseModel;
     };
-    
+
     self.getCampaign = function(){
         return campaign;
     };
-    
+
     return self;
 };

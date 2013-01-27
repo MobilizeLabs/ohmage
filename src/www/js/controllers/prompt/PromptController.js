@@ -4,7 +4,7 @@ var PromptController = function( surveyController, container ) {
     var that = {};
 
     var surveyModel = surveyController.getSurveyModel();
-    
+
     /**
      * An array of prompts associated with the current survey.
      */
@@ -47,15 +47,15 @@ var PromptController = function( surveyController, container ) {
 
     var overrideBackButtonFunctionality = function(){
         if(DeviceDetection.isDeviceAndroid()){
-            invokeOnReady(function(){
+            Init.invokeOnReady(function(){
                console.log("Overriding back button on Android devices for current survey navigation.");
                document.addEventListener("backbutton", androidBackButtonCallbackWrapper, true);
         });
       }
     };
 
-    var resetBackButtonFunctionality = function(){
-        if(DeviceDetection.isDeviceAndroid()){
+    var resetBackButtonFunctionality = function () {
+        if (DeviceDetection.isDeviceAndroid()) {
             document.removeEventListener("backbutton", androidBackButtonCallbackWrapper, false);
         }
     };
@@ -121,17 +121,17 @@ var PromptController = function( surveyController, container ) {
         }
 
         //Save the response.
-        surveyResponse.respond( prompt.getID(), prompt.getResponse(), prompt.getType() == "photo" );
+        surveyResponse.respond(prompt.getID(), prompt.getResponse(), prompt.getType() === "photo");
 
         return true;
     };
 
     var nextPrompt = function(skipped){
         if(processResponse(skipped)){
-            currentPromptIndex++;
+            currentPromptIndex += 1;
             while(currentPromptIndex < prompts.length && failsCondition()){
                 surveyResponse.promptNotDisplayed(getCurrentPrompt().getID());
-                currentPromptIndex++;
+                currentPromptIndex += 1;
             }
             render();
         }
@@ -139,12 +139,12 @@ var PromptController = function( surveyController, container ) {
 
     var previousPrompt = function(){
         if(currentPromptIndex > 0){
-            currentPromptIndex--;
+            currentPromptIndex -= 1;
         }
 
         //Skip all prompts that fail the condition.
         while(currentPromptIndex > 0 && failsCondition()){
-            currentPromptIndex--;
+            currentPromptIndex -= 1;
         }
 
         render();
@@ -158,8 +158,8 @@ var PromptController = function( surveyController, container ) {
         var panel = document.createElement('div');
 
         //If the prompt is skippable, then enable the skip button.
-        if(!submitPage && getCurrentPrompt().isSkippable()){
-            panel.appendChild(mwf.decorator.SingleClickButton(getCurrentPrompt().getSkipLabel(), function(){
+        if (!submitPage && getCurrentPrompt().isSkippable()) {
+            panel.appendChild(mwf.decorator.SingleClickButton(getCurrentPrompt().getSkipLabel(), function () {
                 nextPrompt(true);
             }));
         }
@@ -167,13 +167,13 @@ var PromptController = function( surveyController, container ) {
         androidBackButtonCallback = previousPrompt;
 
         //Handle first prompt.
-        if(currentPromptIndex == 0){
+        if (currentPromptIndex === 0) {
             panel.appendChild(mwf.decorator.SingleClickButton("Next Prompt", function(){
                 nextPrompt(false);
             }));
 
-            androidBackButtonCallback = function(){
-                that.confirmSurveyExit(function(){
+            androidBackButtonCallback = function () {
+                that.confirmSurveyExit(function () {
                     PageNavigation.goBack();
                 });
             };
@@ -184,7 +184,7 @@ var PromptController = function( surveyController, container ) {
 
         //Handle prompts in the middle.
         } else{
-            panel.appendChild(mwf.decorator.DoubleClickButton("Previous", previousPrompt, "Next", function(){
+            panel.appendChild(mwf.decorator.DoubleClickButton("Previous", previousPrompt, "Next", function () {
                 nextPrompt(false);
             }));
         }
@@ -192,7 +192,7 @@ var PromptController = function( surveyController, container ) {
         return panel;
     };
 
-    var render = function(){
+    var render = function () {
 
         //Clear the current contents of the main container.
         container.innerHTML = "";
@@ -234,12 +234,12 @@ var PromptController = function( surveyController, container ) {
      *                 completed.
      */
     that.start = function( callback ) {
-        
+
         if( ConfigManager.getGpsEnabled() ) {
             //Update survey response geolocation information.
             surveyResponse.setLocation();
         }
-        
+
         //Render the initial prompt.
         render();
 
@@ -283,7 +283,7 @@ var PromptController = function( surveyController, container ) {
     };
 
     return that;
-}
+};
 
 
 

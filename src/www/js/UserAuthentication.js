@@ -10,9 +10,9 @@
  *
  * @author Zorayr Khalapyan
  */
-function UserAuthentication() {
+var UserAuthentication = function() {
 
-    var self = this;
+    var that = {};
 
     /**
      * Endpoint for user authentication via authentication token.
@@ -106,7 +106,7 @@ function UserAuthentication() {
 			"'}', " +
 			"'|', " +
 			"':'.";
-                    
+
     var sessionMap = new LocalMap('credentials');
     var session = function(name, value){
         if(typeof(value) !== "undefined"){
@@ -114,7 +114,7 @@ function UserAuthentication() {
         }
         return sessionMap.get(name);
     };
-    
+
     /**
      * Return true if cookie with the specified name exists. Optionally,
      * redirects the user to the provided redirect URL in case the user is
@@ -129,7 +129,7 @@ function UserAuthentication() {
      */
     var authenticationCheck = function(authCookieName, redirectURL){
 
-        if(self.isInAuthErrorState()){
+        if(that.isInAuthErrorState()){
             return false;
         }
 
@@ -144,41 +144,41 @@ function UserAuthentication() {
         }
     };
 
-    this.getPasswordRequirements = function(){
+    that.getPasswordRequirements = function(){
         return PASSWORD_REQUIREMENTS;
     };
 
-    this.isPasswordValid = function(password){
+    that.isPasswordValid = function(password){
         return (new RegExp(PLAINTEXT_PASSWORD_PATTERN_STRING)).test(password);
     };
 
-    this.isUserLocked = function(){
-        return this.getUsername() != null;
-    }
+    that.isUserLocked = function () {
+        return that.getUsername() !== null;
+    };
 
-    this.setAuthErrorState = function(state){
+    that.setAuthErrorState = function (state) {
         session(AUTH_ERROR_STATE_COOKIE_NAME, state);
     };
 
-    this.isInAuthErrorState = function(){
+    that.isInAuthErrorState = function(){
         return session(AUTH_ERROR_STATE_COOKIE_NAME);
-    }
+    };
 
     /**
      * Returns the authentication token if it exists, or null otherwise.
      * @return The authentication token if it exists, or null otherwise.
      */
-    this.getAuthToken = function(){
+    that.getAuthToken = function(){
         return session(TOKEN_AUTH_COOKIE_NAME);
-    }
+    };
 
     /**
      * Returns the hashed password if it exists, or null otherwise.
      * @return The hashed password if it exists, or null otherwise.
      */
-    this.getHashedPassword = function(){
+    that.getHashedPassword = function(){
         return session(HASH_AUTH_COOKIE_NAME);
-    }
+    };
 
     /**
      * Logs out the currently logged in user. This method is authentication
@@ -186,8 +186,8 @@ function UserAuthentication() {
      * methods.
      *
      */
-    this.logout = function(){
-        
+    that.logout = function(){
+
         var message = "All data will be lost. Are you sure you would like to proceed?";
 
         MessageDialogController.showConfirm(message, function(yes){
@@ -199,9 +199,9 @@ function UserAuthentication() {
                 session(HASH_AUTH_COOKIE_NAME, null);
                 session(USERNAME_COOKIE_NAME, null);
                 session(AUTH_ERROR_STATE_COOKIE_NAME, null);
-                
+
                 //ToDo: Decouple these two lines from user authentication. Maybe
-                //in the form of event subscribers. 
+                //in the form of event subscribers.
                 ReminderModel.cancelAll();
                 window.localStorage.clear();
                 window.localStorage['page-parameters'] = "{}";
@@ -210,10 +210,10 @@ function UserAuthentication() {
             }
         }, "Yes,No");
     };
-    
-    
-    this.checkpoint = function(){
-        if(!this.isUserAuthenticated() || this.isInAuthErrorState() ){
+
+
+    that.checkpoint = function(){
+        if(!that.isUserAuthenticated() || that.isInAuthErrorState() ){
             console.log("User failed checkpoint - redirecting to the authentication page.");
             PageNavigation.redirect('auth.html');
         }
@@ -227,10 +227,10 @@ function UserAuthentication() {
      * @param redirectURL If specified, authenticaated users will be redirected
      *        to this URL.
      */
-    this.isUserAuthenticated = function(redirectURL){
+    that.isUserAuthenticated = function(redirectURL){
 
-        if(this.isUserAuthenticatedByHash() ||
-           this.isUserAuthenticatedByToken()){
+        if(that.isUserAuthenticatedByHash() ||
+           that.isUserAuthenticatedByToken()){
 
            PageNavigation.redirect(redirectURL);
 
@@ -251,7 +251,7 @@ function UserAuthentication() {
      *
      * @return True if the user is authenticated, false otherwise.
      */
-    this.isUserAuthenticatedByHash = function(redirectURL){
+    that.isUserAuthenticatedByHash = function(redirectURL){
         return authenticationCheck(HASH_AUTH_COOKIE_NAME, redirectURL);
     };
 
@@ -265,7 +265,7 @@ function UserAuthentication() {
      *
      * @return True if the user is authenticated, false otherwise.
      */
-    this.isUserAuthenticatedByToken = function(redirectURL){
+    that.isUserAuthenticatedByToken = function(redirectURL){
         return authenticationCheck(TOKEN_AUTH_COOKIE_NAME, redirectURL);
     };
 
@@ -273,9 +273,9 @@ function UserAuthentication() {
      * Returns currently logged in user's username, or null if non exists.
      * @return Currently logged in user's username, or null if non exists.
      */
-    this.getUsername = function(){
+    that.getUsername = function(){
         return session(USERNAME_COOKIE_NAME);
-    }
+    };
 
     /**
      * Checks if the user is authenticated via the hashed password method. If
@@ -287,9 +287,9 @@ function UserAuthentication() {
      * @param password User's password.
      * @param callback Invoked on authentication check.
      */
-    this.authenticateByHash = function(username, password, callback){
+    that.authenticateByHash = function(username, password, callback){
 
-        if(this.isUserAuthenticatedByHash()){
+        if(that.isUserAuthenticatedByHash()){
             callback(true);
         }
 
@@ -301,7 +301,7 @@ function UserAuthentication() {
             session(HASH_AUTH_COOKIE_NAME, response.hashed_password);
             session(USERNAME_COOKIE_NAME, username);
 
-            self.setAuthErrorState(false);
+            that.setAuthErrorState(false);
 
             callback(true);
         };
@@ -337,9 +337,8 @@ function UserAuthentication() {
      * @param password User's password.
      * @param callback Invoked on authentication check.
      */
-    this.authenticateByToken = function(username, password, callback)
-    {
-        if(this.isUserAuthorizedByToken()){
+    that.authenticateByToken = function (username, password, callback) {
+        if (that.isUserAuthorizedByToken()) {
             callback(true);
         }
 
@@ -350,7 +349,7 @@ function UserAuthentication() {
             session(TOKEN_AUTH_COOKIE_NAME, response.token);
             session(USERNAME_COOKIE_NAME, username);
 
-            self.setAuthErrorState(false);
+            that.setAuthErrorState(false);
 
             callback(true);
         };
@@ -374,10 +373,8 @@ function UserAuthentication() {
          );
 
     };
-}
 
-var auth = new UserAuthentication ();
+    return that;
+};
 
-if(typeof(checkpoint) != 'undefined'){
-    auth.checkpoint();
-}
+

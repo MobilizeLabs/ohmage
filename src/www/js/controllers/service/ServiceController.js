@@ -1,7 +1,8 @@
-var ServiceController = ( function( ) {
+
+var ServiceController = (function() {
 
     var that = {};
-    
+
     /**
      * Invokes the method 'fun' if it is a valid function. In case the function
      * method is null, or undefined then the error will be silently ignored.
@@ -14,12 +15,12 @@ var ServiceController = ( function( ) {
             fun( args );
         }
     };
-    
-    var onSuccess = function( onSuccessCallback, onErrorCallback, url, redirectOnAuthError ) {
-        
-        return function( response ) {
-            
-            console.log("Received response for URL (" + url + ") with the following response data: " + JSON.stringify(response));
+
+    var onSuccess = function (onSuccessCallback, onErrorCallback, url, redirectOnAuthError) {
+
+        return function (response) {
+
+            console.log("Received response for URL (" + url + ") with the following response data: " + window.JSON.stringify(response));
 
             switch( response.result ) {
 
@@ -27,15 +28,16 @@ var ServiceController = ( function( ) {
                     invoke(onSuccessCallback, response);
                     break;
 
-                case 'failure':{
+                case 'failure':
                     invoke(onErrorCallback, response);
 
                     //If the API request failed because of authentication related
                     //error, then redirect the user to the authentication page.
                     if( redirectOnAuthError ) {
-                        for( var i = 0; i < response.errors.length; i++ ) {
-                            if(response.errors[i].code == '0200'){
-                                auth.setAuthErrorState( true );
+                        var i;
+                        for (i = 0; i < response.errors.length; i+=1) {
+                            if (response.errors[i].code === '0200') {
+                                auth.setAuthErrorState(true);
                                 PageNavigation.openAuthenticationPage();
                                 break;
                             }
@@ -44,25 +46,23 @@ var ServiceController = ( function( ) {
                     }
 
                     break;
-                }
-
 
                 default:
-                    invoke( onSuccess, response );
+                    invoke(onSuccess, response);
                     break;
             }
-            
+
         };
-        
-        
+
+
     };
-    
+
     var onError = function( onErrorCallback, url ) {
         return function() {
             console.log("AJAX exception for url " + (ConfigManager.getServerEndpoint() + url));
             invoke( onErrorCallback, false );
         };
-        
+
     };
 
     /**
@@ -78,7 +78,7 @@ var ServiceController = ( function( ) {
      * @param type      The AJAX call type i.e. POST/GET/DELETE.
      * @param url       The API URL extension i.e. /app/survey/upload.
      * @param data      The data sent with the AJAX call.
-     * @param dataType  The data type for the AJAX call i.e. XML, JSON, JSONP.
+     * @param dataType  The data type for the AJAX call i.e. XML, window.JSON, window.JSONP.
      * @param onSuccessCallback The callback on API call success.
      * @param onErrorCallback   The callback on API call error.
      * @param redirectOnAuthError
@@ -86,9 +86,9 @@ var ServiceController = ( function( ) {
     that.serviceCall = function( type, url, data, dataType, onSuccessCallback, onErrorCallback, redirectOnAuthError ) {
 
         //By default, redirect the user to the login page on authentication error.
-        redirectOnAuthError = (typeof(redirectOnAuthError) == 'undefined')? true : redirectOnAuthError;
+        redirectOnAuthError = (typeof(redirectOnAuthError) === 'undefined')? true : redirectOnAuthError;
 
-        console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + JSON.stringify(data));
+        console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + window.JSON.stringify(data));
 
         $.ajax({
             type     : type,
@@ -100,8 +100,6 @@ var ServiceController = ( function( ) {
         });
 
     };
-    
+
     return that;
-    
-  
-} )();
+}());

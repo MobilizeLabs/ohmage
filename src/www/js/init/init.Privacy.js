@@ -1,6 +1,7 @@
+
 Init.invokeOnReady(function() {
 
-    (function(){
+    (function () {
 
         var label = (auth.isUserAuthenticated()) ? "Dashboard" : "Login";
         var goBack = function(){
@@ -17,6 +18,5 @@ Init.invokeOnReady(function() {
 
         $("#go-back-button").append(mwf.decorator.SingleClickButton(label, goBack));
 
-    })();
-
+    }());
 });

@@ -1,7 +1,8 @@
+
 var MessageDialogController = (function () {
-    
+
     var that = {};
-    
+
     /**
      * Invokes the method 'fun' if it is a valid function. In case the function
      * method is null, or undefined then the error will be silently ignored.
@@ -14,7 +15,7 @@ var MessageDialogController = (function () {
             fun( args );
         }
     };
-    
+
     that.showMessage = function( message, callback, title, buttonName ) {
 
         title = title || "ohmage";
@@ -51,10 +52,11 @@ var MessageDialogController = (function () {
                 var _callback = function(index){
                     if( callback ) {
 
-                        if(DeviceDetection.isDeviceiOS())
+                        if (DeviceDetection.isDeviceiOS()) {
                             index = buttonList.length - index;
+                        }
 
-                        callback( index == 1 );
+                        callback( index === 1 );
                     }
                 };
 
@@ -69,9 +71,9 @@ var MessageDialogController = (function () {
         } else {
             invoke( callback, confirm( message ) );
         }
-        
+
     };
 
     return that;
-    
-})();
+
+}());

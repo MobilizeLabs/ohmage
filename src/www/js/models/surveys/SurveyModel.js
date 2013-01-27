@@ -42,14 +42,15 @@ var SurveyModel = function( surveyData, campaign ) {
      * Returns an array of prompt objects associated with this survey.
      */
     that.getPrompts = function(){
-        var promptList = surveyData.contentlist.prompt;
-        var prompts = new Array();
-        if(promptList.length){    
-            for(var i = 0; i < promptList.length; i++){
-                prompts[i] = new Prompt( promptList[i], that, campaign );
+        var promptList = surveyData.contentlist.prompt,
+            prompts = [],
+            i;
+        if (promptList.length) {
+            for (i = 0; i < promptList.length; i+=1) {
+                prompts[i] = PromptModel(promptList[i], that, campaign);
             }
         } else {
-            prompts.push( new Prompt(promptList, that, campaign) );
+            prompts.push(PromptModel(promptList, that, campaign));
         }
         return prompts;
     };
@@ -60,14 +61,14 @@ var SurveyModel = function( surveyData, campaign ) {
      * @return Prompt object or null.
      */
     that.getPrompt = function( id ) {
-        var prompts = that.getPrompts();
-        for( var i = 0; i < prompts.length; i++ ) {
-            if( prompts[ i ].getID() == id ) {
+        var prompts = that.getPrompts(), i;
+        for (i = 0; i < prompts.length; i+= 1) {
+            if (prompts[ i ].getID() === id) {
                 return prompts[ i ];
             }
         }
         return null;
     };
-    
+
     return that;
-}
+};

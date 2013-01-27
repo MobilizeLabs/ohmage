@@ -1,147 +1,151 @@
+
 /**
  * Singleton Model!
  */
-var CampaignsModel = (function() {
+var CampaignsModel;
+var CampaignsModelInitializer = function () {
+    CampaignsModel = (function() {
+        var that = {};
 
-    var that = {};
-    
-    /**
-     * Stores a list of all available campaigns.
-     */
-    var allCampaigns = new LocalMap("all-campaigns");
-    
-    /**
-     * Stores a list of installed camapigns.
-     */
-    var installedCampaigns = new LocalMap("installed-campaigns");
+        /**
+         * Stores a list of all available campaigns.
+         */
+        var allCampaigns = LocalMap("all-campaigns");
 
-    /**
-     * Returns true campaign metadata has not been downloaded. This doesn't 
-     * have anything to do installed campaigns.
-     * @return True if campaigns metadata has not been downloaded. 
-     */
-    that.isEmpty = function () {
-        return allCampaigns.length() === 0;
-    };
-    
+        /**
+         * Stores a list of installed camapigns.
+         */
+        var installedCampaigns = LocalMap("installed-campaigns");
 
-    
-    /**
-     * Returns the number of currently installed campaigns.
-     * @return Number of currently installed campaigns.
-     */
-    that.getInstalledCampaignsCount = function () {
-        return that.getInstalledCampaigns().length;
-    };
-    
-    that.getCampaign = function (campaignURN) {
-        return new Campaign(campaignURN);
-    };
+        /**
+         * Returns true campaign metadata has not been downloaded. This doesn't
+         * have anything to do installed campaigns.
+         * @return True if campaigns metadata has not been downloaded.
+         */
+        that.isEmpty = function () {
+            return allCampaigns.length() === 0;
+        };
 
-    /**
-     * Deletes the specified campaign from the local storage. This method will
-     * also delete all reminders associated with the provided campaign.
-     * @param urn Unique campaign identifier.
-     */
-    that.uninstallCampaign = function (urn) {
-        installedCampaigns.release(urn);
-        ReminderModel.deleteCampaignReminders(urn);
-    };
+        /**
+         * Returns the number of currently installed campaigns.
+         * @return Number of currently installed campaigns.
+         */
+        that.getInstalledCampaignsCount = function () {
+            return installedCampaigns.length();
+        };
 
-    /**
-     * Returns all available campaigns even if they are installed.
-     */
-    that.getAllCampaigns = function () {
-        var campaigns = {};
-        for(var campaignURN in allCampaigns.getMap()){
-            campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
-        }
-        return campaigns;
-    };
-    
-    that.getAvailableCampaigns = function() {
-        var campaigns = {};
-        for (var campaignURN in allCampaigns.getMap()) {
-            if( !installedCampaigns.isSet( campaignURN )){
+        that.getCampaign = function (campaignURN) {
+            return CampaignModel(campaignURN);
+        };
+
+        /**
+         * Deletes the specified campaign from the local storage. This method will
+         * also delete all reminders associated with the provided campaign.
+         * @param urn Unique campaign identifier.
+         */
+        that.uninstallCampaign = function (urn) {
+            installedCampaigns.release(urn);
+            ReminderModel.deleteCampaignReminders(urn);
+        };
+
+        /**
+         * Returns all available campaigns even if they are installed.
+         */
+        that.getAllCampaigns = function () {
+            var campaigns = {}, campaignURN;
+            for(campaignURN in allCampaigns.getMap()){
                 campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
             }
-        }
-        return campaigns;
-    };
-    
-    /**
-     * Returns a list of campaign objects that the user has currently installed.
-     */
-    that.getInstalledCampaigns = function () {
-        var campaigns = [];
-        for (var urn in installedCampaigns.getMap()) {
-            campaigns.push(new Campaign(urn));
-        }
-        return campaigns;
-    };
-
-    that.download = function (force, onSuccess, onError) {
-
-        if (typeof(force) == undefined) {
-            force = false;
-        }
-            
-
-        if (!force && !that.isEmpty()) {
-            if (onSuccess) {
-                onSuccess();
-            } 
-            return;
-        }
-
-        var _onError = function (response) {
-            Spinner.hide(function(){
-                if(onError){
-                    onError(response);
-                }
-            });
+            return campaigns;
         };
 
-        var _onSuccess = function (response) {
-            Spinner.hide(function () {
-
-                if (response.result === "success") {
-
-                    var campaigns = new LocalMap("all-campaigns");
-
-                    campaigns.erase();
-
-                    for (var urn in response.data) {
-                        campaigns.set(urn, response.data[urn]);
-                    }
-
-                    if (onSuccess) {
-                        onSuccess();
-                    }
+        that.getAvailableCampaigns = function() {
+            var campaigns = {}, campaignURN;
+            for (campaignURN in allCampaigns.getMap()) {
+                if (!installedCampaigns.isSet(campaignURN)) {
+                    campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
                 }
-            });
-
-
+            }
+            return campaigns;
         };
 
-        Spinner.show();
+        /**
+         * Returns a list of campaign objects that the user has currently installed.
+         */
+        that.getInstalledCampaigns = function () {
+            var campaigns = {}, campaignURN;
+            for (campaignURN in installedCampaigns.getMap()) {
+                campaigns[campaignURN] = CampaignsModel.getCampaign(campaignURN);
+            }
+            return campaigns;
+        };
 
-        ServiceController.serviceCall(
-             "POST",
-             ConfigManager.getCampaignReadUrl(),
-             {
-                 user:          auth.getUsername(),
-                 password:      auth.getHashedPassword(),
-                 client:        ConfigManager.getClientName(),
-                 output_format: 'short'
-             },
-             "JSON",
-             _onSuccess,
-             _onError
-        );
-    };
+        /**
+         * Downloads a list of campaigns.
+         */
+        that.download = function (force, onSuccess, onError) {
 
-    return that;
-})();
+            if (typeof(force) === undefined) {
+                force = false;
+            }
+
+
+            if (!force && !that.isEmpty()) {
+                if (onSuccess) {
+                    onSuccess();
+                }
+                return;
+            }
+
+            var _onError = function (response) {
+                Spinner.hide(function(){
+                    if(onError){
+                        onError(response);
+                    }
+                });
+            };
+
+            var _onSuccess = function (response) {
+                Spinner.hide(function () {
+
+                    if (response.result === "success") {
+
+                        var campaigns = LocalMap("all-campaigns"), urn;
+
+                        campaigns.erase();
+
+                        for (urn in response.data) {
+                            campaigns.set(urn, response.data[urn]);
+                        }
+
+                        if (onSuccess) {
+                            onSuccess();
+                        }
+                    }
+                });
+
+
+            };
+
+            Spinner.show();
+
+            ServiceController.serviceCall(
+                 "POST",
+                 ConfigManager.getCampaignReadUrl(),
+                 {
+                     user:          auth.getUsername(),
+                     password:      auth.getHashedPassword(),
+                     client:        ConfigManager.getClientName(),
+                     output_format: 'short'
+                 },
+                 "JSON",
+                 _onSuccess,
+                 _onError
+            );
+        };
+
+        return that;
+    }());
+};
 
 

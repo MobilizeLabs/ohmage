@@ -13,7 +13,9 @@
  *  </div>
  *
  */
-var Spinner = new (function(){
+var Spinner = (function () {
+
+    var that = {};
 
     /**
      * Preload spinner image.
@@ -50,7 +52,7 @@ var Spinner = new (function(){
      * To hide the displayed spinner, use hide_spinner().
 
      */
-    this.show = function(cancelCallback){
+    that.show = function(cancelCallback){
 
         if(isLoading){
             console.log("Spinner: show() canceled because spinner is already active.");
@@ -60,7 +62,7 @@ var Spinner = new (function(){
         }
         console.log("Spinner: Showing spinner.");
 
-        //Force to reload the GIF - otherwise, the user will notice glitches. 
+        //Force to reload the GIF - otherwise, the user will notice glitches.
         $("#spinner-img").attr('src','')
                          .attr('src', 'img/spinner.gif' + "?" + new Date().getTime());
         $("#spinner-img").show();
@@ -102,13 +104,15 @@ var Spinner = new (function(){
      * The method resizes the translucent background image when the orientation of
      * the device changes.
      */
-    var detectOrientation = function(){
+    var detectOrientation = function () {
 
-        if(!window.orientation || !isLoading)
+        if (!window.orientation || !isLoading) {
             return;
+        }
+
 
         //This is some crazy magic that I never want to visit again.
-        if(currentOrientation == null || currentOrientation != window.orientation){
+        if (currentOrientation === null || currentOrientation !== window.orientation) {
             var width, height, topOffset;
 
             if(isPortrait()){
@@ -171,7 +175,7 @@ var Spinner = new (function(){
      * Removes the spinner transparent background and also the loading sign with the
      * cancel link.
      */
-    this.hide = function(callback){
+    that.hide = function(callback){
 
         if(!isLoading){
             console.log("Spinner: hide() canceled because spinner is already inactive.");
@@ -184,20 +188,20 @@ var Spinner = new (function(){
         }
 
         console.log("Spinner: Hiding spinner.");
-        
+
         var fadeOutCallback = function(){
           $("#spinner-background,#spinner-container").remove();
             if(callback){
                 callback();
-            }  
+            }
         };
-        
+
         cancelLink.hide();
-        
+
         if($("#spinner-container").is(":visible") === false){
             $("#spinner-background").hide();
             $("#spinner-container").hide();
-            
+
             fadeOutCallback();
         }else{
             $("#spinner-background").fadeOut(25);
@@ -205,21 +209,18 @@ var Spinner = new (function(){
         }
 
         //Cancel orientation detection timer.
-        if(timer){
+        if (timer) {
             clearInterval(timer);
-            delete timer;
         }
     };
 
     function isLandscape(){
-        return ( window.orientation == 90 || window.orientation == -90 );
+        return ( window.orientation === 90 || window.orientation === -90 );
     }
 
     function isPortrait(){
-        return ( window.orientation == 0 || window.orientation == 180 );
+        return ( window.orientation === 0 || window.orientation === 180 );
     }
 
-
-
-
-});
+    return that;
+}());

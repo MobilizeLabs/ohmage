@@ -44,7 +44,7 @@ var LocalNotificationAdapter = (function(){
     };
 
     return that;
-})();
+}());
 
 function goToPendingSurveys(){
     window.location = "pending-surveys.html";

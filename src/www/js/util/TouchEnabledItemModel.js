@@ -34,13 +34,13 @@ var TouchEnabledItemModel = (function() {
 
         $(item).bind("touchmove", function(e){
             if($(highlightItem).is("." + onTouchHighlightClass)){
-                moveCounter++;
+                moveCounter += 1;
                 var item = e.srcElement;
                 var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
                 var elm = $(item).offset();
                 var x = touch.pageX - elm.left;
                 var y = touch.pageY - elm.top;
-                if(moveCounter > TOUCH_MOVE_SENSITIVITY || !((x < $(item).width() && x > 0) && (y < $(item).height() && y > 0))){
+                if (moveCounter > TOUCH_MOVE_SENSITIVITY || !((x < $(item).width() && x > 0) && (y < $(item).height() && y > 0))) {
                     $(highlightItem).removeClass(onTouchHighlightClass);
                 }
             }

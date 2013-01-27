@@ -1,3 +1,4 @@
+
 Init.invokeOnReady(function() {
     var surveyKey = PageNavigation.getPageParameter('survey-key');
     if(surveyKey === null){ PageNavigation.goBack(); }

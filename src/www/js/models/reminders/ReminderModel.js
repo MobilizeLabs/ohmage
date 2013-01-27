@@ -1,3 +1,4 @@
+
 /**
  * @class ReminderModel
  * @author Zorayr Khalapyan
@@ -8,7 +9,7 @@ var ReminderModel = function( uuid ) {
     var that = {};
     var title = "";
     var campaignURN = "";
-    var surveyID = ""
+    var surveyID = "";
     var message = "";
     var ticker = "";
     var notificationAdapter = LocalNotificationAdapter;
@@ -53,9 +54,9 @@ var ReminderModel = function( uuid ) {
             ticker            : ticker,
             supression_window : supressionWindow,
             exclude_weekends  : excludeWeekends
-        };
+        }, i;
         reminderJSON.notifications = [];
-        for(var i = 0; i < notifications.length; i++){
+        for (i = 0; i < notifications.length; i+=1) {
             reminderJSON.notifications.push({
                id   : notifications[i].id,
                time : notifications[i].date.getTime()
@@ -77,7 +78,7 @@ var ReminderModel = function( uuid ) {
             repeatDaily : false,
             id          : id
         };
-        console.log("ReminderModel: Notification was set with the following options - " + JSON.stringify(options));
+        console.log("ReminderModel: Notification was set with the following options - " + window.JSON.stringify(options));
         notificationAdapter.add(options);
         notifications.push({id : id, date : date});
         return options;
@@ -103,8 +104,9 @@ var ReminderModel = function( uuid ) {
      * notifications, and add new reminders according to the user's
      * modification.
      */
-    that.cancelAllNotifications = function(){
-        for(var i = 0; i < notifications.length; i++){
+    that.cancelAllNotifications = function () {
+        var i;
+        for (i = 0; i < notifications.length; i+=1) {
             cancelNotification( notifications[i] );
         }
         notifications = [];
@@ -127,15 +129,16 @@ var ReminderModel = function( uuid ) {
      */
     that.suppress = function( date ){
         date = date || new Date();
-        var activeNotifications = [], i = 0;
-        var suppressionWindowTime = supressionWindow * 60 * 60 * 1000;
-        var surveySuppressed = false;
-        for( i; i < notifications.length; i++ ) {
-            if( notifications[i].date.getTime() - date.getTime() < suppressionWindowTime ) {
-                cancelNotification( notifications[i] );
+        var activeNotifications = [],
+            i,
+            suppressionWindowTime = supressionWindow * 60 * 60 * 1000,
+            surveySuppressed = false;
+        for (i = 0; i < notifications.length; i += 1) {
+            if (notifications[i].date.getTime() - date.getTime() < suppressionWindowTime) {
+                cancelNotification(notifications[i]);
                 surveySuppressed = true;
             } else {
-                activeNotifications.push( notifications[i] );
+                activeNotifications.push(notifications[i]);
             }
         }
         notifications = activeNotifications;
@@ -153,7 +156,7 @@ var ReminderModel = function( uuid ) {
      * Restores a reminder with the specified UUID from localStorage.
      */
     that.restore = function( storedUUID ){
-        var object       = ReminderModel.reminders.get(storedUUID);
+        var object       = ReminderModel.reminders.get(storedUUID), i;
         uuid             = storedUUID;
         title            = object.title;
         campaignURN      = object.campaign_urn;
@@ -163,7 +166,7 @@ var ReminderModel = function( uuid ) {
         supressionWindow = object.supression_window;
         excludeWeekends  = object.exclude_weekends;
         notifications = [];
-        for(var i = 0; i < object.notifications.length; i++){
+        for (i = 0; i < object.notifications.length; i+=1) {
             notifications.push({
                 id   : object.notifications[i].id,
                 date : new Date( object.notifications[i].time )
@@ -171,25 +174,25 @@ var ReminderModel = function( uuid ) {
         }
     };
 
-    that.setAssociation = function(newCampaignURN, newSurveyID){
-        campaignURN = newCampaignURN
+    that.setAssociation = function (newCampaignURN, newSurveyID) {
+        campaignURN = newCampaignURN;
         surveyID    = newSurveyID;
     };
 
-    that.setMessage = function( newMessage ){
+    that.setMessage = function (newMessage) {
         message = newMessage;
         ticker  = newMessage;
     };
 
-    that.setTitle = function( newTitle ){
+    that.setTitle = function (newTitle) {
         title = newTitle;
     };
 
-    that.setSupressionWindow = function( newSupressionWindow ){
+    that.setSupressionWindow = function (newSupressionWindow) {
         supressionWindow = newSupressionWindow;
     };
 
-    that.setExcludeWeekends = function( newExcludeWeekends ){
+    that.setExcludeWeekends = function (newExcludeWeekends) {
         excludeWeekends = newExcludeWeekends;
     };
 
@@ -197,8 +200,8 @@ var ReminderModel = function( uuid ) {
      * A remineder is expired if it doesn't have any more notificationss, or if
      * the last notification is in the past.
      */
-    that.isExpired = function(){
-        return notifications.length == 0
+    that.isExpired = function () {
+        return notifications.length === 0
             || notifications[notifications.length - 1].date.getTime() <= new Date().getTime();
     };
 
@@ -221,19 +224,19 @@ var ReminderModel = function( uuid ) {
     /**
      * Returns the date of the earliest set notification for this reminder.
      */
-    that.getDate = function(){
+    that.getDate = function () {
         return (notifications.length !== 0)? notifications[0].date : null;
     };
 
-    that.getSupressionWindow = function(){
-        return parseInt(supressionWindow);
+    that.getSupressionWindow = function () {
+        return parseInt(supressionWindow, 10);
     };
 
-    that.excludeWeekends = function(){
+    that.excludeWeekends = function () {
         return excludeWeekends;
     };
 
-    that.getRecurrence = function(){
+    that.getRecurrence = function () {
         return notifications.length;
     };
 
@@ -241,11 +244,11 @@ var ReminderModel = function( uuid ) {
      * Returns current notifications.
      * @visibleForTesting
      */
-    that.getNotifications = function() {
+    that.getNotifications = function () {
         return notifications;
     };
 
-    that.getMessage = function() {
+    that.getMessage = function () {
         return message;
     };
 
@@ -253,7 +256,7 @@ var ReminderModel = function( uuid ) {
      * Replaces the reference to the LocalNotificationAdapter.
      * @visibleForTesting
      */
-    that.setNotificationAdapter = function ( newNotificationAdapter ) {
+    that.setNotificationAdapter = function (newNotificationAdapter) {
         notificationAdapter = newNotificationAdapter;
     };
 
@@ -292,9 +295,10 @@ ReminderModel.reminders = new LocalMap("reminders");
  * Returns all saved reminders.
  */
 ReminderModel.getAllReminders = function(){
-    var remindersMap = ReminderModel.reminders.getMap();
-    var allReminders = [];
-    for(var uuid in remindersMap){
+    var remindersMap = ReminderModel.reminders.getMap(),
+        allReminders = [],
+        uuid;
+    for(uuid in remindersMap){
         if(remindersMap.hasOwnProperty(uuid)){
             allReminders.push( new ReminderModel(uuid) );
         }
@@ -307,8 +311,8 @@ ReminderModel.getAllReminders = function(){
  */
 ReminderModel.cancelAll = function() {
     console.log("ReminderModel: Cancelling all reminders.");
-    var reminders = ReminderModel.getAllReminders();
-    for( var i = 0; i < reminders.length; i++ ) {
+    var reminders = ReminderModel.getAllReminders(), i;
+    for (i = 0; i < reminders.length; i+=1) {
         reminders[i].deleteReminder();
     }
 };
@@ -316,11 +320,12 @@ ReminderModel.cancelAll = function() {
 /**
  * Supresses all reminders associated with the specified survey.
  */
-ReminderModel.supressSurveyReminders = function( surveyID ) {
+ReminderModel.supressSurveyReminders = function (surveyID) {
     console.log("ReminderModel: Supressing all reminders for survey [" + surveyID + "].");
-    var reminders = ReminderModel.getAllReminders(), i = 0;
-    for(i; i < reminders.length; i++){
-        if(reminders[i].getSurveyID() === surveyID && reminders[i].suppress()){
+    var reminders = ReminderModel.getAllReminders(),
+        i;
+    for (i = 0; i < reminders.length; i += 1) {
+        if (reminders[i].getSurveyID() === surveyID && reminders[i].suppress()) {
             break;
         }
     }
@@ -331,21 +336,24 @@ ReminderModel.supressSurveyReminders = function( surveyID ) {
  */
 ReminderModel.deleteCampaignReminders = function(campaignURN){
     console.log("ReminderModel: Deleting all reminders associated with campaign [" + campaignURN + "].");
-    var reminders = ReminderModel.getAllReminders(), i = 0;
-    for(i; i < reminders.length; i++){
-        if(reminders[i].getCampaignURN() === campaignURN){
+    var reminders = ReminderModel.getAllReminders(),
+        i;
+    for (i = 0; i < reminders.length; i += 1) {
+        if (reminders[i].getCampaignURN() === campaignURN) {
             reminders[i].deleteReminder();
         }
     }
 };
 
-ReminderModel.getPendingSurveys = function(){
+ReminderModel.getPendingSurveys = function () {
     var currentDate = new Date().getTime();
     var reminders = ReminderModel.getAllReminders();
-    var campaign, surveys = [], i = 0;
-    for(i; i < reminders.length; i++){
+    var campaign,
+        surveys = [],
+        i;
+    for(i = 0; i < reminders.length; i += 1){
         if(reminders[i].getDate().getTime() < currentDate){
-            campaign = new Campaign(reminders[i].getCampaignURN());
+            campaign = CampaignModel(reminders[i].getCampaignURN());
             surveys.push(campaign.getSurvey(reminders[i].getSurveyID()));
         }
     }
@@ -355,12 +363,13 @@ ReminderModel.getPendingSurveys = function(){
 /**
  * Returns all reminders that have at least single notification in the future.
  */
-ReminderModel.getCurrentReminders = function() {
-    var reminders = ReminderModel.getAllReminders();
-    var currentReminders = [], i = 0;
-    for(i; i < reminders.length; i++){
-        if( !reminders[i].isExpired() ){
-            currentReminders.push( reminders[i] );
+ReminderModel.getCurrentReminders = function () {
+    var reminders = ReminderModel.getAllReminders(),
+        currentReminders = [],
+        i;
+    for (i = 0; i < reminders.length; i += 1) {
+        if (!reminders[i].isExpired()) {
+            currentReminders.push(reminders[i]);
         }
     }
     return currentReminders;

@@ -1,0 +1,62 @@
+    <project name = "ohmageMFW"  basedir = ".">
+
+        <property name = "root" location = "" />
+        <property name = "js"   location = "${root}/js" />
+        <property name = "lib"  location = "${root}/lib" />
+        <property name = "tools"  location = "${root}/tools" />
+        <property name = "externs"  location = "${tools}/closure/externs" />
+
+        <taskdef name = "jslint"
+                 classname="com.googlecode.jslint4java.ant.JSLintTask"
+                 classpath="${root}/tools/jslint4java-2.0.2/jslint4java-2.0.2.jar" />
+
+        <taskdef name = "jscomp"
+                 classname = "com.google.javascript.jscomp.ant.CompileTask"
+                 classpath="${root}/tools/closure/compiler.jar"/>
+
+        <target name = "list">
+
+          <pathconvert pathsep="" property="sounds">
+              <fileset dir = "${js}" includes = "**/*.js" excludes = "build.js,**/init.*.js"/>
+          </pathconvert>
+          <echo file="sounds.txt">${sounds}</echo>
+        </target>
+
+        <target name = "clean">
+            <delete file = "${js}/build.js"/>
+        </target>
+
+        <target name = "lint">
+            <echo message = "Running source files through JSLint..."></echo>
+            <jslint options="white,vars,undef,sloppy,nomen,continue,bitwise,newcap,forin">
+                <formatter type="plain" />
+                <fileset dir="${js}" includes="**/*.js" excludes="build.js, util/jstz.js, util/json2.js, pegjs/*" />
+            </jslint>
+        </target>
+
+        <target name = "concat">
+            <echo message = "Combinging source files..."></echo>
+            <concat destfile = "${js}/build.js" encoding = "UTF-8" fixlastline = "true" >
+                <fileset dir = "${js}" includes = "**/*.js" excludes = "build.js,**/init.*.js"/>
+            </concat>
+        </target>
+
+        <target name="min">
+            <echo message="Running Google Closure..."></echo>
+            <jscomp compilationLevel = "simple"
+                    warning = "verbose"
+                    debug = "off"
+                    output = "${js}/build.min.js">
+                <externs dir = "${externs}">
+                    <file name = "externs.js"/>
+                    <file name = "jquery-1.3.2.externs.js"/>
+                </externs>
+                <sources dir="${js}">
+                    <file name="build.js"/>
+                </sources>
+            </jscomp>
+        </target>
+
+        <target name="run" depends="clean, lint, concat, min"></target>
+
+    </project>

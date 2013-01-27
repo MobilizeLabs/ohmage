@@ -24,7 +24,7 @@ Init.invokeOnReady( function() {
 
     var isInputValid = function(){
 
-        if($('#username').val().length == 0 && $('#password').val().length == 0){
+        if($('#username').val().length === 0 && $('#password').val().length === 0){
             MessageDialogController.showMessage('Please enter your username and password.', function(){
                 $('#username').focus();
             });
@@ -32,7 +32,7 @@ Init.invokeOnReady( function() {
             return false;
         }
 
-        if($('#username').val().length == 0){
+        if($('#username').val().length === 0){
             MessageDialogController.showMessage('Please enter your username.', function(){
                 $('#username').focus();
             });
@@ -40,7 +40,7 @@ Init.invokeOnReady( function() {
             return false;
         }
 
-        if($('#password').val().length == 0){
+        if($('#password').val().length === 0){
             MessageDialogController.showMessage('Please enter your password.', function(){
                 $('#password').focus();
             });

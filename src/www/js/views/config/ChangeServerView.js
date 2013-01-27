@@ -1,17 +1,18 @@
 var ChangeServerView = function( servers ) {
-    
+
     var that = {};
-    
+
     /**
      * Handler for the save button. Should be implemented in the controller.
      */
     that.saveButtonHandler = function() {};
-    
+
     that.render = function( ) {
-        var form = mwf.decorator.Form("Available Servers");
-        var select = document.createElement("select");
-        for( var i = 0; i < servers.length; i++ ){
-            var option = document.createElement('option');
+        var form = mwf.decorator.Form("Available Servers"),
+            select = document.createElement("select"),
+            option, i;
+        for (i = 0; i < servers.length; i+=1) {
+            option = document.createElement('option');
             option.value = servers[i];
             option.innerHTML = servers[i];
             select.appendChild(option);
@@ -28,5 +29,5 @@ var ChangeServerView = function( servers ) {
         return form;
     };
 
-    return that;    
+    return that;
 };

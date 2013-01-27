@@ -1,14 +1,15 @@
-var ReminderView = function(reminder, controller){
 
-    var self = this;
+var ReminderView = function (reminder, controller) {
 
-    var createSuppressionWindowSelectInput = function(){
-        var select = document.createElement('select');
+    var that = {};
+
+    var createSuppressionWindowSelectInput = function () {
+        var select = document.createElement('select'), i;
         select.className = "supression-window-select";
-        for(var i = 1; i <= 24; i++){
+        for (i = 1; i <= 24; i+=1) {
             var option = document.createElement('option');
             option.value = i;
-            option.innerHTML = i + " hour" + ((i != 1) ? "s" : "");
+            option.innerHTML = i + " hour" + ((i !== 1) ? "s" : "");
             select.appendChild(option);
 
             if(i === reminder.getSupressionWindow()){
@@ -21,20 +22,21 @@ var ReminderView = function(reminder, controller){
         return select;
     };
 
-    var createReminderRecurrenceSelectInput = function(){
-        var select = document.createElement('select');
+    var createReminderRecurrenceSelectInput = function () {
+        var select = document.createElement('select'),
+            option,
+            i;
         select.className = "recurrence-select";
-        for(var i = 1; i < 31; i++){
-            var option = document.createElement('option');
+        for (i = 1; i < 31; i+=1)  {
+            option = document.createElement('option');
             option.value = i;
             option.innerHTML = i;
             select.appendChild(option);
-
-            if(i === reminder.getRecurrence()){
+            if (i === reminder.getRecurrence()) {
                 option.selected = "selected";
             }
         }
-        select.getInput = function(){
+        select.getInput = function () {
             return select.options[select.selectedIndex].value;
         };
         return select;
@@ -50,18 +52,20 @@ var ReminderView = function(reminder, controller){
             return option;
         };
 
-        var select = document.createElement('select');
+        var select = document.createElement('select'),
+        campaigns = CampaignsModel.getInstalledCampaigns(),
+        survey, surveys, campaignURN, option, i, j;
+
         select.className = "reminder-survey-select";
-        var campaigns = Campaigns.getInstalledCampaigns();
         select.appendChild(createOption("Select a Survey to Continue"));
 
-        for(var i = 0; i < campaigns.length; i++){
-            if(campaigns[i].isRunning()){
-                var surveys = campaigns[i].getSurveys();
-                var campaignURN = campaigns[i].getURN();
-                for(var j = 0; j < surveys.length; j++){
-                    var survey = surveys[j];
-                    var option = createOption(survey.title, survey.id, campaignURN);
+        for (i = 0; i < campaigns.length; i+=1) {
+            if (campaigns[i].isRunning()) {
+                surveys = campaigns[i].getSurveys();
+                campaignURN = campaigns[i].getURN();
+                for (j = 0; j < surveys.length; j+=1) {
+                    survey = surveys[j];
+                    option = createOption(survey.title, survey.id, campaignURN);
                     if(reminder.getCampaignURN() === campaignURN && reminder.getSurveyID() === survey.id){
                         option.selected = "selected";
                     }
@@ -161,14 +165,14 @@ var ReminderView = function(reminder, controller){
         MessageDialogController.showConfirm( confirmMessage, callback, "Yes,No" );
     };
 
-    self.render = function() {
-        var timePicker = createTimePickerInput();
-        var surveySelect = createSurveySelectInput();
-        var suppressionSelect = createSuppressionWindowSelectInput();
-        var recurrenceSelect = createReminderRecurrenceSelectInput();
-        var weekendsCheckbox = createExcludeWeekendsChecbkoxInput();
+    that.render = function() {
+        var timePicker = createTimePickerInput(),
+            surveySelect = createSurveySelectInput(),
+            suppressionSelect = createSuppressionWindowSelectInput(),
+            recurrenceSelect = createReminderRecurrenceSelectInput(),
+            weekendsCheckbox = createExcludeWeekendsChecbkoxInput(),
+            inputs = mwf.decorator.Form("Create New Reminder");
 
-        var inputs = mwf.decorator.Form("Create New Reminder");
         inputs.addLabel("Reminder Survey");
         inputs.addItem(surveySelect);
         inputs.addLabel("Select Time");
@@ -195,5 +199,5 @@ var ReminderView = function(reminder, controller){
 
     };
 
-    return self;
+    return that;
 };

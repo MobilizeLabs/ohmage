@@ -1,3 +1,4 @@
+
 /**
  * The class is designed to facilitate flexible permanent storage of key value
  * pairs utilzing HTML5 localStorage.
@@ -6,6 +7,7 @@
  * @author Zorayr Khalapyan
  * @version 10/25/2012
  */
+var localStorage = window.localStorage;
 var LocalMap = function ( name ) {
     var that = {};
 
@@ -19,11 +21,11 @@ var LocalMap = function ( name ) {
     }
 
     var setMap = function ( map ) {
-        localStorage[name] = JSON.stringify( map );
+        localStorage[name] = window.JSON.stringify( map );
     };
 
     that.getMap = function () {
-        return JSON.parse( localStorage[name] );
+        return window.JSON.parse( localStorage[name] );
     };
 
     /**
@@ -56,17 +58,19 @@ var LocalMap = function ( name ) {
         var map = that.getMap();
         var size = 0, key;
         for (key in map) {
-            if (map.hasOwnProperty(key)) size++;
+            if (map.hasOwnProperty(key)) {
+                size += 1;
+            }
         }
         return size;
     };
 
     that.erase = function () {
-        localStorage[name] = JSON.stringify({});
+        window.localStorage[name] = window.JSON.stringify({});
     };
 
     that.isSet = function (name) {
-        return that.get(name) != null;
+        return that.get(name) !== null;
     };
 
     that.release = function (name) {
@@ -88,8 +92,9 @@ var LocalMap = function ( name ) {
 };
 
 LocalMap.destroy = function () {
-    for ( var item in localStorage ) {
-        if ( localStorage.hasOwnProperty( item ) ) {
+    var item;
+    for (item in localStorage) {
+        if (localStorage.hasOwnProperty(item)) {
             delete localStorage[ item ];
         }
     }

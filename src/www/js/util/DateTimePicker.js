@@ -1,6 +1,8 @@
 
-var DateTimePicker = function(){
-    
+var DateTimePicker = function () {
+
+    var that = {};
+
     /**
      * Regular expression for validating the time component of a timestamp prompt.
      */
@@ -24,8 +26,8 @@ var DateTimePicker = function(){
                leftPad(date.getMonth() + 1) + "-" +
                leftPad(date.getDate());
     };
-    
-    this.createDatePicker = function(date){
+
+    that.createDatePicker = function (date) {
         date = date || new Date();
 
         var datePicker = document.createElement('input');
@@ -38,7 +40,7 @@ var DateTimePicker = function(){
         if(datePicker.type === 'text' || navigator.userAgent.match(/(Android)/)){
             $(datePicker).scroller({dateFormat:'yyyy-mm-dd', dateOrder:'yymmdd'});
         }
-        
+
         datePicker.isValid = function(){
             return datePicker.value.match(DATE_REGEX);
         };
@@ -46,7 +48,7 @@ var DateTimePicker = function(){
         return datePicker;
     };
 
-    this.createTimePicker = function(date){
+    that.createTimePicker = function(date){
         date = date || new Date();
 
         var timePicker = document.createElement('input');
@@ -57,31 +59,32 @@ var DateTimePicker = function(){
         if(timePicker.type === 'text' || navigator.userAgent.match(/(Android)/)){
             $(timePicker).scroller({preset:'time', ampm: false, timeFormat:'HH:ii'});
         }
-        
+
         timePicker.isValid = function(){
             return timePicker.value.match(TIME_REGEX);
         };
-        
+
         timePicker.getInput = function(){
             return timePicker.value;
         };
-        
+
         timePicker.getHours = function(){
             return parseInt(timePicker.getInput().split(":")[0], 10);
         };
-        
+
         timePicker.getMinutes = function(){
             return parseInt(timePicker.getInput().split(":")[1], 10);
         };
-        
-        
+
+
         return timePicker;
     };
-
+    
+    return that;
 };
 
 DateTimePicker.createDateTimeForm = function(title, datePicker, timePicker){
-    
+
     var form = mwf.decorator.Form(title);
 
     form.addLabel("Select Date");

@@ -1,34 +1,35 @@
+
 Init.invokeOnReady(function() {
 
     var isInputValid = function(){
 
-        if($('#current-password').val().length == 0){
+        if($('#current-password').val().length === 0){
             MessageDialogController.showMessage('Please enter your current password.');
             $('#current-password').focus();
 
             return false;
         }
 
-        if($('#new-password').val().length == 0){
+        if($('#new-password').val().length === 0){
             MessageDialogController.showMessage('Please enter your new password.');
             $('#new-password').focus();
             return false;
         }
 
 
-        if($('#confirm-password').val().length == 0){
+        if($('#confirm-password').val().length === 0){
             MessageDialogController.showMessage('Please confirm your password.');
             $('#confirm-password').focus();
             return false;
         }
 
-        if($('#new-password').val() != $('#confirm-password').val()){
+        if ($('#new-password').val() !== $('#confirm-password').val()) {
             MessageDialogController.showMessage('New password and password confirmation do not match.');
             $('#confirm-password').focus();
             return false;
         }
 
-        if(!auth.isPasswordValid($('#new-password').val())){
+        if (!auth.isPasswordValid($('#new-password').val())) {
             MessageDialogController.showMessage(auth.getPasswordRequirements());
             $('#new-password').focus();
             return false;
@@ -38,16 +39,18 @@ Init.invokeOnReady(function() {
 
     };
 
-    $("#change-password").click(function(){
+    $("#change-password").click(function () {
 
-        if(!isInputValid())
+        if (!isInputValid()) {
             return;
+        }
+
 
         var currentPassword = $("#current-password").val();
         var newPassword     = $("#new-password").val();
 
-        var onSuccess = function() {
-            Spinner.hide(function(){
+        var onSuccess = function () {
+            Spinner.hide(function () {
                 auth.setAuthErrorState(true);
                 MessageDialogController.showMessage('Your password has been successfully changed. Please login to continue.');
                 PageNavigation.openAuthenticationPage();
@@ -56,19 +59,16 @@ Init.invokeOnReady(function() {
 
         };
 
-        var onError = function(response){
-            Spinner.hide(function(){
-                if(response){
+        var onError = function (response) {
+            Spinner.hide(function () {
+                if (response) {
                     MessageDialogController.showMessage(response.errors[0].text);
-                }else{
+                } else {
                     MessageDialogController.showMessage('Network error occured. Please try again.');
                 }
 
                 $('#current-password').focus();
             });
-
-
-
         };
 
         Spinner.show();

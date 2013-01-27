@@ -38,3 +38,4 @@ Thumbs.db
 # NetBeans generated files #
 ############################
 nbproject/*
+/src/www/nbproject/private/
