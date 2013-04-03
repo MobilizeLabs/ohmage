@@ -1,3 +1,6 @@
+/**
+ * @author Zorayr Khalapyan
+ */
 var ConfigManager = (function() {
 
     var that = {};
@@ -15,11 +18,12 @@ var ConfigManager = (function() {
     var SERVERS = [
 
         //Test server.
-        "https://lausd.mobilizingcs.org",
-
         "https://test.ohmage.org",
 
         //Prod server.
+        "https://lausd.mobilizingcs.org",
+
+        //Additional server.
         "https://pilots.mobilizelabs.org"
     ];
 
@@ -67,6 +71,14 @@ var ConfigManager = (function() {
          */
         CLIENT_NAME : "ohmage-mwf"
 
+    };
+
+    /**
+     * Returns true if the current configuration is set up for testing environment.
+     * @returns {boolean}
+     */
+    that.isInTestMode = function () {
+        return TEST_MODE;
     };
 
     that.reset = function() {
