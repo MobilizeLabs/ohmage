@@ -6,52 +6,81 @@
 var Logger = (function () {
     "use strict";
 
-    var formatOutput = function (namespace, message) {
+    var ARG_INSERT_SENTINEL = "$";
+
+    var formatOutput = function (namespace, message, args) {
+        var i, argsLength;
+        for (i = 0, argsLength = args.length; i < argsLength; i += 1) {
+            message = message.replace(ARG_INSERT_SENTINEL + i, args[i]);
+        }
         return namespace + ": " + message;
     };
 
-    var log = function (namespace, message) {
-        console.log(formatOutput(namespace, message));
+    var log = function (namespace, message, args) {
+        var output = formatOutput(namespace, message, args);
+        console.log(output);
+        return output;
     };
 
-    var debug = function (namespace, message) {
-        console.debug(formatOutput(namespace, message));
+    var debug = function (namespace, message, args) {
+        var output = formatOutput(namespace, message, args);
+        console.debug(output);
+        return output;
     };
 
-    var warn = function (namespace, message) {
-        console.warn(formatOutput(namespace, message));
+    var warn = function (namespace, message, args) {
+        var output = formatOutput(namespace, message, args);
+        console.warn(output);
+        return output;
     };
 
-    var error = function (namespace, message) {
-        console.error(formatOutput(namespace, message));
+    var error = function (namespace, message, args) {
+        var output = formatOutput(namespace, message, args);
+        console.error(output);
+        return output;
     };
 
-    var info = function (namespace, message) {
-        console.info(formatOutput(namespace, message));
+    var info = function (namespace, message, args) {
+        var output = formatOutput(namespace, message, args);
+        console.info(output);
+        return output;
     };
 
     return function (namespace) {
         var that = {};
 
         that.log = function (message) {
-            log(namespace, message);
+            return log(namespace, message, arguments);
         };
 
         that.debug = function (message) {
-            debug(namespace, message);
+            return debug(namespace, message, arguments);
         };
 
         that.warn = function (message) {
-            warn(namespace, message);
+            return warn(namespace, message, arguments);
         };
 
         that.error = function (message) {
-            error(namespace, message);
+            return error(namespace, message, arguments);
         };
 
         that.info = function (message) {
-            info(namespace, message);
+            return info(namespace, message, arguments);
         };
+
+        /**
+         * Returns the namespace of the current logger.
+         * @returns {String} The name of the current logger.
+         */
+        that.getNamespace = function () {
+            return namespace;
+        };
+
+        /**
+         * @visibleForTesting
+         */
+        that.formatOutput = formatOutput;
 
         return that;
     };
