@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <script type="text/javascript"> var checkpoint = true; </script>
+
+    <meta name="viewport" content="height=device-height,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Ohmage | Dashboard</title>
+
+    <style type="text/css">
+        @import url("css/mwoc.css");
+        @import url("lib/mwf/css/mwf.css");
+        @import url("css/highlight-styles.css");
+        @import url("css/grid.css");
+        @import url("css/spinner.css");
+    </style>
+
+    <!-- IMPORT PHONEGAP LIBRARY -->
+    <script type="text/javascript" src="lib/cordova/js/bin/core/cordova.js"></script>
+    <script type="text/javascript" src="lib/cordova/js/bin/plugins/LocalNotification.js"></script>
+
+    <!-- IMPORT MWF JAVASCRIPT LIBRARY -->
+    <script type="text/javascript" src="lib/mwf/js/mwf.js"></script>
+    <script type="text/javascript" src="lib/mwf/js/decorator.js"> </script>
+    <script type="text/javascript" src="lib/mwf/js/content.js"> </script>
+    <script type="text/javascript" src="lib/mwf/js/button.js"> </script>
+    <script type="text/javascript" src="lib/mwf/js/menu.js"> </script>
+
+    <!-- IMPORT JQUERY AND EXTENSIONS -->
+    <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.extensions.js"></script>
+
+    <script type="text/javascript" src="js/util/Logger.js"></script>
+    <script type="text/javascript" src="js/controllers/page/PageController.js"></script>
+    <script type="text/javascript" src="js/models/page/PageModel.js"></script>
+    <script type="text/javascript" src="js/views/page/PageView.js"></script>
+
+
+    <script>
+
+        var page1 = PageModel("page1", "Welcome to Page 1");
+        var page2 = PageModel("page2", "Welcome to Page 2");
+
+        PageController.registerPages(page1, page2);
+        //PageController.registerPage(page2);
+
+        PageController.setRootPageModel(page1);
+
+        $(document).ready(function () {
+            PageController.setScreen(document.getElementById("screen"));
+            PageController.goTo("page1");
+            console.log(PageController.getRegisteredPages());
+        });
+
+        
+    </script>
+
+
+
+</head>
+<body>
+
+    <h1 id="header">
+        <a>
+            <img src="img/home-icon.gif" alt="home"/>
+            <span id="header-title"></span>
+        </a>
+    </h1>
+
+    <div id="screen"></div>
+
+    <div id="footer">
+        <p>
+            <a href="privacy.html">View Our Privacy Policy</a>
+        </p>
+    </div>
+
+</body>
+</html>

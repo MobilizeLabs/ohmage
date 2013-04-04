@@ -2,42 +2,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>QUnit Tests</title>
+    <title>QUnit Tests</title>
 
-  <!-- Include QUnit Library -->
-  <link rel="stylesheet" href="../lib/qunit/css/qunit.css">
-  <script src="../lib/qunit/js/qunit.js"></script>
+    <!-- Include QUnit Library -->
+    <link rel="stylesheet" href="../lib/qunit/css/qunit.css">
+    <script src="../lib/qunit/js/qunit.js"></script>
 
-  <!-- Include JsHamcrest and JsMockito Library -->
-  <script src="../lib/jsmockito/jsmockito-1.0.4.js"></script>
-  <script src="../lib/jshamcrest/jshamcrest-0.5.2.js"></script>
-  <script type="text/javascript">
+    <!-- Include JsHamcrest and JsMockito Library -->
+    <script src="../lib/jsmockito/jsmockito-1.0.4.js"></script>
+    <script src="../lib/jshamcrest/jshamcrest-0.5.2.js"></script>
+    <script type="text/javascript">
       JsHamcrest.Integration.QUnit();
       JsMockito.Integration.QUnit();
-  </script>
+    </script>
 
-  <script src="../js/util/DeviceDetection.js"></script>
-  <script src="./util/DeviceDetectionTest.js"></script>
+    <script src="../js/util/DeviceDetection.js"></script>
+    <script src="./util/DeviceDetectionTest.js"></script>
 
-  <script src="../js/util/LocalMap.js"></script>
-  <script src="./util/LocalMapTest.js"></script>
+    <script src="../js/util/LocalMap.js"></script>
+    <script src="./util/LocalMapTest.js"></script>
 
-  <script src="../js/config/ConfigManager.js"></script>
-  <script src="./config/ConfigManagerTest.js"></script>
+    <script type="text/javascript" src="../js/util/Logger.js"></script>
+    <script type="text/javascript" src="./util/LoggerTest.js"></script>
 
-  <script src="../js/util/UUIDGen.js"></script>
-  <script src="./util/UUIDGenTest.js"></script>
+    <script src="../js/util/UUIDGen.js"></script>
+    <script src="./util/UUIDGenTest.js"></script>
 
-  <script src="../js/pegjs/ConditionalParser.js"></script>
-  <script src="../js/pegjs/peg-0.7.0.js"></script>
-  <script src="./pegjs/ConditionalParserTest.js"></script>
+    <script src="../js/config/ConfigManager.js"></script>
+    <script src="./config/ConfigManagerTest.js"></script>
 
-  <script type="text/javascript" src="../js/util/LocalNotificationAdapter.js"></script>
+    <script src="../js/config/ConfigManager.js"></script>
+    <script src="./config/ConfigManagerTest.js"></script>
 
-  <script src="../js/models/reminders/ReminderModel.js"></script>
-  <script src="./models/reminders/ReminderModelTest.js"></script>
+
+    <script src="../js/pegjs/ConditionalParser.js"></script>
+    <script src="../js/pegjs/peg-0.7.0.js"></script>
+    <script src="./pegjs/ConditionalParserTest.js"></script>
+
+    <script type="text/javascript" src="../js/util/LocalNotificationAdapter.js"></script>
+
+    <script src="../js/models/reminders/ReminderModel.js"></script>
+    <script src="./models/reminders/ReminderModelTest.js"></script>
+
+    <script src="../js/models/page/PageModel.js"></script>
+    <script src="../js/controllers/page/PageController.js"></script>
+    <script src="./controllers/page/PageControllerTest.js"></script>
+
 
 </head>
 <body>
