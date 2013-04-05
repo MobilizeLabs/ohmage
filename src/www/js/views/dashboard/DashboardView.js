@@ -10,19 +10,30 @@ var DashboardView = function (dashboardModel) {
         return 'img/dash/dash_' + iconKey.toLowerCase() + '.png';
     };
 
+    var onDashboardIconClickCallbackClosure = function (dashboardItemKey) {
+        return function () {
+            that.onDashboardIconClickCallback(dashboardItemKey);
+        };
+    };
+
     var createDashboardMenu = function () {
         //var queueSize = SurveyResponseModel.getUploadQueueSize();
         //var queueLabel = "Queue (";// + queueSize + ")";
 
-        var dashboardMenu = mwf.decorator.Menu();
-        var dashboardItems = dashboardModel.getDashboardItems(), itemKey;
-        for (itemKey in dashboardItems) {
-            if (dashboardItems.hasOwnProperty(itemKey)) {
-                dashboardMenu.addMenuImageItem(dashboardItems[itemKey], null, getDashboardIcon(itemKey));
+        var dashboardMenu = mwf.decorator.Menu(),
+            dashboardItems = dashboardModel.getDashboardItems(),
+            dashboardItemKey,
+            menuItem;
+        for (dashboardItemKey in dashboardItems) {
+            if (dashboardItems.hasOwnProperty(dashboardItemKey)) {
+                menuItem = dashboardMenu.addMenuImageItem(dashboardItems[dashboardItemKey], null, getDashboardIcon(dashboardItemKey));
+                TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onDashboardIconClickCallbackClosure(dashboardItemKey), "menu-highlight");
             }
         }
         return dashboardMenu;
     };
+
+    that.onDashboardIconClickCallback = function (dashboardItemKey) {};
 
     that.render = function () {
         var div = document.createElement('div');

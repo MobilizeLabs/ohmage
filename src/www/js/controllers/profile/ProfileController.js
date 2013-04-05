@@ -1,51 +1,52 @@
-var ProfileController = function() {
+var ProfileController = function () {
+    "use strict";
+
     var that = {};
-    
-    that.changePasswordHandler = function() {
+
+    var profileView = ProfileView();
+
+    //Attach handlers to the view.
+    profileView.changePasswordHandler = that.changePasswordHandler;
+    profileView.clearCustomizedChoicesHandler = that.clearCustomizedChoicesHandler;
+    profileView.logoutAndClearDataHandler = that.logoutAndClearDataHandler;
+    profileView.disableGpsHandler = that.disableGpsHandler;
+    profileView.enableGpsHandler = that.enableGpsHandler;
+
+    that.changePasswordHandler = function () {
         PageNavigation.openChangePasswordPage();
     };
-    
-    that.enableGpsHandler = function() {
-        ConfigManager.setGpsEnabled( true );
+
+    that.enableGpsHandler = function () {
+        ConfigManager.setGpsEnabled(true);
         PageNavigation.openProfilePage();
     };
-    
-    that.disableGpsHandler = function() {
-        ConfigManager.setGpsEnabled( false );
+
+    that.disableGpsHandler = function () {
+        ConfigManager.setGpsEnabled(false);
         PageNavigation.openProfilePage();
     };
-    
-    that.clearCustomizedChoicesHandler = function() {
+
+    that.clearCustomizedChoicesHandler = function () {
         var confirmMessage = "Are you sure you would like to clear all your custom choices?";
         var confirmButtonLabels = "Yes,No";
-        var confirmCallback = function( confirmed ) {
-            if( confirmed ) {
+        var confirmCallback = function (confirmed) {
+            if (confirmed) {
                 CustomPropertiesVault.deleteAllCustomProperties();
-                MessageDialogController.showMessage( "All custom choices have been cleared." );
+                MessageDialogController.showMessage("All custom choices have been cleared.");
             }
         };
-        MessageDialogController.showConfirm( confirmMessage, confirmCallback, confirmButtonLabels );
+        MessageDialogController.showConfirm(confirmMessage, confirmCallback, confirmButtonLabels);
     };
-    
-    that.logoutAndClearDataHandler = function() {
-        if( auth.logout() ) {
+
+    that.logoutAndClearDataHandler = function () {
+        if (auth.logout()) {
             PageNavigation.openAuthenticationPage();
         }
     };
-    
-    that.renderProfileView = function() {
-      
-        var profileView = ProfileView();
-        
-        //Attach handlers to the view.
-        profileView.changePasswordHandler = that.changePasswordHandler;
-        profileView.clearCustomizedChoicesHandler = that.clearCustomizedChoicesHandler;
-        profileView.logoutAndClearDataHandler = that.logoutAndClearDataHandler;
-        profileView.disableGpsHandler = that.disableGpsHandler;
-        profileView.enableGpsHandler = that.enableGpsHandler;
-        
-        return profileView.render();
+
+    that.getView = function () {
+        return profileView;
     };
-    
+
     return that;
 };

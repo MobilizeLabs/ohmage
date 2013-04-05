@@ -37,19 +37,30 @@
     <script type="text/javascript" src="js/util/Logger.js"></script>
     <script type="text/javascript" src="js/util/DeviceDetection.js"></script>
 
+    <script type="text/javascript" src="js/config/ConfigManager.js"></script>
+
     <script type="text/javascript" src="js/controllers/page/PageController.js"></script>
+    <script type="text/javascript" src="js/controllers/profile/ProfileController.js"></script>
     <script type="text/javascript" src="js/controllers/dashboard/DashboardController.js"></script>
 
     <script type="text/javascript" src="js/models/page/PageModel.js"></script>
     <script type="text/javascript" src="js/models/dashboard/DashboardModel.js"></script>
 
+    <script type="text/javascript" src="js/views/profile/ProfileView.js"></script>
     <script type="text/javascript" src="js/views/dashboard/DashboardView.js"></script>
     <script type="text/javascript" src="js/views/page/PageView.js"></script>
 
     <script type="text/javascript" src="js/init/init.js"></script>
     <script type="text/javascript" src="js/init/init.Index.js"></script>
+    <script type="text/javascript" src="js/init/init.Profile.js"></script>
 
-
+    <script>
+        auth = {
+            getUsername : function () {
+                return "username-mock"
+            }
+        };
+    </script>
 
 </head>
 <body>

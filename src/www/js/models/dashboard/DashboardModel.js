@@ -15,12 +15,12 @@ var DashboardModel = function () {
      * "Tasks", but the page names have to remain the same.
      */
     var dashboardItems = {
-        "Campaigns" : "Campaigns",
-        "Surveys"   : "Surveys",
-        "Queue"     : "Queue",
-        "Profile"   : "Profile",
-        "Help"      : "Help",
-        "Reminders" : "Reminders"
+        "campaigns" : "Campaigns",
+        "surveys"   : "Surveys",
+        "queue"     : "Queue",
+        "profile"   : "Profile",
+        "help"      : "Help",
+        "reminders" : "Reminders"
     };
 
     /**

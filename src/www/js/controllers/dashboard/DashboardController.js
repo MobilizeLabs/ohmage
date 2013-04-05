@@ -12,7 +12,7 @@ var DashboardController = function (dashboardModel) {
 
     var dashboardView = DashboardView(dashboardModel);
 
-    dashboardView.onDashboardIconPressCallback = function (dashboardItemKey) {
+    dashboardView.onDashboardIconClickCallback = function (dashboardItemKey) {
         //Since the keys we used to index the dashboard buttons correspond to
         //to the actual page names, we don't have to do any conversion.
         PageController.goTo(dashboardItemKey);
