@@ -25,7 +25,7 @@ var DashboardModel = function () {
 
     /**
      * Returns an object representing the items displayed on the dashboard.
-     * @returns {{Campaigns: string, Surveys: string, Queue: string, Profile: string, Help: string, Reminders: string}}
+     * @returns {{campaigns: string, surveys: string, queue: string, profile: string, help: string, reminders: string}}
      */
     that.getDashboardItems = function () {
         return dashboardItems;

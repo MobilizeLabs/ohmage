@@ -7,7 +7,5 @@ Init.invokeOnReady(function () {
     pageModel.setTopButton("Dashboard", PageController.openDashboard);
     pageModel.setView(profileController.getView());
     PageController.registerPage(pageModel);
-    PageController.goToRootPage();
-
 
 });

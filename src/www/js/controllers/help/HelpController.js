@@ -1,17 +1,20 @@
-var HelpController = function(){
-    var self = {};
-    
-    var helpModel  = new HelpModel();
-    
-    self.renderHelpMenu = function(){
-        var helpMenuView = new HelpMenuView(helpModel.getAllSections());
-        return helpMenuView.render();
+var HelpController = function () {
+    "use strict";
+    var that = {};
+
+    var helpModel = HelpModel();
+
+    that.getHelpMenuView = function () {
+        var helpMenuView = HelpMenuView(helpModel.getAllSections());
+        helpMenuView.helpSectionClickedCallback = function (helpSectionIndex) {
+            PageController.openHelpSection({helpSectionIndex : helpSectionIndex});
+        };
+        return helpMenuView;
     };
-    
-    self.renderHelpSection = function(index){
-        var helpSectionView = new HelpSectionView(helpModel.getHelpSection(index));
-        return helpSectionView.render();
+
+    that.getHelpSectionView = function (helpSectionIndex) {
+        return HelpSectionView(helpModel.getHelpSection(helpSectionIndex));
     };
-    
-    return self;  
+
+    return that;
 };

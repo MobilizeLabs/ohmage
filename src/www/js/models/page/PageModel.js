@@ -19,6 +19,12 @@ var PageModel = function (pageName, pageTitle) {
      */
     var topButtonLabel, topButtonCallback;
 
+    /**
+     * Stores a callback that is invoked before the page is rendered. This
+     * callback can be used to fetch any page parameters for rendering.
+     */
+    var pageInitializer = null;
+
     that.getPageName = function () {
         return pageName;
     };
@@ -59,6 +65,16 @@ var PageModel = function (pageName, pageTitle) {
 
     that.getView = function () {
         return view;
+    };
+
+    that.setPageInitializer = function (newPageInitializer) {
+        pageInitializer = newPageInitializer;
+    };
+
+    that.initialize = function () {
+        if (pageInitializer !== null) {
+            pageInitializer();
+        }
     };
 
     return that;

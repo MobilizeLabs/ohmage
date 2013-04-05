@@ -91,7 +91,7 @@ test("Test tracking the current page.", function () {
     var currentPageName = PageController.getCurrentPageName();
     ///
     ok(currentPageName === "PageName", "Current page should be the last page that the user visited.");
-    ok(PageController.getPageStack().length === 1, "After visiting a single page, there should only be one page in the page stack.");
+    ok(PageStackModel.getStackSize() === 1, "After visiting a single page, there should only be one page in the page stack.");
 });
 
 test("Test visiting the root page.", function () {
@@ -102,7 +102,7 @@ test("Test visiting the root page.", function () {
     var goToRootPageResult = PageController.goTo("RootPageName");
     ///
     ok(goToRootPageResult, "The user should be able to visit the root page");
-    ok(PageController.getPageStack().length === 1, "After visiting the root page, there should only be one page in the page stack.");
+    ok(PageStackModel.getStackSize() === 1, "After visiting the root page, there should only be one page in the page stack.");
 });
 
 test("Test visiting two pages.", function () {
@@ -113,7 +113,7 @@ test("Test visiting two pages.", function () {
     PageController.goTo("PageName");
     ///
     ok(PageController.getCurrentPageName() === "PageName", "Current page should be the last page that the user visited.");
-    ok(PageController.getPageStack().length === 2, "After visiting two pages, there should be two pages in the page stack.");
+    ok(PageStackModel.getStackSize() === 2, "After visiting two pages, there should be two pages in the page stack.");
 });
 
 test("Test visiting two pages and going back.", function () {
@@ -125,5 +125,61 @@ test("Test visiting two pages and going back.", function () {
     PageController.goBack();
     ///
     ok(PageController.getCurrentPageName() === "RootPageName", "Current page should be the page that the user went back to.");
-    ok(PageController.getPageStack().length === 1, "After visiting two pages and going back, there should be only one page in the page stack.");
+    ok(PageStackModel.getStackSize() === 1, "After visiting two pages and going back, there should be only one page in the page stack.");
+});
+
+test("Test page parameters.", function () {
+    "use strict";
+    fixture.setPageController();
+    PageController.goTo("RootPageName");
+    ///
+    PageController.goTo("PageName", {param : "value"});
+    ///
+    var pageParams = PageStackModel.getCurrentPageParams();
+    ok(pageParams.param === "value", "The current page should have the same page parameters as was set.");
+});
+
+test("Test page parameters with dynamically created open page function.", function () {
+    "use strict";
+    fixture.setPageController();
+    PageController.goTo("RootPageName");
+    ///
+    PageController.openPageName({param : "value"});
+    ///
+    var pageParams = PageStackModel.getCurrentPageParams();
+    ok(pageParams.param === "value", "The current page should have the same page parameters as was set.");
+});
+
+test("Test page parameters after going back.", function () {
+    "use strict";
+    fixture.setPageController();
+    ///
+    PageController.goTo("RootPageName", {rootParam : "rootParamValue"});
+    PageController.goTo("PageName", {param : "value"});
+    PageController.goBack();
+    ///
+    var pageParams = PageStackModel.getCurrentPageParams();
+    ok(pageParams.rootParam === "rootParamValue", "The current page should have the same page parameters as was set.");
+});
+
+test("Test getting a page parameter by name.", function () {
+    "use strict";
+    fixture.setPageController();
+    PageController.goTo("RootPageName", {rootParam : "rootParamValue"});
+    PageController.goTo("PageName", {param : "value"});
+    ///
+    var pageParamName = PageController.getPageParameter("param");
+    ///
+    ok(pageParamName === "value", "The parameter fetched by name should be equal to the parameter's set value.");
+});
+
+test("Test getting a page parameter by a wrong name.", function () {
+    "use strict";
+    fixture.setPageController();
+    PageController.goTo("RootPageName", {rootParam : "rootParamValue"});
+    PageController.goTo("PageName", {param : "value"});
+    ///
+    var pageParamName = PageController.getPageParameter("WRONG_PARAM_NAME");
+    ///
+    ok(pageParamName === null, "The value returned should be null if the parameter name is wrong.");
 });
