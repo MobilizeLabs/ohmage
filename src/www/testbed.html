@@ -27,35 +27,27 @@
     <script type="text/javascript" src="lib/mwf/js/content.js"> </script>
     <script type="text/javascript" src="lib/mwf/js/button.js"> </script>
     <script type="text/javascript" src="lib/mwf/js/menu.js"> </script>
+    <script type="text/javascript" src="js/util/TouchEnabledItemModel.js"></script>
 
     <!-- IMPORT JQUERY AND EXTENSIONS -->
     <script type="text/javascript" src="lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery.extensions.js"></script>
 
+    <script type="text/javascript" src="js/util/LocalMap.js"></script>
     <script type="text/javascript" src="js/util/Logger.js"></script>
+    <script type="text/javascript" src="js/util/DeviceDetection.js"></script>
+
     <script type="text/javascript" src="js/controllers/page/PageController.js"></script>
+    <script type="text/javascript" src="js/controllers/dashboard/DashboardController.js"></script>
+
     <script type="text/javascript" src="js/models/page/PageModel.js"></script>
+    <script type="text/javascript" src="js/models/dashboard/DashboardModel.js"></script>
+
+    <script type="text/javascript" src="js/views/dashboard/DashboardView.js"></script>
     <script type="text/javascript" src="js/views/page/PageView.js"></script>
 
-
-    <script>
-
-        var page1 = PageModel("page1", "Welcome to Page 1");
-        var page2 = PageModel("page2", "Welcome to Page 2");
-
-        PageController.registerPages(page1, page2);
-        //PageController.registerPage(page2);
-
-        PageController.setRootPageModel(page1);
-
-        $(document).ready(function () {
-            PageController.setScreen(document.getElementById("screen"));
-            PageController.goTo("page1");
-            console.log(PageController.getRegisteredPages());
-        });
-
-        
-    </script>
+    <script type="text/javascript" src="js/init/init.js"></script>
+    <script type="text/javascript" src="js/init/init.Index.js"></script>
 
 
 

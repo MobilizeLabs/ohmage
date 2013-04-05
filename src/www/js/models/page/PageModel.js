@@ -10,12 +10,14 @@ var PageModel = function (pageName, pageTitle) {
 
     var that = {};
 
+    var view = null;
+
     /**
      * Stores information required for adding a top button to the mobile page.
      * If the top button name is null, that means that the current page does not
      * have a top button.
      */
-    var topButtonName, topButtonCallback;
+    var topButtonLabel, topButtonCallback;
 
     that.getPageName = function () {
         return pageName;
@@ -33,14 +35,30 @@ var PageModel = function (pageName, pageTitle) {
         return pageTitle;
     };
 
-    that.setTopButton = function (newTopButtonName, newTopButtonCallback) {
-        topButtonName = newTopButtonName;
+    that.setTopButton = function (newTopButtonLabel, newTopButtonCallback) {
+        topButtonLabel = newTopButtonLabel;
         topButtonCallback = newTopButtonCallback;
     };
 
+    that.getTopButtonName = function () {
+        return topButtonLabel;
+    };
+
+    that.getTopButtonCallback = function () {
+        return topButtonCallback;
+    };
+
     that.removeTopButton = function () {
-        topButtonName = null;
+        topButtonLabel = null;
         topButtonCallback = null;
+    };
+
+    that.setView = function (newView) {
+        view = newView;
+    };
+
+    that.getView = function () {
+        return view;
     };
 
     return that;

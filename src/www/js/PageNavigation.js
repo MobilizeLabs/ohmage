@@ -206,7 +206,7 @@ var PageNavigation = (function(){
      * Redirects the user to tha authentication page.
      */
     self.openAuthenticationPage = function() {
-        if (DeviceDetection.isNativeApplication()) {
+        if (DeviceDetection.isNativeApplication() || ConfigManager.isInTestMode()) {
             self.redirect( "auth.html" );
         } else {
             linkRedirect( "https://test.ohmage.org/web/#login" );

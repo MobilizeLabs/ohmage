@@ -14,9 +14,8 @@ var PageView = function (pageModel) {
     var header, view, footer;
 
     that.render = function () {
-        var div = document.createElement('div');
-        div.innerHTML = pageModel.getPageName();
-        return div;
+        mwf.decorator.TopButton(pageModel.getTopButtonName(), null, pageModel.getTopButtonCallback(), true);
+        return pageModel.getView().render();
     };
 
     return that;
