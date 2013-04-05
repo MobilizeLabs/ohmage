@@ -1,5 +1,5 @@
-var ServiceController = ( function( ) {
-
+var ServiceController = (function () {
+    "use strict";
     var that = {};
 
     /**
@@ -9,49 +9,48 @@ var ServiceController = ( function( ) {
      * @param fun  the name of the function to be invoked.
      * @param args the arguments to pass to the callback function.
      */
-    var invoke = function( fun, args ) {
-        if( fun && typeof fun === 'function' ) {
-            fun( args );
+    var invoke = function (fun, args) {
+        if (fun && typeof fun === 'function') {
+            fun(args);
         }
     };
 
-    var onSuccess = function( onSuccessCallback, onErrorCallback, url, redirectOnAuthError ) {
+    var onSuccess = function (onSuccessCallback, onErrorCallback, url, redirectOnAuthError) {
 
-        return function( response ) {
+        return function (response) {
 
             console.log("Received response for URL (" + url + ") with the following response data: " + JSON.stringify(response));
 
-            switch( response.result ) {
+            switch (response.result) {
+            case 'success':
+                invoke(onSuccessCallback, response);
+                break;
 
-                case 'success':
-                    invoke(onSuccessCallback, response);
-                    break;
+            case 'failure': {
+                invoke(onErrorCallback, response);
 
-                case 'failure':{
-                    invoke(onErrorCallback, response);
-
-                    //If the API request failed because of authentication related
-                    //error, then redirect the user to the authentication page.
-                    if( redirectOnAuthError ) {
-                        for( var i = 0; i < response.errors.length; i++ ) {
-                            if(response.errors[i].code == '0200'){
-                                if (DeviceDetection.isNativeApplication()) {
-                                    auth.setAuthErrorState( true );    
-                                }
-                                PageNavigation.openAuthenticationPage();
-                                break;
+                //If the API request failed because of authentication related
+                //error, then redirect the user to the authentication page.
+                if( redirectOnAuthError ) {
+                    for( var i = 0; i < response.errors.length; i++ ) {
+                        if(response.errors[i].code == '0200'){
+                            if (DeviceDetection.isNativeApplication()) {
+                                auth.setAuthErrorState( true );
                             }
-
+                            PageNavigation.openAuthenticationPage();
+                            break;
                         }
-                    }
 
-                    break;
+                    }
                 }
 
+                break;
+            }
 
-                default:
-                    invoke( onSuccess, response );
-                    break;
+
+            default:
+                invoke( onSuccess, response );
+                break;
             }
 
         };
@@ -59,12 +58,10 @@ var ServiceController = ( function( ) {
 
     };
 
-    var onError = function( onErrorCallback, url ) {
+    var onError = function (onErrorCallback, url) {
         return function() {
-            console.log("AJAX exception for url " + (ConfigManager.getServerEndpoint() + url));
-            invoke( onErrorCallback, false );
+            invoke(onErrorCallback, false);
         };
-
     };
 
     /**
@@ -96,7 +93,6 @@ var ServiceController = ( function( ) {
 
             if (!data["password"] && !data["auth_token"]) {
                 if (auth.isUserAuthenticatedByToken()) {
-                    console.log("setting auth_token");
                     data["auth_token"] = auth.getAuthToken();
                 } else {
                     data["user"] = auth.getUsername();
