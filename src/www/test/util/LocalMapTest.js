@@ -1,5 +1,5 @@
-module( "util.LocalMap", {
-  setup: function() {
+module("util.LocalMap", {
+  setup: function () {
     fixture.localStorageBackup = {};
     for(var key in localStorage){
         fixture.localStorageBackup[key] = localStorage[ key ];

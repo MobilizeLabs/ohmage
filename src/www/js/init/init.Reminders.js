@@ -1,4 +1,4 @@
-Init.invokeOnReady(function() {
+Init.invokeOnReady(function () {
     $("#reminders").append((new RemindersController()).render());
     $("#reminders").append(mwf.decorator.DoubleClickButton("Dashboard", PageNavigation.openDashboard,
                                                            "Pending", PageNavigation.openPendingSurveysView));

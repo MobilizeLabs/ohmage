@@ -1,14 +1,15 @@
 /**
  * @author Zorayr Khalapyan
  */
-var ConfigManager = (function() {
+var ConfigManager = (function () {
+    "use strict";
 
     var that = {};
 
     var configMap = LocalMap("config");
 
     /**
-     * If set to true, will use test server for deployement.
+     * If set to true, will use test server for deployment.
      */
     var TEST_MODE = true;
 
@@ -23,7 +24,7 @@ var ConfigManager = (function() {
         //Prod server.
         "https://lausd.mobilizingcs.org",
 
-        //Additional server.
+        //List additional servers below.
         "https://pilots.mobilizelabs.org"
     ];
 
@@ -35,9 +36,9 @@ var ConfigManager = (function() {
     var config = {
 
         /**
-         * ohmage server URL.
+         * Server endpoint.
          */
-        SERVER_ENDPOINT : SERVERS[ (TEST_MODE) ? 0 : 1 ],
+        SERVER_ENDPOINT : SERVERS[TEST_MODE ? 0 : 1],
 
         /**
          * URL for reading campaigns.
@@ -81,27 +82,27 @@ var ConfigManager = (function() {
         return TEST_MODE;
     };
 
-    that.reset = function() {
-        configMap.importMap( config );
+    that.reset = function () {
+        configMap.importMap(config);
     };
 
     /**
      * Generic method for accessing any available property.
      */
-    that.getProperty = function ( propertyName ) {
-        return configMap.get( propertyName );
+    that.getProperty = function (propertyName) {
+        return configMap.get(propertyName);
     };
 
     /**
      * Returns a list of available servers.
      */
-    that.getServers = function() {
+    that.getServers = function () {
         return SERVERS;
     };
 
     var property, camelCaseGetterName, camelCaseSetterName;
 
-    var toCamelCase = function( g ) {
+    var toCamelCase = function (g) {
         return g[1].toUpperCase();
     };
 
@@ -110,31 +111,31 @@ var ConfigManager = (function() {
      * to iterate through all the config properties and create accessor
      * functions to return the config's value.
      */
-    var addPropertyGetter = function( propertyName ) {
-        return function(){
-            return that.getProperty( propertyName );
-        }
+    var addPropertyGetter = function (propertyName) {
+        return function () {
+            return that.getProperty(propertyName);
+        };
     };
 
-    var addPropertySetter = function( propertyName ) {
-      return function( newConfigValue ) {
-          configMap.set( propertyName, newConfigValue );
-      };
+    var addPropertySetter = function (propertyName) {
+        return function (newConfigValue) {
+            configMap.set(propertyName, newConfigValue);
+        };
     };
 
-    for( property in config ) {
+    for (property in config ) {
 
-        //Convert CONSTNAT_CASE to camelCase.
-        camelCaseGetterName = ("get_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase );
-        camelCaseSetterName = ("set_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase );
+        //Convert CONSTANT_CASE to camelCase.
+        camelCaseGetterName = ("get_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase);
+        camelCaseSetterName = ("set_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase);
 
         //Create accessor functions to allow users to get and set config values.
-        that[ camelCaseGetterName ] = addPropertyGetter( property );
-        that[ camelCaseSetterName ] = addPropertySetter( property );
+        that[camelCaseGetterName] = addPropertyGetter(property);
+        that[camelCaseSetterName] = addPropertySetter(property);
     }
 
     //Transfer any values in config that have not been saved in localStorage.
-    for( var key in config ) {
+    for(var key in config ) {
         if ( !configMap.isSet( key ) ) {
             configMap.set( key, config[ key ] );
         }
