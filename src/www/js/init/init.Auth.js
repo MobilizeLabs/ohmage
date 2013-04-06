@@ -52,8 +52,8 @@ Init.invokeOnReady( function() {
 
     };
 
-    var login = function(){
-        if(!isInputValid()){
+    var login = function () {
+        if (!isInputValid()) {
             return;
         }
 
@@ -65,10 +65,10 @@ Init.invokeOnReady( function() {
         //On successful authentication, redirects the user to the dashboard.
         auth.authenticateByHash(username, password, function(success, response){
 
-           Spinner.hide(function(){
-               if(success){
+           Spinner.hide(function () {
+               if (success){
                    PageNavigation.openDashboard();
-               }else if(response){
+               } else if(response){
                    MessageDialogController.showMessage( response );
                }else{
                    MessageDialogController.showMessage( "Unable to login. Please try again." );

@@ -6,6 +6,10 @@
 
     <title>QUnit Tests</title>
 
+    <!-- IMPORT JQUERY AND EXTENSIONS -->
+    <script type="text/javascript" src="../lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.extensions.js"></script>
+
     <!-- Include QUnit Library -->
     <link rel="stylesheet" href="../lib/qunit/css/qunit.css">
     <script src="../lib/qunit/js/qunit.js"></script>
@@ -53,11 +57,18 @@
     <script src="./models/page/PageStackModelTest.js"></script>
     <script src="./controllers/page/PageControllerTest.js"></script>
 
-
     <script type="text/javascript" src="../js/service/campaigns/CampaignsMetadataService.js"></script>
     <script type="text/javascript" src="../js/models/campaigns/CampaignModel.js"></script>
     <script type="text/javascript" src="../js/models/campaigns/CampaignsModel.js"></script>
     <script type="text/javascript" src="./models/campaigns/CampaignsModelTest.js"></script>
+
+    
+    <script type="text/javascript" src="../js/models/auth/AuthenticationModel.js"></script>
+    <script type="text/javascript" src="./models/auth/AuthenticationModelTest.js"></script>
+    
+    <script type="text/javascript" src="../js/controllers/service/ServiceController.js"></script>
+    <script type="text/javascript" src="../js/service/auth/AuthenticationService.js"></script>
+    <script type="text/javascript" src="./service/auth/AuthenticationServiceTest.js"></script>
 
 </head>
 <body>

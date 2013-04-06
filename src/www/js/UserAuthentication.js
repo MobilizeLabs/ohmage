@@ -19,15 +19,17 @@ function UserAuthentication() {
      */
     var TOKEN_AUTH_URL = '/app/user/auth_token';
 
-    /**
-     * Authentication token cookie name.
-     */
-    var TOKEN_AUTH_COOKIE_NAME = 'auth_token';
 
     /**
      * Endpoint for user authentication via hash password.
      */
     var HASH_AUTH_URL = '/app/user/auth';
+
+    /**
+     * Authentication token cookie name.
+     */
+    var TOKEN_AUTH_COOKIE_NAME = 'auth_token';
+
 
     /**
      * Hash authentication cookie name.
@@ -162,7 +164,7 @@ function UserAuthentication() {
 
     this.isInAuthErrorState = function(){
         return session(AUTH_ERROR_STATE_COOKIE_NAME);
-    }
+    };
 
     /**
      * Returns the authentication token if it exists, or null otherwise.
@@ -170,7 +172,7 @@ function UserAuthentication() {
      */
     this.getAuthToken = function(){
         return session(TOKEN_AUTH_COOKIE_NAME) || $.cookie(TOKEN_AUTH_COOKIE_NAME);
-    }
+    };
 
     /**
      * Returns the hashed password if it exists, or null otherwise.
@@ -178,7 +180,7 @@ function UserAuthentication() {
      */
     this.getHashedPassword = function(){
         return session(HASH_AUTH_COOKIE_NAME);
-    }
+    };
 
     /**
      * Logs out the currently logged in user. This method is authentication

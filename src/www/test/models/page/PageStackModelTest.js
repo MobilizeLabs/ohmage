@@ -7,7 +7,7 @@ if (!fixture) {
     var fixture = {};
 }
 
-module("controllers.page.PageStackModel", {
+module("models.page.PageStackModel", {
     setup: function () {
         "use strict";
     },
