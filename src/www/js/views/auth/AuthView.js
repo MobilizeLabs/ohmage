@@ -8,18 +8,14 @@ var AuthView = function () {
     var that = AbstractView();
 
     /**
-     * Caches the loaded HTML view.
+     * Caches the generated DOM fragment for user's authentication view.
      * @type {String}
      */
     var view = null;
 
-    /**
-     * The URL to load the HTML.
-     * @type {string}
-     */
-    var VIEW_URL = "./views/auth/auth-view.html";
+    var usernameField;
 
-    var usernameField, passwordField;
+    var passwordField;
 
     var getUsername = function () {
         return usernameField.value;
@@ -39,7 +35,7 @@ var AuthView = function () {
         var password = getPassword();
 
         if (username.length === 0 && password.length === 0) {
-            MessageDialogController.showMessage('Please enter your username and pass word.', function () {
+            MessageDialogController.showMessage('Please enter your username and password.', function () {
                 usernameField.focus();
             });
             return false;
