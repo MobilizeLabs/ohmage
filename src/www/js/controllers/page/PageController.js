@@ -250,11 +250,12 @@ var PageController = (function () {
      * @param pageModel The page model to render.
      */
     that.render = function (pageModel) {
-        pageModel.initialize();
-        clearScreen();
-        var pageView =  PageView(pageModel);
-        screen.appendChild(pageView.render());
-        log.info("Rendered [$1] page.", pageModel.getPageName());
+        pageModel.initialize(function () {
+            clearScreen();
+            var pageView =  PageView(pageModel);
+            screen.appendChild(pageView.render());
+            log.info("Rendered [$1] page.", pageModel.getPageName());
+        });
     };
 
     return that;

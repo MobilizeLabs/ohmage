@@ -2,7 +2,7 @@
  * @author Zorayr Khalapyan
  * @version 4/5/13
  */
-var AuthenticationController = function () {
+var AuthenticationController = (function () {
     "use strict";
     var that = {};
 
@@ -99,5 +99,9 @@ var AuthenticationController = function () {
         return !that.isUserAuthenticated() || that.isInAuthErrorState();
     };
 
+    that.getView = function () {
+        return AuthView();
+    };
+
     return that;
-};
+}());

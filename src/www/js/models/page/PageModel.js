@@ -21,9 +21,14 @@ var PageModel = function (pageName, pageTitle) {
 
     /**
      * Stores a callback that is invoked before the page is rendered. This
-     * callback can be used to fetch any page parameters for rendering.
+     * callback can be used to fetch any page parameters for rendering. By
+     * default, the method is set to immediately invoke the onSuccessCallback.
      */
-    var pageInitializer = null;
+    var pageInitializer = function (onSuccessCallback) {
+        if (onSuccessCallback) {
+            onSuccessCallback();
+        }
+    };
 
     that.getPageName = function () {
         return pageName;
@@ -71,10 +76,10 @@ var PageModel = function (pageName, pageTitle) {
         pageInitializer = newPageInitializer;
     };
 
-    that.initialize = function () {
-        if (pageInitializer !== null) {
-            pageInitializer();
-        }
+    that.initialize = function (onSuccessCallback) {
+        pageInitializer(function () {
+            that.getView().initializeView(onSuccessCallback);
+        });
     };
 
     return that;

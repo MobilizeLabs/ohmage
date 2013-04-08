@@ -20,36 +20,33 @@ var ServiceController = (function () {
         return function (response) {
 
             console.log("Received response for URL (" + url + ") with the following response data: " + JSON.stringify(response));
-
+            var i;
             switch (response.result) {
             case 'success':
                 invoke(onSuccessCallback, response);
                 break;
 
-            case 'failure': {
+            case 'failure':
                 invoke(onErrorCallback, response);
 
                 //If the API request failed because of authentication related
                 //error, then redirect the user to the authentication page.
-                if( redirectOnAuthError ) {
-                    for( var i = 0; i < response.errors.length; i++ ) {
-                        if(response.errors[i].code == '0200'){
+                if (redirectOnAuthError) {
+                    for (i = 0; i < response.errors.length; i += 1) {
+                        if (response.errors[i].code === '0200') {
                             if (DeviceDetection.isNativeApplication()) {
-                                auth.setAuthErrorState( true );
+                                auth.setAuthErrorState(true);
                             }
                             PageNavigation.openAuthenticationPage();
                             break;
                         }
-
                     }
                 }
 
                 break;
-            }
-
 
             default:
-                invoke( onSuccess, response );
+                invoke(onSuccess, response);
                 break;
             }
 
@@ -59,7 +56,7 @@ var ServiceController = (function () {
     };
 
     var onError = function (onErrorCallback, url) {
-        return function() {
+        return function () {
             invoke(onErrorCallback, false);
         };
     };
@@ -82,11 +79,10 @@ var ServiceController = (function () {
      * @param onErrorCallback   The callback on API call error.
      * @param redirectOnAuthError
      */
-    that.serviceCall = function( type, url, data, dataType, onSuccessCallback, onErrorCallback, redirectOnAuthError ) {
+    that.serviceCall = function (type, url, data, dataType, onSuccessCallback, onErrorCallback, redirectOnAuthError) {
 
-        console.log(data);
         //By default, redirect the user to the login page on authentication error.
-        redirectOnAuthError = (typeof(redirectOnAuthError) == 'undefined')? true : redirectOnAuthError;
+        redirectOnAuthError = (typeof (redirectOnAuthError) == 'undefined')? true : redirectOnAuthError;
 
 
         if (auth.isUserAuthenticated()) {
@@ -107,18 +103,30 @@ var ServiceController = (function () {
 
         console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + JSON.stringify(data));
 
-        $.ajax({
+        that.ajaxRequest({
             type     : type,
             url      : ConfigManager.getServerEndpoint() + url,
             data     : data,
             dataType : dataType,
-            success  : onSuccess( onSuccessCallback, onErrorCallback, url, redirectOnAuthError ),
-            error    : onError( onErrorCallback, url )
+            success  : onSuccess(onSuccessCallback, onErrorCallback, url, redirectOnAuthError),
+            error    : onError(onErrorCallback, url)
         });
 
+    };
+
+    /**
+     * This method should be used for all purposes of AJAX communication. This
+     * approach is necessary since although currently the application uses
+     * JQuery AJAX library for making requests, this is not always guaranteed to
+     * be the case.
+     *
+     * @param request See JQuery $.ajax(request) documentation.
+     */
+    that.ajaxRequest = function (request) {
+        $.ajax(request);
     };
 
     return that;
 
 
-} )();
+}());
