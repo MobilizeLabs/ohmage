@@ -1,6 +1,6 @@
 var HelpMenuView = function (sections) {
     "use strict";
-    var that = {};
+    var that = AbstractView();
 
     that.helpSectionClickedCallback = function (helpSectionIndex) {};
 

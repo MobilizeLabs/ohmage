@@ -5,7 +5,7 @@
 
 var CampaignsView = function (campaignsModel) {
     "use strict";
-    var that = {};
+    var that = AbstractView();
 
     /**
      * Callback for installing a new campaign.

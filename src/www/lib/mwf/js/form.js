@@ -40,13 +40,13 @@ mwf.decorator.Form = function (title) {
      * @param onSubmitCallback The callback to be invoked
      */
     form.setOnSubmitCallback = function (onSubmitCallback) {
-        form.onsubmit(function (e) {
+        form.onsubmit = function (e) {
             e.preventDefault();
             if (onSubmitCallback) {
                 onSubmitCallback();
             }
             return false;
-        });
+        };
     };
 
     /**
@@ -161,13 +161,12 @@ mwf.decorator.Form = function (title) {
      *
      * @return This form.
      */
-    form.addInputButton = function(text, callback)
-    {
+    form.addInputButton = function (text, callback) {
         var submitButton = document.createElement('input');
         submitButton.type = 'button';
         submitButton.value = text;
 
-        if( callback ) {
+        if (callback) {
             TouchEnabledItemModel.bindTouchEvent(submitButton, submitButton, callback);
         }
 

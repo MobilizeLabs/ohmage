@@ -19,29 +19,42 @@ var AuthView = function () {
      */
     var VIEW_URL = "./views/auth/auth-view.html";
 
+    var usernameField, passwordField;
+
+    var getUsername = function () {
+        return usernameField.value;
+    };
+
+    var getPassword = function () {
+        return passwordField.value;
+    };
+
     /**
      * Returns true if the input received from the user is not empty.
      * @returns {boolean} True if the user has completed all required fields.
      */
-    var isInputValid = function () {
+    var isInputComplete = function () {
 
-        if ($('#username').val().length === 0 && $('#password').val().length === 0) {
+        var username = getUsername();
+        var password = getPassword();
+
+        if (username.length === 0 && password.length === 0) {
             MessageDialogController.showMessage('Please enter your username and pass word.', function () {
-                $('#username').focus();
+                usernameField.focus();
             });
             return false;
         }
 
-        if ($('#username').val().length === 0) {
+        if (username.length === 0) {
             MessageDialogController.showMessage('Please enter your username.', function () {
-                $('#username').focus();
+                usernameField.focus();
             });
             return false;
         }
 
-        if ($('#password').val().length === 0) {
+        if (password.length === 0) {
             MessageDialogController.showMessage('Please enter your password.', function () {
-                $('#password').focus();
+                passwordField.focus();
             });
             return false;
         }
@@ -49,56 +62,53 @@ var AuthView = function () {
         return true;
     };
 
-    var encloseHTMLResponse = function (htmlResponse) {
-        var div = document.createElement("div");
-        div.innerHTML = htmlResponse;
-        return div;
-    };
-
-    var loginCallback = function () {
-
-        if (!isInputValid()) {
-            return;
+    /**
+     * Invokes the login callback if the user has entered all the required
+     * information.
+     */
+    var loginCallbackWrapper = function () {
+        if (isInputComplete()) {
+            that.loginCallback(getUsername(), getPassword());
         }
-
-        var username = $("#username").val();
-        var password = $("#password").val();
-
-        Spinner.show();
-
-        //On successful authentication, redirects the user to the dashboard.
-        auth.authenticateByHash(username, password, function (success, response) {
-
-            Spinner.hide(function () {
-                if (success) {
-                    PageNavigation.openDashboard();
-                } else if (response) {
-                    MessageDialogController.showMessage(response);
-                } else {
-                    MessageDialogController.showMessage("Unable to login. Please try again.");
-                }
-            });
-
-        }, false);
     };
+
+    /**
+     * Controller should override this function in order to process the
+     * username and password entered by the user.
+     * @param username User's username.
+     * @param password User's password.
+     */
+    that.loginCallback = function (username, password) {};
 
     that.initializeView = function (onSuccessCallback) {
         if (view === null) {
-            PageViewService.loadPageView(VIEW_URL, function (response) {
-                //Save the view, and invoke the callback to notify that the
-                //initialization process is complete.
-                view = encloseHTMLResponse(response);
-                console.log(view);
-                view.getElementByID("auth-form").onsubmit(function (e) {
-                    e.preventDefault();
-                    loginCallback();
-                    return false;
-                });
-                onSuccessCallback();
-            });
-        } else {
-            onSuccessCallback();
+
+            usernameField = document.createElement('input');
+            passwordField = document.createElement('input');
+            passwordField.type = "password";
+
+            view = mwf.decorator.Form("Please Login");
+            view.addLabel("Username");
+            view.addItem(usernameField);
+            view.addLabel("Password");
+            view.addItem(passwordField);
+            view.addSubmitButton("Secure Login");
+
+            view.setOnSubmitCallback(loginCallbackWrapper);
         }
+
+        if (AuthenticationModel.isUserLocked()) {
+            usernameField.value = AuthenticationModel.getUsername();
+            usernameField.disabled = true;
+        } else {
+            usernameField.disabled = false;
+            usernameField.value = "";
+        }
+
+        passwordField.value = "";
+
+        onSuccessCallback();
+
     };
 
     that.render = function () {

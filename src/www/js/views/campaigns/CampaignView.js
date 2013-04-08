@@ -5,7 +5,9 @@
 
 var CampaignView = function (campaignModel) {
     "use strict";
-    var that = {};
+
+    var that = AbstractView();
+
     that.deleteCampaignHandler = function () {};
     that.openSurveyViewHandler = function () {};
     that.render = function () {

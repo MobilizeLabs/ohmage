@@ -1,6 +1,6 @@
 var ProfileView = function () {
     "use strict";
-    var that = {};
+    var that = AbstractView();
 
     that.changePasswordHandler = function () {};
     that.clearCustomizedChoicesHandler = function () {};

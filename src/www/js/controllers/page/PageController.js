@@ -250,6 +250,7 @@ var PageController = (function () {
      * @param pageModel The page model to render.
      */
     that.render = function (pageModel) {
+        log.info("Initializing [$1] page.", pageModel.getPageName());
         pageModel.initialize(function () {
             clearScreen();
             var pageView =  PageView(pageModel);

@@ -1,6 +1,6 @@
 var HelpSectionView = function (helpSection) {
     "use strict";
-    var that = {};
+    var that = AbstractView();
 
     that.render = function () {
 

@@ -37,7 +37,7 @@ var ServiceController = (function () {
                             if (DeviceDetection.isNativeApplication()) {
                                 auth.setAuthErrorState(true);
                             }
-                            PageNavigation.openAuthenticationPage();
+                            PageController.openAuth();
                             break;
                         }
                     }
@@ -49,10 +49,7 @@ var ServiceController = (function () {
                 invoke(onSuccess, response);
                 break;
             }
-
         };
-
-
     };
 
     var onError = function (onErrorCallback, url) {
@@ -85,7 +82,7 @@ var ServiceController = (function () {
         redirectOnAuthError = (typeof (redirectOnAuthError) == 'undefined')? true : redirectOnAuthError;
 
 
-        if (auth.isUserAuthenticated()) {
+        if (AuthenticationModel.isUserAuthenticated()) {
 
             if (!data["password"] && !data["auth_token"]) {
                 if (auth.isUserAuthenticatedByToken()) {

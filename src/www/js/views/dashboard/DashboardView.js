@@ -4,7 +4,7 @@
  */
 var DashboardView = function (dashboardModel) {
     "use strict";
-    var that = {};
+    var that = AbstractView();
 
     var getDashboardIcon = function (iconKey) {
         return 'img/dash/dash_' + iconKey.toLowerCase() + '.png';

@@ -78,6 +78,24 @@ var AuthenticationController = (function () {
         "'|', " +
         "':'.";
 
+    var loginCallback = function (username, password) {
+        Spinner.show();
+
+        //On successful authentication, redirects the user to the dashboard.
+        AuthenticationService.authenticateByHash(username, password, function (success, response) {
+            Spinner.hide(function () {
+                if (success) {
+                    PageController.openDashboard();
+                } else if (response) {
+                    MessageDialogController.showMessage(response);
+                } else {
+                    MessageDialogController.showMessage("Unable to login. Please try again.");
+                }
+            });
+
+        });
+    };
+
     that.getPasswordRequirements = function () {
         return PASSWORD_REQUIREMENTS;
     };
@@ -91,16 +109,19 @@ var AuthenticationController = (function () {
         MessageDialogController.showConfirm(confirmationMessage, function (yes) {
             if (yes) {
                 AuthenticationModel.logout();
+                PageController.openAuth();
             }
         }, "Yes,No");
     };
 
     that.failsCheckpoint = function () {
-        return !that.isUserAuthenticated() || that.isInAuthErrorState();
+        return !AuthenticationModel.isUserAuthenticated() || AuthenticationModel.isInAuthErrorState();
     };
 
     that.getView = function () {
-        return AuthView();
+        var view = AuthView();
+        view.loginCallback = loginCallback;
+        return view;
     };
 
     return that;
