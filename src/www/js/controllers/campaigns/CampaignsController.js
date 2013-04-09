@@ -12,7 +12,7 @@ var CampaignsController = (function () {
      * campaign.
      */
     var onCampaignInstallSuccess = function () {
-        PageNavigation.openInstalledCampaignsView();
+        PageController.openInstalledCampaigns();
     };
 
     /**
@@ -23,10 +23,18 @@ var CampaignsController = (function () {
     };
 
     /**
-     * When the campaign list has been sucessfully refreshed, refresh the view.
+     * Handler for installing a new campaign.
+     */
+    var installNewCampaignHandler = function (campaignURN) {
+        CampaignDownloadService.downloadCampaign(campaignURN, onCampaignInstallSuccess, onCampaignInstallError);
+    };
+
+    /**
+     * When the campaign list has been successfully refreshed, refresh the view to display the updated list of
+     * campaigns.
      */
     var onCampaignListRefreshSuccess = function () {
-        MessageDialogController.showMessage("All campaigns have been updated.", PageNavigation.openAvailableCampaignsView);
+        MessageDialogController.showMessage("All campaigns have been updated.", PageController.refresh);
     };
 
     /**
@@ -38,34 +46,28 @@ var CampaignsController = (function () {
     };
 
     /**
-     * Handler for installing a new campaign.
-     */
-    that.installNewCampaignHandler = function (campaignURN) {
-        CampaignModel.install(campaignURN, onCampaignInstallSuccess, onCampaignInstallError);
-    };
-
-    /**
      * Handler for opening an already installed campaign.
      */
     that.openMyCampaignHandler = function (campaignURN) {
-        PageNavigation.openCampaignView(campaignURN);
+        PageController.openCampaign(campaignURN);
     };
 
-    that.refreshCampaignsListHandler = function () {
-        CampaignsModel.download(true, onCampaignListRefreshSuccess, onCampaignListRefreshError);
+
+    var refreshCampaignsListHandler = function () {
+        CampaignsMetadataService.download(true, onCampaignListRefreshSuccess, onCampaignListRefreshError);
     };
 
-    that.renderInstalledCampaigns = function () {
-        var campaignsView = CampaignsView(CampaignsModel);
+    that.getInstalledCampaignsView = function () {
+        var campaignsView = InstalledCampaignsView();
         campaignsView.openMyCampaignHandler = that.openMyCampaignHandler;
-        return campaignsView.renderMyCampaigns();
+        return campaignsView;
     };
 
-    that.renderAvailableCampaigns = function () {
-        var campaignsView = CampaignsView(CampaignsModel);
-        campaignsView.installNewCampaignHandler = that.installNewCampaignHandler;
-        campaignsView.refreshCampaignsListHandler = that.refreshCampaignsListHandler;
-        return campaignsView.renderAvailableCampaigns();
+    that.getAvailableCampaignsView = function () {
+        var availableCampaignsView = AvailableCampaignsView();
+        availableCampaignsView.installNewCampaignHandler = installNewCampaignHandler;
+        availableCampaignsView.refreshCampaignsListHandler = refreshCampaignsListHandler;
+        return availableCampaignsView;
     };
 
     return that;

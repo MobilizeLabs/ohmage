@@ -1,5 +1,6 @@
-Init.invokeOnReady( function() {
-    
+Init.invokeOnReady(function () {
+    "use strict";
+    /*
     var onSuccess = function(){
         $('#campaigns').append(Campaigns.render(false));
     };
@@ -9,5 +10,12 @@ Init.invokeOnReady( function() {
     };
 
     Campaigns.download(false, onSuccess, onError);
+    */
+
+
+    var pageModel = PageModel("availableCampaigns", "Available Campaigns");
+    pageModel.setTopButton("Dashboard", PageController.openDashboard);
+    pageModel.setView(CampaignsController.getAvailableCampaignsView());
+    PageController.registerPage(pageModel);
 
 });

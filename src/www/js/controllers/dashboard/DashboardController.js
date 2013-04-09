@@ -13,9 +13,22 @@ var DashboardController = function (dashboardModel) {
     var dashboardView = DashboardView(dashboardModel);
 
     dashboardView.onDashboardIconClickCallback = function (dashboardItemKey) {
+
+        if (dashboardItemKey === "campaigns") {
+
+            if (CampaignsModel.getInstalledCampaignsCount() === 0) {
+                PageController.openAvailableCampaigns();
+            } else {
+                PageController.openInstalledCampaigns();
+            }
+
         //Since the keys we used to index the dashboard buttons correspond to
-        //to the actual page names, we don't have to do any conversion.
-        PageController.goTo(dashboardItemKey);
+        //to the actual page names, in most cases, we don't have to do any conversion.
+        } else {
+            PageController.goTo(dashboardItemKey);
+        }
+
+
     };
 
     that.getView = function () {

@@ -76,9 +76,6 @@ var CampaignsMetadataService = (function () {
                 "POST",
                 ConfigManager.getCampaignReadUrl(),
                 {
-                    user:          auth.getUsername(),
-                    password:      auth.getHashedPassword(),
-                    client:        ConfigManager.getClientName(),
                     output_format: 'short'
                 },
                 "JSON",

@@ -35,7 +35,7 @@ var ServiceController = (function () {
                     for (i = 0; i < response.errors.length; i += 1) {
                         if (response.errors[i].code === '0200') {
                             if (DeviceDetection.isNativeApplication()) {
-                                auth.setAuthErrorState(true);
+                                AuthenticationModel.setAuthErrorState(true);
                             }
                             PageController.openAuth();
                             break;
@@ -79,23 +79,23 @@ var ServiceController = (function () {
     that.serviceCall = function (type, url, data, dataType, onSuccessCallback, onErrorCallback, redirectOnAuthError) {
 
         //By default, redirect the user to the login page on authentication error.
-        redirectOnAuthError = (typeof (redirectOnAuthError) == 'undefined')? true : redirectOnAuthError;
+        redirectOnAuthError = (typeof redirectOnAuthError === "undefined") ? true : redirectOnAuthError;
 
 
         if (AuthenticationModel.isUserAuthenticated()) {
 
-            if (!data["password"] && !data["auth_token"]) {
-                if (auth.isUserAuthenticatedByToken()) {
-                    data["auth_token"] = auth.getAuthToken();
+            if (!data.password && !data.auth_token) {
+                if (AuthenticationModel.isUserAuthenticatedByToken()) {
+                    data.auth_token = AuthenticationModel.getAuthToken();
                 } else {
-                    data["user"] = auth.getUsername();
-                    data["password"] = auth.getHashedPassword();
+                    data.user = AuthenticationModel.getUsername();
+                    data.password = AuthenticationModel.getHashedPassword();
                 }
             }
         }
 
-        if (!data["client"]) {
-            data["client"] = ConfigManager.getClientName();
+        if (!data.client) {
+            data.client = ConfigManager.getClientName();
         }
 
         console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + JSON.stringify(data));

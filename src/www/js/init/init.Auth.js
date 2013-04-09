@@ -13,5 +13,4 @@ Init.invokeOnReady(function () {
     }
 
     PageController.registerPage(pageModel);
-    PageController.goTo("auth");
 });

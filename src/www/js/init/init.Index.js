@@ -8,6 +8,6 @@ Init.invokeOnReady(function () {
     pageModel.setView(dashboardController.getView());
     PageController.registerPage(pageModel);
     PageController.setRootPageModel(pageModel);
-    //PageController.goToRootPage();
+    PageController.goToRootPage();
 
 });

@@ -65,6 +65,12 @@ var CampaignDownloadService = (function () {
         };
     };
 
+    /**
+     * Attempts to download the specified campaign and on success installs the campaign.
+     * @param campaignURN The campaign to download from the server.
+     * @param onSuccessCallback Callback on successful download. The callback has no arguments passed to it.
+     * @param onErrorCallback Callback on failed download. The first argument will be the response from the server.
+     */
     that.downloadCampaign = function (campaignURN, onSuccessCallback, onErrorCallback) {
         Spinner.show();
 
