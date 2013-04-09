@@ -97,3 +97,20 @@ test("Test authentication error state detection (when not in error state).", fun
     ///
     ok(!AuthenticationModel.isInAuthErrorState(), "User should not be in authentication error state if the state was set to false.");
 });
+
+test("Test user's locked state when the username is set.", function () {
+    "use strict";
+    AuthenticationModel.setUsername("test-username");
+    ///
+    var isUserLocked = AuthenticationModel.isUserLocked();
+    ///
+    ok(isUserLocked, "User should be in a locked state when the username field is set.");
+});
+
+test("Test user's locked state when the username is not set.", function () {
+    "use strict";
+    ///
+    var isUserLocked = AuthenticationModel.isUserLocked();
+    ///
+    ok(!isUserLocked, "User should not be in a locked state when the username field is not set.");
+});
