@@ -9,7 +9,7 @@ var ProfileView = function () {
     that.logoutAndClearDataHandler = function () {};
 
     that.render = function () {
-        var menu = mwf.decorator.Menu(auth.getUsername());
+        var menu = mwf.decorator.Menu(AuthenticationModel.getUsername());
 
         if (DeviceDetection.isNativeApplication()) {
             var changePasswordMenuItem = menu.addMenuLinkItem('Change Password', null, 'Easily change your password.');
