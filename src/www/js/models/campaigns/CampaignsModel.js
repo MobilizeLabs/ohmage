@@ -30,6 +30,9 @@ var CampaignsModel = (function () {
      */
     var installedCampaigns = LocalMap("installed-campaigns");
 
+
+    var log = Logger("CampaignsModel");
+
     /**
      * The method is used to extract out CampaignModels from allCampaigns and
      * installedCampaigns objects which are LocalMaps.
@@ -77,6 +80,7 @@ var CampaignsModel = (function () {
      * @param campaignConfiguration The campaign configuration to save.
      */
     that.installCampaign = function (campaignURN, campaignConfiguration) {
+        log.info("Installing campaign with URN [$1].", campaignURN);
         //Mark the campaign as installed by setting a timestamp.
         installedCampaigns.set(campaignURN, Math.round(new Date().getTime() / 1000));
         campaignConfigurations.set(campaignURN, campaignConfiguration);
@@ -105,7 +109,9 @@ var CampaignsModel = (function () {
      * @param campaignURN Unique campaign identifier.
      */
     that.uninstallCampaign = function (campaignURN) {
+        log.info("Uninstalling campaign with URN [$1]", campaignURN);
         installedCampaigns.release(campaignURN);
+        campaignConfigurations.release(campaignURN);
         //TODO: Use publish-subscribe pattern instead!
         ReminderModel.deleteCampaignReminders(campaignURN);
     };
