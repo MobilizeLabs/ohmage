@@ -11,6 +11,8 @@ module("models.campaigns.CampaignsModel", {
     setup: function () {
         "use strict";
 
+        CampaignsModel.uninstallAllCampaigns();
+
         //Example campaigns metadata for testing.
         fixture.testCampaignsMetadata = {
             "urn:brent:students:long": {
@@ -168,4 +170,25 @@ test("Test getting all campaigns with CampaignsModel.getAllCampaigns() with an i
                 "All campaign URNs should be included in the response of CampaignsModel.getAllCampaigns() even though some campaigns may be installed.");
         }
     }
+});
+
+test("Test uninstalling a single installed campaign with CampaignsModel.uninstallCampaign().", function () {
+    "use strict";
+    fixture.setCampaignsMetadata();
+    CampaignsModel.installCampaign("urn:brent:students:long", {});
+    ///
+    CampaignsModel.uninstallCampaign("urn:brent:students:long");
+    ///
+    ok(CampaignsModel.getInstalledCampaignsCount() === 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
+});
+
+test("Test uninstalling several campaigns with CampaignsModel.uninstallAllCampaigns().", function () {
+    "use strict";
+    fixture.setCampaignsMetadata();
+    CampaignsModel.installCampaign("urn:brent:students:long", {});
+    CampaignsModel.installCampaign("urn:campaign:demo:scott2", {});
+    ///
+    CampaignsModel.uninstallAllCampaigns();
+    ///
+    ok(CampaignsModel.getInstalledCampaignsCount() === 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
 });

@@ -10,6 +10,7 @@ if (!fixture) {
 module("models.auth.AuthenticationModel", {
     setup: function () {
         "use strict";
+        AuthenticationModel.logout();
     },
 
     teardown: function () {
