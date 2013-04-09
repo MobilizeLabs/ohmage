@@ -49,7 +49,7 @@ var CampaignsController = (function () {
      * Handler for opening an already installed campaign.
      */
     that.openMyCampaignHandler = function (campaignURN) {
-        PageController.openCampaign(campaignURN);
+        PageController.openCampaign({campaignURN : campaignURN});
     };
 
 

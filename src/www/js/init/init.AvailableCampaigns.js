@@ -14,8 +14,17 @@ Init.invokeOnReady(function () {
 
 
     var pageModel = PageModel("availableCampaigns", "Available Campaigns");
-    pageModel.setTopButton("Dashboard", PageController.openDashboard);
+
     pageModel.setView(CampaignsController.getAvailableCampaignsView());
+    pageModel.setPageInitializer(function (onSuccessCallback) {
+        if (CampaignsModel.getInstalledCampaignsCount() === 0) {
+            pageModel.setTopButton("Dashboard", PageController.openDashboard);
+        } else {
+            pageModel.setTopButton("My Campaigns", PageController.openInstalledCampaigns);
+        }
+        onSuccessCallback();
+    });
+
     PageController.registerPage(pageModel);
 
 });

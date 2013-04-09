@@ -7,8 +7,8 @@ var CampaignModel = function (campaignURN) {
     "use strict";
     var that = {};
 
-    var metadata = (new LocalMap("all-campaigns").get(campaignURN));
-    var campaign = (new LocalMap("campaign-configurations")).get(campaignURN);
+    var metadata = LocalMap("all-campaigns").get(campaignURN);
+    var campaign = LocalMap("campaign-configurations").get(campaignURN);
 
     /**
      * Returns surveys associated with this campaign.
@@ -24,6 +24,10 @@ var CampaignModel = function (campaignURN) {
         return (!surveys.length) ? [surveys] : surveys;
     };
 
+    /**
+     * Returns true if the current campaign is in running state.
+     * @returns {boolean}
+     */
     that.isRunning = function () {
         return metadata.running_state === 'running';
     };
@@ -73,6 +77,7 @@ var CampaignModel = function (campaignURN) {
 
     /**
      * Returns the description for this campaign.
+     * @returns {string}
      */
     that.getDescription = function () {
         return metadata.description;

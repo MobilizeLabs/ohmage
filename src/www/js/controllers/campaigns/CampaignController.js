@@ -7,28 +7,33 @@ var CampaignController = function (campaignModel) {
     "use strict";
     var that = {};
 
+    var campaignView = null;
+
     var deleteCampaignConfirmationCallback = function (yes) {
         if (yes) {
             CampaignsModel.uninstallCampaign(campaignModel.getURN());
-            PageNavigation.goBack();
+            PageController.goBack();
         }
     };
 
-    that.deleteCampaignHandler = function () {
+    var deleteCampaignHandler = function () {
         var message = "All data will be lost. Are you sure you would like to proceed?";
         MessageDialogController.showConfirm(message, deleteCampaignConfirmationCallback, "Yes,No");
     };
 
-    that.renderCampaignView = function () {
-        var campaignView = CampaignView(campaignModel);
-        campaignView.openSurveyViewHandler = CampaignController.openSurveyViewHandler;
-        campaignView.deleteCampaignHandler = that.deleteCampaignHandler;
-        return campaignView.render();
+    var openSurveyViewHandler = function (campaignURN, surveyID) {
+        PageController.openSurvey({campaignURN : campaignURN, surveyID : surveyID});
+    };
+
+    that.getCampaignView = function () {
+        if (campaignView === null) {
+            campaignView = CampaignView(campaignModel);
+            campaignView.openSurveyViewHandler = openSurveyViewHandler;
+            campaignView.deleteCampaignHandler = deleteCampaignHandler;
+        }
+
+        return campaignView;
     };
 
     return that;
-};
-
-CampaignController.openSurveyViewHandler = function (campaignURN, surveyID) {
-    PageNavigation.openSurveyView(campaignURN, surveyID);
 };
