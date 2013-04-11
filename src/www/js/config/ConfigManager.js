@@ -29,6 +29,12 @@ var ConfigManager = (function () {
     ];
 
     /**
+     * Log output for the ConfigManager.
+     * @type {Logger}
+     */
+    var log = Logger("ConfigManager");
+
+    /**
      * Configuration blueprint. To add new configuration value, add a new
      * property to this object and an accessor function will be generated. The
      * actual working values will be saved in a localStorage object.
@@ -100,47 +106,72 @@ var ConfigManager = (function () {
         return SERVERS;
     };
 
-    var property, camelCaseGetterName, camelCaseSetterName;
+    that.updateLocalCopy = function () {
+        var configChecksum = ChecksumGen.getChecksum(config),
+            localConfigChecksum = configMap.get("SAVED_CONFIG_CHECKSUM"),
+            key;
 
-    var toCamelCase = function (g) {
-        return g[1].toUpperCase();
-    };
-
-    /**
-     * Creates a closure function to return the specified value. This is used
-     * to iterate through all the config properties and create accessor
-     * functions to return the config's value.
-     */
-    var addPropertyGetter = function (propertyName) {
-        return function () {
-            return that.getProperty(propertyName);
-        };
-    };
-
-    var addPropertySetter = function (propertyName) {
-        return function (newConfigValue) {
-            configMap.set(propertyName, newConfigValue);
-        };
-    };
-
-    for (property in config ) {
-
-        //Convert CONSTANT_CASE to camelCase.
-        camelCaseGetterName = ("get_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase);
-        camelCaseSetterName = ("set_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase);
-
-        //Create accessor functions to allow users to get and set config values.
-        that[camelCaseGetterName] = addPropertyGetter(property);
-        that[camelCaseSetterName] = addPropertySetter(property);
-    }
-
-    //Transfer any values in config that have not been saved in localStorage.
-    for(var key in config ) {
-        if ( !configMap.isSet( key ) ) {
-            configMap.set( key, config[ key ] );
+        //Save the new config checksum if it has changed.
+        if (configChecksum !== localConfigChecksum) {
+            configMap.set("SAVED_CONFIG_CHECKSUM", configChecksum);
+            log.info("Remote configuration has changed - updating local copy.");
         }
-    }
+
+        //Transfer any values in config that have not been saved in localStorage.
+        for (key in config) {
+            if (config.hasOwnProperty(key)) {
+                if (!configMap.isSet(key) || configChecksum !== localConfigChecksum) {
+                    configMap.set(key, config[key]);
+                }
+            }
+        }
+    };
+
+    //Initialize the configuration manager in a local scope.
+    (function () {
+        var property,
+            key,
+            camelCaseGetterName,
+            camelCaseSetterName;
+
+        var toCamelCase = function (g) {
+            return g[1].toUpperCase();
+        };
+
+        /**
+         * Creates a closure function to return the specified value. This is used
+         * to iterate through all the config properties and create accessor
+         * functions to return the configuration's value.
+         */
+        var addPropertyGetter = function (propertyName) {
+            return function () {
+                return that.getProperty(propertyName);
+            };
+        };
+
+        var addPropertySetter = function (propertyName) {
+            return function (newConfigValue) {
+                configMap.set(propertyName, newConfigValue);
+            };
+        };
+
+        //Iterate through each configuration property and dynamically add getter
+        //and setter functions to ConfigManager. This will allow users to call,
+        //for example, ConfigManager.setGpsEnabled(true) to set GPS_ENABLED.
+        for (property in config) {
+            if (config.hasOwnProperty(property)) {
+                //Convert CONSTANT_CASE to camelCase.
+                camelCaseGetterName = ("get_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase);
+                camelCaseSetterName = ("set_" + property.toLowerCase()).replace(/_([a-z])/g, toCamelCase);
+
+                //Create accessor functions to allow users to get and set config values.
+                that[camelCaseGetterName] = addPropertyGetter(property);
+                that[camelCaseSetterName] = addPropertySetter(property);
+            }
+        }
+
+        that.updateLocalCopy();
+    }());
 
     return that;
-
-})();
+}());
