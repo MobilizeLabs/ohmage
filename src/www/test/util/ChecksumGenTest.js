@@ -17,7 +17,7 @@ test("Test generating checksum for a string.", function () {
     ///
     var checksum = ChecksumGen.getChecksum("test-string");
     ///
-    ok(checksum === -1500777192, "Checksum should be deterministic and return the same value each time.");
+    strictEqual(checksum, -1500777192, "Checksum should be deterministic and return the same value each time.");
 });
 
 test("Test generating checksum for an object.", function () {
@@ -25,7 +25,7 @@ test("Test generating checksum for an object.", function () {
     ///
     var checksum = ChecksumGen.getChecksum({someValue : "test-string"});
     ///
-    ok(checksum === 39819891, "Checksum should be deterministic and return the same value each time.");
+    strictEqual(checksum, 39819891, "Checksum should be deterministic and return the same value each time.");
 });
 
 test("Test generated checksum should be different for strings that are similar.", function () {

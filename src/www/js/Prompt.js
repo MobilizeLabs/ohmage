@@ -277,7 +277,7 @@ var Prompt = function(promptData, survey, campaign){
 
     //Initialization.
     (function(){
-       customPropertiesVault = new CustomPropertiesVault(self);
+       customPropertiesVault = new CustomPromptPropertyVault(self);
        setProperties();
     }());
 
