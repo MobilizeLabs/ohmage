@@ -315,7 +315,7 @@ test("Test creating CampaignModel instance.", function () {
     ///
     var campaignModel = CampaignModel("urn:campaign:ca:ucla:Demo:Snack");
     ///
-    ok(campaignModel.getURN() === "urn:campaign:ca:ucla:Demo:Snack", "Returned URN should match the URN that was used to create the campaign model.");
+    strictEqual(campaignModel.getURN(), "urn:campaign:ca:ucla:Demo:Snack", "Returned URN should match the URN that was used to create the campaign model.");
 
 });
 
@@ -328,9 +328,9 @@ test("Test accessing CampaignModel properties.", function () {
         campaignCreationTimestamp = campaignModel.getCreationTimestamp(),
         campaignDescription = campaignModel.getDescription();
     ///
-    ok(campaignName === "Demo Snack", "The campaign name accessed from the model should be the same as specified in the JSON object.");
-    ok(campaignCreationTimestamp === "2011-08-30 21:51:06", "The campaign creation timestamp accessed from the model should be the same as specified in the JSON object.");
-    ok(campaignDescription === "Snack campaign as of 080111 (final version).", "The campaign description accessed from the model should be the same as specified in the JSON object.");
+    strictEqual(campaignName, "Demo Snack", "The campaign name accessed from the model should be the same as specified in the JSON object.");
+    strictEqual(campaignCreationTimestamp, "2011-08-30 21:51:06", "The campaign creation timestamp accessed from the model should be the same as specified in the JSON object.");
+    strictEqual(campaignDescription, "Snack campaign as of 080111 (final version).", "The campaign description accessed from the model should be the same as specified in the JSON object.");
 
 });
 
@@ -351,7 +351,7 @@ test("Test accessing all surveys from the campaign.", function () {
     ///
     var surveys = campaignModel.getSurveys();
     ///
-    ok(surveys["Snack"].getID() === "Snack", "The first element of the surveys array should be the first element specified in the JSON object.");
+    strictEqual(surveys["Snack"].getID(), "Snack", "The first element of the surveys array should be the first element specified in the JSON object.");
 });
 
 test("Test accessing a specific survey with ID from the campaign.", function () {
@@ -361,7 +361,7 @@ test("Test accessing a specific survey with ID from the campaign.", function () 
     ///
     var survey = campaignModel.getSurvey("Snack");
     ///
-    ok(survey.getID() === "Snack", "The ID of the survey accessed from the model should match the ID of the survey specified in the JSON object.");
+    strictEqual(survey.getID(), "Snack", "The ID of the survey accessed from the model should match the ID of the survey specified in the JSON object.");
 });
 
 test("Test accessing a specific survey with ID is not associated with the campaign.", function () {
@@ -371,7 +371,7 @@ test("Test accessing a specific survey with ID is not associated with the campai
     ///
     var survey = campaignModel.getSurvey("THIS_SURVEY_ID_DOES_NOT_EXIST");
     ///
-    ok(survey === null, "The survey accessed from the model with an unknown ID should be null.");
+    strictEqual(survey, null, "The survey accessed from the model with an unknown ID should be null.");
 });
 
 

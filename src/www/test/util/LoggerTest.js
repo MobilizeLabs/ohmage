@@ -9,7 +9,7 @@ test("Logger should correctly save namespace.", function () {
     ///
     var log = Logger("namespace");
     ///
-    ok(log.getNamespace() === "namespace", "The namespace of the logger should equal to 'namespace'.");
+    strictEqual(log.getNamespace(), "namespace", "The namespace of the logger should equal to 'namespace'.");
 });
 
 test("Formatted message should prepend namespace name.", function () {
@@ -18,7 +18,7 @@ test("Formatted message should prepend namespace name.", function () {
     ///
     var formattedOutput = log.info("message");
     ///
-    ok(formattedOutput === "namespace: message", "namespace should be prepended to the message.");
+    strictEqual(formattedOutput, "namespace: message", "namespace should be prepended to the message.");
 });
 
 test("Argument insertion should work correctly.", function () {
@@ -27,7 +27,7 @@ test("Argument insertion should work correctly.", function () {
     ///
     var formattedOutput = log.info("message $1", "test-case");
     ///
-    ok(formattedOutput === "namespace: message test-case", "The argument should be correctly inserted.");
+    strictEqual(formattedOutput, "namespace: message test-case", "The argument should be correctly inserted.");
 });
 
 test("Argument insertion should work correctly with several arguments.", function () {
@@ -36,6 +36,6 @@ test("Argument insertion should work correctly with several arguments.", functio
     ///
     var formattedOutput = log.info("$1 - message - $2", "test-insertion-1", "test-insertion-2");
     ///
-    ok(formattedOutput === "namespace: test-insertion-1 - message - test-insertion-2", "The arguments should be correctly inserted.");
+    strictEqual(formattedOutput, "namespace: test-insertion-1 - message - test-insertion-2", "The arguments should be correctly inserted.");
 });
 

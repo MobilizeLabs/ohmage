@@ -85,7 +85,7 @@ test("Test getting all campaigns with CampaignsModel.getAllCampaigns().", functi
     ///
     for (campaignURN in fixture.testCampaignsMetadata) {
         if (fixture.testCampaignsMetadata.hasOwnProperty(campaignURN)) {
-            ok(allCampaigns[campaignURN] !== undefined,
+            notStrictEqual(allCampaigns[campaignURN], undefined,
                 "All campaign URNs should be included in the response of CampaignsModel.getAllCampaigns().");
         }
     }
@@ -98,9 +98,8 @@ test("Test getting installed campaigns without any installed campaigns.", functi
     ///
     installedCampaigns = CampaignsModel.getInstalledCampaigns();
     ///
-    ok(installedCampaigns["urn:brent:students:long"] === undefined
-        && installedCampaigns["urn:campaign:demo:scott2"] === undefined,
-        "Without installing any campaigns, the installed campaigns object should be empty.");
+    strictEqual(installedCampaigns["urn:brent:students:long"], undefined, "Without installing any campaigns, the installed campaigns object should be empty.");
+    strictEqual(installedCampaigns["urn:campaign:demo:scott2"], undefined, "Without installing any campaigns, the installed campaigns object should be empty.");
 });
 
 test("Test getting all available campaigns with CampaignsModel.getAvailableCampaigns() without any installed campaigns.", function () {
@@ -112,7 +111,7 @@ test("Test getting all available campaigns with CampaignsModel.getAvailableCampa
     ///
     for (campaignURN in fixture.testCampaignsMetadata) {
         if (fixture.testCampaignsMetadata.hasOwnProperty(campaignURN)) {
-            ok(availableCampaigns[campaignURN] !== undefined,
+            notStrictEqual(availableCampaigns[campaignURN], undefined,
                 "All campaign URNs should be included in the response of CampaignsModel.getAvailableCampaigns() since no campaign has been installed.");
         }
     }
@@ -126,8 +125,8 @@ test("Test installing a campaign with CampaignsModel.installCampaign().", functi
     //is left blank for testing purposes.
     CampaignsModel.installCampaign("urn:campaign:demo:scott2", {});
     ///
-    ok(CampaignsModel.getInstalledCampaignsCount() === 1, "The number of installed campaigns should equal to 1 since we only installed a single campaign.");
-    ok(CampaignsModel.getInstalledCampaigns()["urn:campaign:demo:scott2"] !== undefined, "The installed campaign should be included in the installed campaigns object.");
+    strictEqual(CampaignsModel.getInstalledCampaignsCount(), 1, "The number of installed campaigns should equal to 1 since we only installed a single campaign.");
+    notStrictEqual(CampaignsModel.getInstalledCampaigns()["urn:campaign:demo:scott2"], undefined, "The installed campaign should be included in the installed campaigns object.");
 });
 
 test("Test installing two campaigns with CampaignsModel.installCampaign().", function () {
@@ -139,9 +138,9 @@ test("Test installing two campaigns with CampaignsModel.installCampaign().", fun
     CampaignsModel.installCampaign("urn:brent:students:long", {});
     CampaignsModel.installCampaign("urn:campaign:demo:scott2", {});
     ///
-    ok(CampaignsModel.getInstalledCampaignsCount() === 2, "The number of installed campaigns should equal to 1 since we only installed a single campaign.");
-    ok(CampaignsModel.getInstalledCampaigns()["urn:brent:students:long"] !== undefined, "The installed campaign should be included in the installed campaigns object.");
-    ok(CampaignsModel.getInstalledCampaigns()["urn:campaign:demo:scott2"] !== undefined, "The installed campaign should be included in the installed campaigns object.");
+    strictEqual(CampaignsModel.getInstalledCampaignsCount(), 2, "The number of installed campaigns should equal to 1 since we only installed a single campaign.");
+    notStrictEqual(CampaignsModel.getInstalledCampaigns()["urn:brent:students:long"], undefined, "The installed campaign should be included in the installed campaigns object.");
+    notStrictEqual(CampaignsModel.getInstalledCampaigns()["urn:campaign:demo:scott2"], undefined, "The installed campaign should be included in the installed campaigns object.");
 });
 
 test("Test getting all available campaigns with CampaignsModel.getAvailableCampaigns() with one installed campaigns.", function () {
@@ -152,8 +151,8 @@ test("Test getting all available campaigns with CampaignsModel.getAvailableCampa
     ///
     availableCampaigns = CampaignsModel.getAvailableCampaigns();
     ///
-    ok(availableCampaigns["urn:brent:students:long"] === undefined, "Installed campaign should not be included in available campaigns list.");
-    ok(availableCampaigns["urn:campaign:demo:scott2"] !== undefined, "Not-installed campaign should be included in available campaigns list.");
+    strictEqual(availableCampaigns["urn:brent:students:long"], undefined, "Installed campaign should not be included in available campaigns list.");
+    notStrictEqual(availableCampaigns["urn:campaign:demo:scott2"], undefined, "Not-installed campaign should be included in available campaigns list.");
 });
 
 test("Test getting all campaigns with CampaignsModel.getAllCampaigns() with an installed campaign.", function () {
@@ -166,7 +165,7 @@ test("Test getting all campaigns with CampaignsModel.getAllCampaigns() with an i
     ///
     for (campaignURN in fixture.testCampaignsMetadata) {
         if (fixture.testCampaignsMetadata.hasOwnProperty(campaignURN)) {
-            ok(allCampaigns[campaignURN] !== undefined,
+            notStrictEqual(allCampaigns[campaignURN], undefined,
                 "All campaign URNs should be included in the response of CampaignsModel.getAllCampaigns() even though some campaigns may be installed.");
         }
     }
@@ -179,7 +178,7 @@ test("Test uninstalling a single installed campaign with CampaignsModel.uninstal
     ///
     CampaignsModel.uninstallCampaign("urn:brent:students:long");
     ///
-    ok(CampaignsModel.getInstalledCampaignsCount() === 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
+    strictEqual(CampaignsModel.getInstalledCampaignsCount(), 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
 });
 
 test("Test uninstalling several campaigns with CampaignsModel.uninstallAllCampaigns().", function () {
@@ -190,5 +189,5 @@ test("Test uninstalling several campaigns with CampaignsModel.uninstallAllCampai
     ///
     CampaignsModel.uninstallAllCampaigns();
     ///
-    ok(CampaignsModel.getInstalledCampaignsCount() === 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
+    strictEqual(CampaignsModel.getInstalledCampaignsCount(), 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
 });

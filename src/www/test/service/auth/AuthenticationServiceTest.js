@@ -34,7 +34,7 @@ test("Test successful authentication with hashed password.", function () {
     AuthenticationService.authenticateByHash("username", "password", function () {});
     ///
     ok(AuthenticationModel.isUserAuthenticatedByHash(), "User should be authenticated by hash after a successful authentication service call.");
-    ok(AuthenticationModel.getUsername() === "username", "Saved username should equal to the username with which the user logged in.");
+    strictEqual(AuthenticationModel.getUsername(), "username", "Saved username should equal to the username with which the user logged in.");
 });
 
 test("Test successful authentication with auth token.", function () {
@@ -46,7 +46,7 @@ test("Test successful authentication with auth token.", function () {
     AuthenticationService.authenticateByToken("username", "password", function () {});
     ///
     ok(AuthenticationModel.isUserAuthenticatedByToken(), "User should be authenticated by auth token after a successful authentication service call.");
-    ok(AuthenticationModel.getUsername() === "username", "Saved username should equal to the username with which the user logged in.");
+    strictEqual(AuthenticationModel.getUsername(), "username", "Saved username should equal to the username with which the user logged in.");
 });
 
 test("Test failed authentication with hashed password.", function () {
