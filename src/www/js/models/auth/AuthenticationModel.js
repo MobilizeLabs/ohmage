@@ -33,21 +33,18 @@ var AuthenticationModel = (function () {
      */
     var sessionMap = new LocalMap('credentials');
 
-    /**
-     * Acts both as a setter and a getter for session values. If a value is
-     * specified, then the parameter will be changed to that value and returned.
-     * Otherwise, the value of the parameter if any will be returned without any
-     * modification.
-     *
-     * @param name The name of the session parameter.
-     * @param [value] The value to be assigned to the parameter.
-     * @returns {String}
-     */
-    var session = function (name, value) {
+    var setSessionParam = function (name, value) {
         if (value !== undefined) {
             sessionMap.set(name, value);
         }
-        return sessionMap.get(name);
+    };
+
+    var getSessionParam = function (sessionParamName) {
+        return sessionMap.get(sessionParamName);
+    };
+
+    var deleteSessionParam = function (sessionParamName) {
+        sessionMap.release(sessionParamName);
     };
 
     /**
@@ -60,7 +57,7 @@ var AuthenticationModel = (function () {
         if (that.isInAuthErrorState()) {
             return false;
         }
-        return session(authParameterName) !== null || $.cookie(authParameterName) !== null;
+        return getSessionParam(authParameterName) !== null || $.cookie(authParameterName) !== null;
     };
 
     /**
@@ -82,7 +79,7 @@ var AuthenticationModel = (function () {
      * authentication error state; false, otherwise.
      */
     that.setAuthErrorState = function (authErrorState) {
-        session(AUTH_ERROR_STATE_PARAM_NAME, authErrorState);
+        setSessionParam(AUTH_ERROR_STATE_PARAM_NAME, authErrorState);
     };
 
     /**
@@ -90,7 +87,7 @@ var AuthenticationModel = (function () {
      * @returns {Boolean} True if the user is in authentication error state.
      */
     that.isInAuthErrorState = function () {
-        return session(AUTH_ERROR_STATE_PARAM_NAME);
+        return getSessionParam(AUTH_ERROR_STATE_PARAM_NAME);
     };
 
     /**
@@ -100,7 +97,7 @@ var AuthenticationModel = (function () {
     that.getAuthToken = function () {
         //Authentication token may either have been saved as a cookie or as a
         //session parameter (i.e. localStorage).
-        return session(AUTH_TOKEN_PARAM_NAME) || $.cookie(AUTH_TOKEN_PARAM_NAME);
+        return getSessionParam(AUTH_TOKEN_PARAM_NAME) || $.cookie(AUTH_TOKEN_PARAM_NAME);
     };
 
     /**
@@ -108,7 +105,7 @@ var AuthenticationModel = (function () {
      * @return The hashed password if it exists, or null otherwise.
      */
     that.getHashedPassword = function () {
-        return session(HASHED_PASSWORD_PARAM_NAME);
+        return getSessionParam(HASHED_PASSWORD_PARAM_NAME);
     };
 
     /**
@@ -118,10 +115,10 @@ var AuthenticationModel = (function () {
      */
     that.logout = function () {
         //Erase any authentication related data.
-        session(AUTH_TOKEN_PARAM_NAME, null);
-        session(HASHED_PASSWORD_PARAM_NAME, null);
-        session(USERNAME_PARAM_NAME, null);
-        session(AUTH_ERROR_STATE_PARAM_NAME, null);
+        deleteSessionParam(AUTH_TOKEN_PARAM_NAME);
+        deleteSessionParam(HASHED_PASSWORD_PARAM_NAME);
+        deleteSessionParam(USERNAME_PARAM_NAME);
+        deleteSessionParam(AUTH_ERROR_STATE_PARAM_NAME);
 
         //This is the cookie tracked by unified login page.
         $.cookie("auth_token", null, {path : "/"});
@@ -162,7 +159,7 @@ var AuthenticationModel = (function () {
      * @return {String} Currently logged in user's username, or null if non exists.
      */
     that.getUsername = function () {
-        return session(USERNAME_PARAM_NAME);
+        return getSessionParam(USERNAME_PARAM_NAME);
     };
 
     /**
@@ -171,19 +168,19 @@ var AuthenticationModel = (function () {
      * @returns {String} The set username.
      */
     that.setUsername = function (username) {
-        return session(USERNAME_PARAM_NAME, username);
+        return setSessionParam(USERNAME_PARAM_NAME, username);
     };
 
     that.setAuthToken = function (authToken, useCookie) {
         if (useCookie) {
             $.cookie(AUTH_TOKEN_PARAM_NAME, authToken, {path : "/"});
         } else {
-            session(AUTH_TOKEN_PARAM_NAME, authToken);
+            setSessionParam(AUTH_TOKEN_PARAM_NAME, authToken);
         }
     };
 
     that.setHashedPassword = function (hashedPassword) {
-        return session(HASHED_PASSWORD_PARAM_NAME, hashedPassword);
+        return setSessionParam(HASHED_PASSWORD_PARAM_NAME, hashedPassword);
     };
 
     return that;

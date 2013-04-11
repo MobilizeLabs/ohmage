@@ -34,6 +34,7 @@ test("Test authentication by hashed password.", function () {
     var isUserAuthenticated = AuthenticationModel.isUserAuthenticated();
     ///
     ok(isUserAuthenticated, "User should be authenticated if hashed password is set.");
+    ok(!LocalMap("credentials").isSet("auth_token"), "Auth token should not be set when authenticating via hashed password method.");
 });
 
 test("Test authentication by auth token (local storage version).", function () {
@@ -43,6 +44,7 @@ test("Test authentication by auth token (local storage version).", function () {
     var isUserAuthenticated = AuthenticationModel.isUserAuthenticated();
     ///
     ok(isUserAuthenticated, "User should be authenticated if auth token is set.");
+    ok(!LocalMap("credentials").isSet("hashed_password"), "Hashed password should not be set when authenticating via auth_token method.");
 });
 
 test("Test authentication by auth token (cookie).", function () {
@@ -52,6 +54,7 @@ test("Test authentication by auth token (cookie).", function () {
     var isUserAuthenticated = AuthenticationModel.isUserAuthenticated();
     ///
     ok(isUserAuthenticated, "User should be authenticated if auth token cookie is set.");
+    ok(!LocalMap("credentials").isSet("hashed_password"), "Hashed password should not be set when authenticating via auth_token method.");
 });
 
 test("Test authentication after logging out from auth token authentication (cookie).", function () {
@@ -70,6 +73,8 @@ test("Test authentication after logging out from auth token authentication (loca
     AuthenticationModel.logout();
     ///
     ok(!AuthenticationModel.isUserAuthenticated(), "User should not be authenticated after logging out.");
+    ok(!LocalMap("credentials").isSet("hashed_password"), "Hashed password should not be set when authenticating via auth_token method.");
+
 });
 
 test("Test authentication after logging out from hashed password authentication.", function () {
