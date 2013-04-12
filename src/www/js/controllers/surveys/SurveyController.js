@@ -1,15 +1,15 @@
-var SurveyController = function( surveyModel ) {
-
+var SurveyController = function (surveyModel) {
+    "use strict";
     var that = {};
 
     /**
      * Callback for when the user completes the survey.
      */
-    var onSurveyComplete = function( surveyResponse ){
+    var onSurveyComplete = function (surveyResponse) {
 
-        ReminderModel.supressSurveyReminders( surveyModel.getID() );
+        ReminderModel.supressSurveyReminders(surveyModel.getID());
 
-        var afterSurveyComplete = function() {
+        var afterSurveyComplete = function () {
 
             if (DeviceDetection.isNativeApplication()) {
                 PageNavigation.goBack();
@@ -23,38 +23,38 @@ var SurveyController = function( surveyModel ) {
         var title = 'ohmage';
         var buttonLabels = 'Yes,No';
         var message = "Would you like to upload your response?";
-        var callback = function( yes ) {
+        var callback = function (yes) {
 
             //Yes upload my response now.
-            if( yes ) {
+            if (yes) {
 
-                var uploader = new SurveyResponseUploadController( surveyModel, surveyResponse);
+                var uploader = new SurveyResponseUploadController(surveyModel, surveyResponse);
 
-                var onSuccess = function( response ) {
-                    MessageDialogController.showMessage( "Successfully uploaded your survey response.", function() {
-                        SurveyResponseModel.deleteSurveyResponse( surveyResponse );
+                var onSuccess = function (response) {
+                    MessageDialogController.showMessage("Successfully uploaded your survey response.", function () {
+                        SurveyResponseModel.deleteSurveyResponse(surveyResponse);
                         afterSurveyComplete();
                     });
 
                 };
 
-                var onError = function( error ) {
-                    MessageDialogController.showMessage( "Unable to upload your survey response at this time.", afterSurveyComplete );
+                var onError = function (error) {
+                    MessageDialogController.showMessage("Unable to upload your survey response at this time.", afterSurveyComplete);
                 };
 
-                uploader.upload( onSuccess, onError, ConfigManager.getGpsEnabled() );
+                uploader.upload(onSuccess, onError, ConfigManager.getGpsEnabled());
 
             } else {
                 MessageDialogController.showMessage("Your survey response has been saved. You may upload it any time from the survey upload queue.", function () {
                     afterSurveyComplete();
                 });
             }
-        }
+        };
 
-        if( ConfigManager.getConfirmToUploadOnSubmit() ) {
-            MessageDialogController.showConfirm( message, callback, buttonLabels, title );
-        }else{
-            callback( true );
+        if (ConfigManager.getConfirmToUploadOnSubmit()) {
+            MessageDialogController.showConfirm(message, callback, buttonLabels, title);
+        } else {
+            callback(true);
         }
 
     };
@@ -70,11 +70,11 @@ var SurveyController = function( surveyModel ) {
      * should be used to start off the survey. The prompts will be displayed one
      * by one, user response will be gathered in a SurveyResponse, etc.
      */
-    that.start = function( container ) {
+    that.start = function (container) {
 
         //Start the actual survey.
-        that.promptController = new PromptController( that, container );
-        that.promptController.start( onSurveyComplete );
+        that.promptController = new PromptController(that, container);
+        that.promptController.start(onSurveyComplete);
 
         return that.promptController;
     };
@@ -82,7 +82,7 @@ var SurveyController = function( surveyModel ) {
     /**
      * Returns the survey model associated with this controller.
      */
-    that.getSurveyModel = function() {
+    that.getSurveyModel = function () {
         return surveyModel;
     };
 

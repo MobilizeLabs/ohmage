@@ -13,13 +13,13 @@ var CampaignModel = function (campaignURN) {
     /**
      * Stores a mapping between survey ID i.e. "Snack" and survey model.
      * This object is initialized by initializeSurveys().
-     * @type {null}
+     * @type {{}|null}
      */
     var surveys = null;
 
 
     /**
-     * extract the surveys from the campaign and map IDs to survey model.
+     * Extract the surveys from the campaign and map IDs to survey model.
      */
     var initializeSurveys = function () {
 
@@ -48,6 +48,7 @@ var CampaignModel = function (campaignURN) {
      * @return {*} An object that maps a survey ID to survey model.
      */
     that.getSurveys = function () {
+        //Lazy instantiation.
         if (surveys === null) {
             initializeSurveys();
         }

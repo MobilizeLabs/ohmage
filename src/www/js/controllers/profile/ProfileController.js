@@ -24,7 +24,7 @@ var ProfileController = function () {
         var confirmButtonLabels = "Yes,No";
         var confirmCallback = function (confirmed) {
             if (confirmed) {
-                CustomPropertiesVault.deleteAllCustomProperties();
+                CustomPromptPropertyVault.deleteAllCustomProperties();
                 MessageDialogController.showMessage("All custom choices have been cleared.");
             }
         };
