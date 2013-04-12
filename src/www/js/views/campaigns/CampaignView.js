@@ -10,6 +10,7 @@ var CampaignView = function (campaignModel) {
 
     that.deleteCampaignHandler = function () {};
     that.openSurveyViewHandler = function () {};
+
     that.render = function () {
         var container = document.createElement('div');
         if (campaignModel.isRunning()) {
@@ -22,23 +23,28 @@ var CampaignView = function (campaignModel) {
         container.appendChild(mwf.decorator.SingleClickButton("Delete Campaign", that.deleteCampaignHandler));
         return container;
     };
+
     return that;
 };
 
-CampaignView.renderSurveyList = function (campaignModel, surveyMenu, callback) {
+CampaignView.renderSurveyList = function (campaignModel, surveyMenu, onSurveyClickCallback) {
     "use strict";
-    var openSurveyViewCallback = function (surveyID) {
-        return function () {
-            callback(campaignModel.getURN(), surveyID);
-        };
-    };
     var surveys = campaignModel.getSurveys(),
         surveyMenuItem,
-        numSurveys = surveys.length,
-        i;
-    for (i = 0; i < numSurveys; i += 1) {
-        surveyMenuItem = surveyMenu.addMenuLinkItem(surveys[i].title, null, surveys[i].description);
-        TouchEnabledItemModel.bindTouchEvent(surveyMenuItem, surveyMenuItem, openSurveyViewCallback(surveys[i].id), "menu-highlight");
+        surveyID,
+        survey,
+        openSurveyViewCallback = function (surveyID) {
+            return function () {
+                onSurveyClickCallback(campaignModel.getURN(), surveyID);
+            };
+        };
+
+    for (surveyID in surveys) {
+        if (surveys.hasOwnProperty(surveyID)) {
+            survey = surveys[surveyID];
+            surveyMenuItem = surveyMenu.addMenuLinkItem(survey.getTitle(), null, survey.getDescription());
+            TouchEnabledItemModel.bindTouchEvent(surveyMenuItem, surveyMenuItem, openSurveyViewCallback(survey.getID()), "menu-highlight");
+        }
     }
     return surveyMenu;
 };
