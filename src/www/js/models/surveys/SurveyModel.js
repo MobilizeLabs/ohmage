@@ -1,11 +1,67 @@
-var SurveyModel = function (surveyData, campaign) {
+var SurveyModel = function (surveyData, campaignModel) {
     "use strict";
 
-    /**
-     * This variable utilizes JavaScript's closure paradigm to allow private
-     * methods to invoke public methods.
-     */
     var that = {};
+
+    /**
+     * Stores an array of items in the order that was defined by the JSON.
+     * @type {Array}
+     */
+    var itemsList = null;
+
+    /**
+     * Stores a mapping between items IDs and item models. This object is for
+     * fast access using the ID key as opposed to iterating through the array
+     * to find a key match.
+     * @type {*}
+     */
+    var itemsMap = null;
+
+    /**
+     * Adds an item  model to both the item list and the item mapping.
+     * @param itemModel The JSON item specification (i.e. extracted object).
+     */
+    var addItemModel = function (itemModel) {
+        //Store in both the array and the object. Remember there is only one
+        //instance of the item model so we are not adding too much overhead.
+        itemsList.push(itemModel);
+        itemsMap[itemModel.getID()] = itemModel;
+    };
+
+    /**
+     *
+     * @param promptData
+     */
+    var addPromptItem = function (promptData) {
+        addItemModel(PromptModel(promptData, that, campaignModel));
+    };
+
+    /**
+     *
+     * @param messageData
+     */
+    var addMessageItem = function (messageData) {
+        addItemModel(MessageModel(messageData, that, campaignModel));
+    };
+
+    /**
+     * Populates the items list and items map.
+     */
+    var initializeItems = function () {
+        itemsList = [];
+        itemsMap = {};
+
+        var prompts = surveyData.contentlist.prompt,
+            i;
+
+        if (prompts.length) {
+            for (i = 0; i < prompts.length; i += 1) {
+                addPromptItem(prompts[i]);
+            }
+        } else {
+            addPromptItem(prompts);
+        }
+    };
 
     /**
      * Returns the title of the current survey.
@@ -32,46 +88,37 @@ var SurveyModel = function (surveyData, campaign) {
     };
 
     /**
-     * Returns a reference to this survey's campaign.
+     * Returns a reference to this survey's campaign model.
      * @returns {CampaignModel} Reference to this survey's campaign.
      */
     that.getCampaign = function () {
-        return campaign;
+        return campaignModel;
     };
 
     /**
-     * Returns an array of prompt objects associated with this survey.
+     * Returns an array of item objects associated with this survey.
      * @returns {Array}
      */
-    that.getPrompts = function () {
-        var promptList = surveyData.contentlist.prompt,
-            prompts = [],
-            i;
-        if (promptList.length) {
-            for (i = 0; i < promptList.length; i += 1) {
-                prompts[i] = new Prompt(promptList[i], that, campaign);
-            }
-        } else {
-            prompts.push(new Prompt(promptList, that, campaign));
+    that.getItems = function () {
+        //Lazy initialization.
+        if (itemsList === null) {
+            initializeItems();
         }
-        return prompts;
+        return itemsList;
     };
 
     /**
-     * Returns a prompt, given a prompt ID.
-     * @param id ID of the prompt to return.
-     * @returns Prompt object or null.
+     * Returns an item with the specified ID.
+     * @param itemID ID of the item to return.
+     * @returns {PromptModel|MessageModel|null} Survey item model or null.
      */
-    that.getPrompt = function (id) {
-        var prompts = that.getPrompts(),
-            i;
-        for (i = 0; i < prompts.length; i += 1) {
-            if (prompts[i].getID() === id) {
-                return prompts[i];
-            }
+    that.getItem = function (itemID) {
+        //Lazy initialization.
+        if (itemsMap === null) {
+            initializeItems();
         }
-        return null;
+        return itemsMap[itemID] || null;
     };
 
     return that;
-}
+};

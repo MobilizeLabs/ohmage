@@ -29,7 +29,7 @@ module( "models.reminders.ReminderModel", {
   }
 });
 
-test( "Test ReminderModel()", function() {
+test( "Test ReminderModel()", function() { ok
     ///
     var reminderModel = ReminderModel();
     ///

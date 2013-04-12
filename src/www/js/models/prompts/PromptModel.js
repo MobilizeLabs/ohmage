@@ -10,7 +10,7 @@
 var PromptModel = function (promptData, surveyModel, campaignModel) {
     "use strict";
 
-    var that = {};
+    var that = AbstractSurveyItemModel(promptData, surveyModel, campaignModel);
 
     /**
      * Stores custom prompt properties associated with the current prompt.
@@ -29,12 +29,6 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
      * @type {number}
      */
     var numProperties = 0;
-
-    /**
-     * Stores the conditional statement associated with the current prompt.
-     * @type {string | null}
-     */
-    var condition = null;
 
     /**
      * Detects if the specified property is already in the property list of this
@@ -110,29 +104,6 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
             return true;
         }
         return false;
-    };
-
-    that.getCampaignURN = function () {
-        return campaignModel.getURN();
-    };
-
-    that.getSurveyID = function () {
-        return surveyModel.getID();
-    };
-
-    /**
-     * Returns the ID of the current prompt.
-     * @return The ID of the current prompt.
-     */
-    that.getID = function () {
-        return promptData.id;
-    };
-
-    /**
-     * Returns the conditional statement associated with the current prompt.
-     */
-    that.getCondition = function () {
-        return condition;
     };
 
     /**
@@ -236,16 +207,6 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
                 properties[customProperty.key] = customProperty.label;
                 numProperties += 1;
             }
-        }
-
-        //Since in XML we can't write '<' or '>', it's written as &lt; and &gt;
-        //and since PEG.js expects the mathematical symbols, we need to do this
-        //conversion here if a condition is specified for this survey.
-        //See GitHub issue #141 for more details.
-        if (promptData.condition !== undefined) {
-            condition = promptData.condition;
-            condition = condition.replace(/&gt;/g, ">");
-            condition = condition.replace(/&lt;/g, "<");
         }
 
     }());
