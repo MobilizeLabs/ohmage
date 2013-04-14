@@ -103,6 +103,10 @@ var CampaignsModel = (function () {
         return CampaignModel(campaignURN);
     };
 
+    that.getSurvey = function (campaignURN, surveyID) {
+        return that.getCampaign(campaignURN).getSurvey(surveyID);
+    };
+
     /**
      * Deletes the specified campaign from the local storage. This method will
      * also delete all reminders associated with the provided campaign.

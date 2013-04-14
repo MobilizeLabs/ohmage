@@ -39,7 +39,7 @@ var TextPromptView = function (promptModel) {
         return true;
     };
 
-    that.render = function (promptModel) {
+    that.render = function () {
         var form = mwf.decorator.Form(promptModel.getText());
         form.addItem(textarea);
         return form;

@@ -59,7 +59,7 @@ var PageController = (function () {
         return pageName.charAt(0).toUpperCase() + pageName.slice(1);
     };
 
-    that.setBackButtonHandler = function () {
+    that.setDefaultBackButtonHandler = function () {
         //Currently, only Android devices have a built in back button.
         if (DeviceDetection.isDeviceAndroid()) {
 
@@ -253,9 +253,16 @@ var PageController = (function () {
         log.info("Initializing [$1] page.", pageModel.getPageName());
         pageModel.initialize(function () {
             clearScreen();
-            var pageView =  PageView(pageModel);
-            screen.appendChild(pageView.render());
-            log.info("Rendered [$1] page.", pageModel.getPageName());
+            var pageView =  PageView(pageModel),
+                renderedView = pageView.render();
+            if (renderedView) {
+                screen.appendChild(pageView.render());
+                log.info("Rendered [$1] page.", pageModel.getPageName());
+            } else {
+                log.error("Unable to render page [$1] because the rendered object is invalid.", pageModel.getPageName());
+            }
+
+
         });
     };
 

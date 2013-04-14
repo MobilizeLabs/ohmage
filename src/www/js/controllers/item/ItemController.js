@@ -1,6 +1,10 @@
-var SurveyController = function (surveyModel) {
+
+var ItemController = function (surveyController) {
     "use strict";
+
     var that = {};
+
+    var surveyModel = surveyController.getSurveyModel();
 
     /**
      * An array of items associated with the current survey.
@@ -13,10 +17,16 @@ var SurveyController = function (surveyModel) {
     var surveyResponse = SurveyResponseModel.init(surveyModel.getID(), surveyModel.getCampaign().getURN());
 
     /**
-     * Stores the index of the currently displayed survey item. Initialized to
+    * Stores the index of the currently displayed survey item. Initialized to
      * the first item at index 0.
-     */
+    */
     var currentItemIndex = 0;
+
+    /**
+     * Callback for survey completed event. The actual response will not be
+     * submitted but will be passed as a reference object to this callback.
+     */
+    var surveyCompletedCallback = null;
 
     /**
      * Message displayed to the user when exiting the current survey without
@@ -24,14 +34,22 @@ var SurveyController = function (surveyModel) {
      */
     var confirmToLeaveMessage = "Data from your current survey response will be lost. Are you sure you would like to continue?";
 
-    var surveyView = null;
+    /**
+     * Returns currently displayed item. Returns null if current index is out
+     * of bounds.
+     *
+     * @returns Current item.
+     */
+    var getCurrentItem = function () {
+        return surveyItems[currentItemIndex] || null;
+    };
 
     /**
      * Returns current survey item's condition.
      * @returns {String|null}
      */
     var getCurrentCondition = function () {
-        return that.getCurrentItem().getCondition();
+        return getCurrentItem().getCondition();
     };
 
     /**
@@ -43,70 +61,26 @@ var SurveyController = function (surveyModel) {
         var currentCondition = getCurrentCondition(),
             currentResponse  = surveyResponse.getResponses();
         return currentCondition &&
-            !ConditionalParser.parse(currentCondition, currentResponse);
+               !ConditionalParser.parse(currentCondition, currentResponse);
     };
-
 
     /**
-     * Callback for when the user completes taking survey.
+     * Buffer that stores currently displayed/rendered items. This approach
+     * is used for storing user entered data when the user goes to the previous
+     * prompt.
      */
-    var onSurveyComplete = function (surveyResponse) {
+    var itemBuffer = {};
 
+    /**
+     * Method invoked when the user completes the survey and clicks submit.
+     */
+    var done = function () {
         surveyResponse.submit();
         surveyCompletedCallback(surveyResponse);
-
-        ReminderModel.supressSurveyReminders(surveyModel.getID());
-
-        //Confirmation box related properties.
-        var title = 'ohmage';
-        var buttonLabels = 'Yes,No';
-        var message = "Would you like to upload your response?";
-
-
-        if (ConfigManager.getConfirmToUploadOnSubmit()) {
-            MessageDialogController.showConfirm(message, onUploadConfirmCallback, buttonLabels, title);
-        } else {
-            onUploadConfirmCallback(true);
-        }
-
-        if (DeviceDetection.isNativeApplication()) {
-            PageController.goBack();
-        } else {
-            window.onbeforeunload = null;
-            close();
-        }
-
-    };
-
-    var onUploadConfirmCallback = function (yes) {
-
-        //Yes upload my response now.
-        if (yes) {
-
-            var uploader = new SurveyResponseUploadController(surveyModel, surveyResponse);
-
-            var onSuccess = function (response) {
-                MessageDialogController.showMessage("Successfully uploaded your survey response.", function () {
-                    SurveyResponseModel.deleteSurveyResponse(surveyResponse);
-                    afterSurveyComplete();
-                });
-            };
-
-            var onError = function (error) {
-                MessageDialogController.showMessage("Unable to upload your survey response at this time.", afterSurveyComplete);
-            };
-
-            uploader.upload(onSuccess, onError, ConfigManager.getGpsEnabled());
-
-        } else {
-            MessageDialogController.showMessage("Your survey response has been saved. You may upload it any time from the survey upload queue.", function () {
-                afterSurveyComplete();
-            });
-        }
     };
 
     var processResponse = function (skipped) {
-        var prompt = that.getCurrentItem();
+        var prompt = getCurrentItem();
         if (skipped) {
             if (!prompt.isSkippable()) {
                 return false;
@@ -131,9 +105,10 @@ var SurveyController = function (surveyModel) {
         if (processResponse(skipped)) {
             currentItemIndex += 1;
             while (currentItemIndex < surveyItems.length && failsCondition()) {
-                surveyResponse.promptNotDisplayed(that.getCurrentItem().getID());
+                surveyResponse.promptNotDisplayed(getCurrentItem().getID());
                 currentItemIndex += 1;
             }
+            render();
         }
     };
 
@@ -147,15 +122,79 @@ var SurveyController = function (surveyModel) {
             currentItemIndex -= 1;
         }
 
+        render();
+
     };
 
+    /**
+     * Enables or disables next, previous, submit, and skip buttons.
+     */
+
+    var render = function () {
+
+        //Clear the current contents of the main container.
+        container.innerHTML = "";
+
+        var controlButtons;
+
+        //Render prompt if not at the last prompt.
+        if (currentItemIndex < surveyItems.length) {
+
+            //Displayed buffered prompts if possible, else render the prompt and
+            //save the rendered content.
+            if (!itemBuffer[getCurrentItem().getID()]) {
+                container.appendChild(itemBuffer[getCurrentItem().getID()] = getCurrentItem().render());
+            } else {
+                container.appendChild(itemBuffer[getCurrentItem().getID()]);
+            }
+
+            controlButtons = getControlButtons(false);
+
+
+        //Render submit page if at the last prompt.
+        } else {
+
+            var menu = mwf.decorator.Menu('Survey Completed');
+            menu.addMenuTextItem('Done with ' + surveyModel.getTitle());
+            container.appendChild(menu);
+
+            controlButtons = getControlButtons(true);
+        }
+
+        container.appendChild(controlButtons);
+
+    };
+
+    /**
+     * Fetches the current location and renders the first prompt.
+     *
+     * @param callback Function that will be invoked when the survey has been
+     *                 completed.
+     */
+    that.start = function (callback) {
+
+        if (ConfigManager.getGpsEnabled()) {
+            //Update survey response geolocation information.
+            surveyResponse.setLocation();
+        }
+
+        //Render the initial prompt.
+        render();
+
+        //Save the callback to be invoked when the survey has been completed.
+        surveyCompletedCallback = callback;
+
+        overrideBackButtonFunctionality();
+
+    };
 
     /**
      * Aborts the current survey participation and deletes the users responses.
      * This method should be called to do the clean up before the user navigates
      * to another page without completing the survey.
      */
-    var abort = function () {
+    that.abort = function () {
+        resetBackButtonFunctionality();
         if (surveyResponse !== null && !surveyResponse.isSubmitted()) {
             SurveyResponseModel.deleteSurveyResponse(surveyResponse);
         }
@@ -170,10 +209,10 @@ var SurveyController = function (surveyModel) {
      * @param positiveConfirmationCallback A callback invoked when the user
      *        confirms the current action.
      */
-    var confirmSurveyExit = function (positiveConfirmationCallback) {
+    that.confirmSurveyExit = function (positiveConfirmationCallback) {
         MessageDialogController.showConfirm(confirmToLeaveMessage, function (isResponseYes) {
             if (isResponseYes) {
-                abort();
+                that.abort();
                 if (typeof positiveConfirmationCallback === "function") {
                     positiveConfirmationCallback();
                 }
@@ -181,48 +220,10 @@ var SurveyController = function (surveyModel) {
         }, "Yes,No");
     };
 
-    /**
-     * Fetches the current location and renders the first prompt.
-     */
-    that.startSurvey = function () {
-        if (ConfigManager.getGpsEnabled()) {
-            surveyResponse.setLocation();
-        }
-    };
-
-    that.getView = function () {
-        if (surveyView === null) {
-            surveyView = SurveyView(that);
-        }
-        return surveyView;
-
-    };
-
-    /**
-     * Returns the survey model associated with this controller.
-     * @returns {SurveyModel}
-     */
-    that.getSurveyModel = function () {
-        return surveyModel;
-    };
-
-    that.isOnFirstItem = function () {
-        return currentItemIndex === 0;
-    };
-
-    that.isOnSubmitPage = function () {
-        return currentItemIndex === surveyItems.length;
-    };
-
-    /**
-     * Returns currently displayed item. Returns null if current index is out
-     * of bounds.
-     *
-     * @returns Current item.
-     */
-    that.getCurrentItem = function () {
-        return surveyItems[currentItemIndex] || null;
-    };
-
     return that;
 };
+
+
+
+
+

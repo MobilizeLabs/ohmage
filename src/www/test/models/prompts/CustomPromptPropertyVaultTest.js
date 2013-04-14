@@ -32,7 +32,7 @@ module("models.prompt.CustomPromptPropertyVault", {
             return testPrompt;
         };
 
-        fixture.getTestCustomPromptPropertyVault = function (promptID, surveyID, campaignURN) {
+        fixture.getCustomPromptPropertyVault = function (promptID, surveyID, campaignURN) {
             return CustomPromptPropertyVault(fixture.getTestPrompt(promptID, surveyID, campaignURN));
         };
     },
@@ -42,13 +42,13 @@ module("models.prompt.CustomPromptPropertyVault", {
         CustomPromptPropertyVault.deleteAllCustomProperties();
 
         delete fixture.getTestPrompt;
-        delete fixture.getTestCustomPromptPropertyVault;
+        delete fixture.getCustomPromptPropertyVault;
     }
 });
 
 test("Test setting and getting a custom property.", function () {
     "use strict";
-    var customPromptPropertyVault = fixture.getTestCustomPromptPropertyVault();
+    var customPromptPropertyVault = fixture.getCustomPromptPropertyVault();
     ///
     customPromptPropertyVault.addCustomProperty("key", "value");
     ///
@@ -58,7 +58,7 @@ test("Test setting and getting a custom property.", function () {
 
 test("Test setting and getting several custom properties.", function () {
     "use strict";
-    var customPromptPropertyVault = fixture.getTestCustomPromptPropertyVault();
+    var customPromptPropertyVault = fixture.getCustomPromptPropertyVault();
     ///
     customPromptPropertyVault.addCustomProperty("key1", "value1");
     customPromptPropertyVault.addCustomProperty("key2", "value2");
@@ -71,7 +71,7 @@ test("Test setting and getting several custom properties.", function () {
 
 test("Test deleting all custom prompt properties.", function () {
     "use strict";
-    var customPromptPropertyVault = fixture.getTestCustomPromptPropertyVault();
+    var customPromptPropertyVault = fixture.getCustomPromptPropertyVault();
     customPromptPropertyVault.addCustomProperty("key1", "value1");
     customPromptPropertyVault.addCustomProperty("key2", "value2");
     customPromptPropertyVault.addCustomProperty("key3", "value3");
@@ -85,7 +85,7 @@ test("Test deleting all custom prompt properties.", function () {
 
 test("Test deleting custom prompt properties for a specific prompt.", function () {
     "use strict";
-    var customPromptPropertyVault = fixture.getTestCustomPromptPropertyVault();
+    var customPromptPropertyVault = fixture.getCustomPromptPropertyVault();
     customPromptPropertyVault.addCustomProperty("key1", "value1");
     customPromptPropertyVault.addCustomProperty("key2", "value2");
     customPromptPropertyVault.addCustomProperty("key3", "value3");
@@ -99,8 +99,8 @@ test("Test deleting custom prompt properties for a specific prompt.", function (
 
 test("Test separation of properties between two prompts.", function () {
     "use strict";
-    var customPromptPropertyVault1 = fixture.getTestCustomPromptPropertyVault("prompt1");
-    var customPromptPropertyVault2 = fixture.getTestCustomPromptPropertyVault("prompt2");
+    var customPromptPropertyVault1 = fixture.getCustomPromptPropertyVault("prompt1");
+    var customPromptPropertyVault2 = fixture.getCustomPromptPropertyVault("prompt2");
     ///
     customPromptPropertyVault1.addCustomProperty("key", "value1");
     customPromptPropertyVault2.addCustomProperty("key", "value2");
@@ -111,8 +111,8 @@ test("Test separation of properties between two prompts.", function () {
 
 test("Test separation of properties between two surveys.", function () {
     "use strict";
-    var customPromptPropertyVault1 = fixture.getTestCustomPromptPropertyVault("prompt-id", "survey-id-1");
-    var customPromptPropertyVault2 = fixture.getTestCustomPromptPropertyVault("prompt-id", "survey-id-2");
+    var customPromptPropertyVault1 = fixture.getCustomPromptPropertyVault("prompt-id", "survey-id-1");
+    var customPromptPropertyVault2 = fixture.getCustomPromptPropertyVault("prompt-id", "survey-id-2");
     ///
     customPromptPropertyVault1.addCustomProperty("key", "value1");
     customPromptPropertyVault2.addCustomProperty("key", "value2");
@@ -123,8 +123,8 @@ test("Test separation of properties between two surveys.", function () {
 
 test("Test separation of properties between two campaigns.", function () {
     "use strict";
-    var customPromptPropertyVault1 = fixture.getTestCustomPromptPropertyVault("prompt-id", "survey-id", "campaign-urn-1");
-    var customPromptPropertyVault2 = fixture.getTestCustomPromptPropertyVault("prompt-id", "survey-id", "campaign-urn-2");
+    var customPromptPropertyVault1 = fixture.getCustomPromptPropertyVault("prompt-id", "survey-id", "campaign-urn-1");
+    var customPromptPropertyVault2 = fixture.getCustomPromptPropertyVault("prompt-id", "survey-id", "campaign-urn-2");
     ///
     customPromptPropertyVault1.addCustomProperty("key", "value1");
     customPromptPropertyVault2.addCustomProperty("key", "value2");

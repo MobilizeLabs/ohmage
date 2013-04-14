@@ -60,23 +60,24 @@ var NumberInputView = function (promptModel) {
     };
 
     that.getResponse = function () {
-        return parseInt(textBox.value, 10);
+        return parseInt(userInputField.value, 10);
     };
 
-    that.render = function (promptModel, defaultValue) {
+    that.render = function (currentValue) {
 
         userInputField = document.createElement('input');
-        userInputField.value = defaultValue || that.getNumberPromptDefaultValue(promptModel);
+        userInputField.value = currentValue || that.getNumberPromptDefaultValue(promptModel);
         userInputField.onkeypress = validateNumberInputKeyPress;
 
-        var form = mwfd.Form(promptModel.getText());
+        var form = mwf.decorator.Form(promptModel.getText());
         form.addLabel(rangeMessage);
         form.addItem(userInputField);
 
         var container = document.createElement('div');
-        container.appendChild(mwfd.SingleClickButton("Switch to Number Picker", function () {
+        container.appendChild(mwf.decorator.SingleClickButton("Switch to Number Picker", function () {
             container.innerHTML = "";
-            container.appendChild(createNumberPicker(promptModel, (isValueInRange(userInputField.value)) ? that.getResponse() : false));
+            that = NumberPickerView(promptModel, (isValueInRange(userInputField.value)) ? that.getResponse() : promptModel.getDefaultValue());
+            container.appendChild(that.render());
         }));
         container.appendChild(form);
         return container;

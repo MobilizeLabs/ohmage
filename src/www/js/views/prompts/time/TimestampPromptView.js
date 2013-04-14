@@ -33,7 +33,7 @@ var TimestampPromptView = function (promptModel) {
         return datePicker.value + 'T' + timePicker.value + ":00";
     };
 
-    that.render = function (promptModel) {
+    that.render = function () {
         return DateTimePicker.createDateTimeForm(promptModel.getText(), datePicker, timePicker);
     };
 

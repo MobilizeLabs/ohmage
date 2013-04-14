@@ -60,7 +60,7 @@ var PhotoPromptView = function (promptModel) {
         //Detect PhoneGap camera support. If possible, allow the user to take a
         //photo.
         if (navigator.camera) {
-            var takeImageButton = mwfd.SingleClickButton(promptModel.getText(), function () {
+            var takeImageButton = mwf.decorator.SingleClickButton(promptModel.getText(), function () {
 
                 function onSuccess(imageData) {
                     recordImage(imageData, true);
@@ -81,7 +81,7 @@ var PhotoPromptView = function (promptModel) {
         //Downgrade to file input form.
         } else {
 
-            var fileInputForm = mwfd.Form(promptModel.getText());
+            var fileInputForm = mwf.decorator.Form(promptModel.getText());
 
             var fileInput = document.createElement('input');
             fileInput.type = 'file';

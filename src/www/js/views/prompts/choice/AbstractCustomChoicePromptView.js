@@ -1,8 +1,10 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/12/13
+ * @constructor
+ * @param promptModel {PromptModel}
+ * @param isSingleChoice {Boolean}
  */
-
 var AbstractCustomChoicePromptView = function (promptModel, isSingleChoice) {
     "use strict";
     var that;
@@ -42,13 +44,13 @@ var AbstractCustomChoicePromptView = function (promptModel, isSingleChoice) {
 
     /**
      * First removes the last item in the choice menu (which is the button that
-     * allows users to add a new option), then add either a radio menu item or a
-     * checkbox menu item depending on the type of prompt, and then adds the
+     * allows users to add a new option), then adds either a radio menu item or
+     * a checkbox menu item depending on the type of prompt, and then adds the
      * last menu item back onto the menu.
-     * @param key
-     * @param label
+     * @param key {String} The key to be the name of the new menu item.
+     * @param label {String} The display value of the new menu item.
      */
-    var addNewOption = function (key, label) {
+    var addNewOptionToMenu = function (key, label) {
         var addOptionItem = choiceMenu.getLastMenuItem();
         choiceMenu.removeMenuItem(addOptionItem);
         if (isSingleChoice) {
@@ -56,29 +58,30 @@ var AbstractCustomChoicePromptView = function (promptModel, isSingleChoice) {
         } else {
             choiceMenu.addMenuCheckboxItem(promptModel.getID(), key, label);
         }
-        hideCustomChoiceMenu();
         choiceMenu.addMenuItem(addOptionItem, true);
     };
 
     var addNewChoiceCallback = function () {
 
-        var newChoiceValue = newChoiceField.value;
+        var newChoiceValue = newChoiceField.value,
+            newPropertyKey;
+
         if (newChoiceValue.length === 0) {
             MessageDialogController.showMessage('Please specify an option to add.');
             return false;
         }
 
-        var prop = promptModel.addProperty(newChoiceValue);
-
-        //If the property is invalid, alert the user and cancel the add.
-        if (!prop) {
+        if (promptModel.isDuplicatePropertyLabel(newChoiceValue)) {
             MessageDialogController.showMessage('Option with that label already exists.');
             return false;
         }
 
-
+        newPropertyKey = promptModel.addProperty(newChoiceValue);
+        addNewOptionToMenu(newPropertyKey, newChoiceValue);
+        hideCustomChoiceMenu();
 
         return true;
+
     };
 
     /**
@@ -92,6 +95,7 @@ var AbstractCustomChoicePromptView = function (promptModel, isSingleChoice) {
             newChoiceForm.addItem(newChoiceField);
             newChoiceForm.addInputButton('Create New Choice', addNewChoiceCallback);
             newChoiceForm.addInputButton('Cancel', hideCustomChoiceMenu);
+            newChoiceForm.setOnSubmitCallback(addNewChoiceCallback);
             newChoiceForm.style.display = 'none';
         }
     };

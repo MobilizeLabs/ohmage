@@ -74,7 +74,7 @@ var Init = (function () {
         };
 
         //Initialize the page controller.
-        PageController.setBackButtonHandler();
+        PageController.setDefaultBackButtonHandler();
         PageController.setScreen(document.getElementById("screen"));
     });
 

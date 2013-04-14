@@ -16,7 +16,7 @@ var AbstractChoicePromptView = function (promptModel, isSingleChoice, isCustom) 
     };
 
     that.getChoiceMenu = function () {
-        return choiceMenu();
+        return choiceMenu;
     };
 
     that.getResponse = function () {
@@ -44,28 +44,21 @@ var AbstractChoicePromptView = function (promptModel, isSingleChoice, isCustom) 
     };
 
     that.render = function () {
-        var i;
+        var key,
+            promptModelID = promptModel.getID();
         if (choiceMenu === null) {
             choiceMenu = mwf.decorator.Menu(promptModel.getText());
-
-            for (i = 0; i < properties.length; i  += 1) {
-
-                //Handle single choice prompts.
-                if (isSingleChoice) {
-                    choiceMenu.addMenuRadioItem(promptModel.getID(),   //Name
-                                          properties[i].key,     //Value
-                                          properties[i].label);  //Label
-
-                //Handle multiple choice prompts.
-                } else {
-                    choiceMenu.addMenuCheckboxItem(promptModel.getID(),  //Name
-                                             properties[i].key,    //Value
-                                             properties[i].label); //Label
+            for (key in properties) {
+                if (properties.hasOwnProperty(key)) {
+                    if (isSingleChoice) {
+                        choiceMenu.addMenuRadioItem(promptModelID, key, properties[key]);
+                    } else {
+                        choiceMenu.addMenuCheckboxItem(promptModelID, key, properties[key]);
+                    }
                 }
-
             }
-        }
 
+        }
         return choiceMenu;
 
     };

@@ -15,6 +15,7 @@
         @import url("css/highlight-styles.css");
         @import url("css/grid.css");
         @import url("css/spinner.css");
+        @import url("css/PromptStyles.css");
     </style>
 
     <!-- IMPORT PHONEGAP LIBRARY -->
@@ -39,6 +40,10 @@
     <script type="text/javascript" src="js/util/Logger.js"></script>
     <script type="text/javascript" src="js/util/DeviceDetection.js"></script>
     <script type="text/javascript" src="js/util/ChecksumGen.js"></script>
+    <script type="text/javascript" src="js/util/UUIDGen.js"></script>
+    <script type="text/javascript" src="js/util/jstz.js"></script>
+    <script type="text/javascript" src="js/util/DateTimePicker.js"></script>
+    <script type="text/javascript" src="js/util/Base64.js"></script>
 
     <script type="text/javascript" src="js/config/ConfigManager.js"></script>
 
@@ -51,6 +56,7 @@
     <script type="text/javascript" src="js/controllers/help/HelpController.js"></script>
     <script type="text/javascript" src="js/controllers/campaigns/CampaignsController.js"></script>
     <script type="text/javascript" src="js/controllers/campaigns/CampaignController.js"></script>
+    <script type="text/javascript" src="js/controllers/surveys/SurveyController.js"></script>
 
     <script type="text/javascript" src="js/models/auth/AuthenticationModel.js"></script>
     <script type="text/javascript" src="js/models/campaigns/CampaignModel.js"></script>
@@ -62,6 +68,10 @@
     <script type="text/javascript" src="js/models/help/HelpModel.js"></script>
     <script type="text/javascript" src="js/models/reminders/ReminderModel.js"></script>
     <script type="text/javascript" src="js/models/surveys/SurveyModel.js"></script>
+    <script type="text/javascript" src="js/models/surveys/AbstractSurveyItemModel.js"></script>
+    <script type="text/javascript" src="js/models/surveys/SurveyResponseModel.js"></script>
+    <script type="text/javascript" src="js/models/prompts/PromptModel.js"></script>
+
 
     <script type="text/javascript" src="js/service/auth/AuthenticationService.js"></script>
     <script type="text/javascript" src="js/service/page/PageViewService.js"></script>
@@ -79,6 +89,24 @@
     <script type="text/javascript" src="js/views/campaigns/AvailableCampaignsView.js"></script>
     <script type="text/javascript" src="js/views/campaigns/InstalledCampaignsView.js"></script>
     <script type="text/javascript" src="js/views/campaigns/CampaignView.js"></script>
+    <script type="text/javascript" src="js/views/surveys/SurveyView.js"></script>
+
+    <script type="text/javascript" src="js/views/prompts/PromptViewFactory.js"></script>
+    <script type="text/javascript" src="js/views/prompts/AbstractPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/choice/multi/MultiChoiceCustomPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/choice/multi/MultiChoicePromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/choice/single/SingleChoicePromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/choice/single/SingleChoiceCustomPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/choice/AbstractChoicePromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/choice/AbstractCustomChoicePromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/number/AbstractNumberPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/number/NumberInputView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/number/NumberPickerView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/number/NumberPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/photo/PhotoPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/text/TextPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/time/TimestampPromptView.js"></script>
+    <script type="text/javascript" src="js/views/prompts/unsupported/UnsupportedPromptView.js"></script>
 
     <script type="text/javascript" src="js/init/init.js"></script>
     <script type="text/javascript" src="js/init/init.Index.js"></script>
@@ -89,6 +117,7 @@
     <script type="text/javascript" src="js/init/init.AvailableCampaigns.js"></script>
     <script type="text/javascript" src="js/init/init.InstalledCampaigns.js"></script>
     <script type="text/javascript" src="js/init/init.Campaign.js"></script>
+    <script type="text/javascript" src="js/init/init.Survey.js"></script>
 
 
 </head>

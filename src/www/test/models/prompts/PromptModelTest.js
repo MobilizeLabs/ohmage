@@ -217,12 +217,10 @@ test("Test accessing prompt properties.", function () {
         key2 = promptModel.getProperty(2),
         invalidKeyValue = promptModel.getProperty(10000);
     ///
-
     strictEqual(key0, "The Beach", "Property with key 0 should be the same as specified.");
     strictEqual(key1, "The Desert", "Property with key 1 should be the same as specified.");
     strictEqual(key2, "The Mountains", "Property with key 2 should be the same as specified.");
     strictEqual(invalidKeyValue, null, "Property with invalid key should be null.");
-
 });
 
 test("Conditional statement &lt; and &lt; conversion to < and > test.", function () {
@@ -247,13 +245,46 @@ test("Test getting min, max, and default values for a prompt that specified thes
     strictEqual(defaultValue, 0, "Default value accessed should be the same as defined in the JSON.");
 });
 
-test("Test adding a property with a duplicate label value.", function () {
+
+test("Test restoring properties from custom prompt property vault", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2"),
+        customPromptPropertyVault = CustomPromptPropertyVault(promptModel),
+        testPromptModel;
+    customPromptPropertyVault.addCustomProperty("new-key-1", "new-label-1");
+    customPromptPropertyVault.addCustomProperty("new-key-2", "new-label-2");
+    ///
+    testPromptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    ///
+    strictEqual(testPromptModel.getProperty("new-key-1"), "new-label-1", "The restored property from custom prompt properties vault should match the property added.");
+    strictEqual(testPromptModel.getProperty("new-key-2"), "new-label-2", "The restored property from custom prompt properties vault should match the property added.");
+});
+
+test("Test adding a property with a duplicate key value.", function () {
     "use strict";
     var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
     ///
-    var addPropertyResult = promptModel.addProperty("The Beach");
+    var addPropertyResult = promptModel.addProperty("Unique Label", 0);
     ///
-    ok(!addPropertyResult, "Should not be able to add a duplicate label.");
+    ok(!addPropertyResult, "Should not be able to add a property with a duplicate key.");
+});
+
+test("Test detecting duplicate label value.", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    ///
+    var isDuplicatePropertyLabel = promptModel.isDuplicatePropertyLabel("The Beach");
+    ///
+    ok(isDuplicatePropertyLabel, "Should detect duplicate property label.");
+});
+
+test("Test detecting duplicate label value using a unique label.", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    ///
+    var isDuplicatePropertyLabel = promptModel.isDuplicatePropertyLabel("Unique Label");
+    ///
+    ok(!isDuplicatePropertyLabel, "Should correctly detect a unique label.");
 });
 
 test("Test adding a property with a unique label value but with existing key.", function () {
@@ -263,7 +294,7 @@ test("Test adding a property with a unique label value but with existing key.", 
     var addPropertyResult = promptModel.addProperty("Unique Label", 0);
     ///
     ok(!addPropertyResult, "Should not be able to a property with an existing key.");
-    strictEqual(promptModel.getTestCustomPromptPropertyVault().getCustomProperties()[0], undefined, "The invalid property should not be added to the custom property vault.");
+    strictEqual(promptModel.getCustomPromptPropertyVault().getCustomProperties()[0], undefined, "The invalid property should not be added to the custom property vault.");
 });
 
 test("Test adding a property with a unique label and key.", function () {
@@ -274,7 +305,7 @@ test("Test adding a property with a unique label and key.", function () {
     ///
     ok(addPropertyResult, "Should be able to add a property with a unique label and key.");
     strictEqual(promptModel.getProperty(3), "Unique Label", "The access prompt should be the same as the one added.");
-    strictEqual(promptModel.getTestCustomPromptPropertyVault().getCustomProperties()[3], "Unique Label", "The added property should also be added to the custom property vault.");
+    strictEqual(promptModel.getCustomPromptPropertyVault().getCustomProperties()[3], "Unique Label", "The added property should also be added to the custom property vault.");
 });
 
 test("Test adding a property with a unique label, without defining key value.", function () {
@@ -285,7 +316,7 @@ test("Test adding a property with a unique label, without defining key value.", 
     ///
     ok(addPropertyResult, "Should be able to add a property with a unique label, without defining key.");
     strictEqual(promptModel.getProperty(3), "Unique Label", "The access prompt should be the same as the one added.");
-    strictEqual(promptModel.getTestCustomPromptPropertyVault().getCustomProperties()[3], "Unique Label", "The added property should also be added to the custom property vault.");
+    strictEqual(promptModel.getCustomPromptPropertyVault().getCustomProperties()[3], "Unique Label", "The added property should also be added to the custom property vault.");
 });
 
 

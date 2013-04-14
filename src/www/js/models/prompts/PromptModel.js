@@ -1,11 +1,15 @@
 /**
- * @author Zorayr Khalapyan
- * @version 4/11/13
+ *
  */
 /**
  *
  * Represents an individual prompt. The class provides functionality for
  * interacting with prompt properties.
+ * @author Zorayr Khalapyan
+ * @version 4/11/13
+ * @param promptData {*}
+ * @param surveyModel {SurveyModel}
+ * @param campaignModel {CampaignModel}
  */
 var PromptModel = function (promptData, surveyModel, campaignModel) {
     "use strict";
@@ -29,25 +33,6 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
      * @type {number}
      */
     var numProperties = 0;
-
-    /**
-     * Detects if the specified property is already in the property list of this
-     * prompt. The method returns true if the property is a duplicate, false
-     * otherwise.
-     * @param {String} label The label to check for a duplicate match.
-     * @returns {Boolean} True if the specified label is a duplicate.
-     */
-    var isDuplicatePropertyLabel = function (label) {
-        var key;
-        for (key in properties) {
-            if (properties.hasOwnProperty(key)) {
-                if (properties[key] === label) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
 
     /**
      * Returns all the properties for this prompt.
@@ -88,20 +73,40 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
     };
 
     /**
-     * Adds a new property to this prompt. If the property label already exists,
+     * Detects if the specified property is already in the property list of this
+     * prompt. The method returns true if the property is a duplicate, false
+     * otherwise.
+     * @param {String} label The label to check for a duplicate match.
+     * @returns {Boolean} True if the specified label is a duplicate.
+     */
+    that.isDuplicatePropertyLabel = function (label) {
+        var key;
+        for (key in properties) {
+            if (properties.hasOwnProperty(key)) {
+                if (properties[key] === label) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    /**
+     * Adds a new property to this prompt. If the property key already exists,
      * then the method will have no side effects and will return false. The
      * order of label and key seems unusual but is correct since mostly the
      * function will be called without the key value specified.
+     * @returns {Number\Boolean} On success, returns the key of the new
+     * property. If the property could not be added, returns false.
      */
     that.addProperty = function (label, key) {
         //By default, property key is the index of the array.
         key = (key !== undefined) ? key : numProperties;
-
-        if (!isDuplicatePropertyLabel(label) && properties[key] === undefined) {
+        if (properties[key] === undefined) {
             properties[key] = label;
             customPromptPropertyVault.addCustomProperty(key, label);
             numProperties += 1;
-            return true;
+            return key;
         }
         return false;
     };
@@ -153,7 +158,7 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
      * current prompt.
      * @type {CustomPromptPropertyVault}
      */
-    that.getTestCustomPromptPropertyVault = function () {
+    that.getCustomPromptPropertyVault = function () {
         return customPromptPropertyVault;
     };
 
@@ -204,7 +209,7 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
         customProperties = customPromptPropertyVault.getCustomProperties();
         for (customProperty in customProperties) {
             if (customProperties.hasOwnProperty(customProperty)) {
-                properties[customProperty.key] = customProperty.label;
+                properties[customProperty] = customProperties[customProperty];
                 numProperties += 1;
             }
         }
