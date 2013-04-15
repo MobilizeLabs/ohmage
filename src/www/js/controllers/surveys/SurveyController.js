@@ -70,7 +70,7 @@ var SurveyController = function (surveyModel) {
     /**
      * Callback for when the user completes taking survey.
      */
-    var submitCallback = function (surveyResponse) {
+    var submitCallback = function () {
 
         surveyResponse.submit();
 
@@ -98,20 +98,20 @@ var SurveyController = function (surveyModel) {
     };
 
     var recordSkippedResponse = function () {
-        surveyResponse.promptSkipped(that.getCurrentItem().getID());
+        surveyResponse.setPromptSkipped(that.getCurrentItem().getID());
     };
 
     var recordPromptResponse = function () {
         var currentPromptModel = that.getCurrentItem(),
             currentPromptResponse = surveyView.getCurrentItemView().getResponse();
-        surveyResponse.respond(currentPromptModel.getID(), currentPromptResponse, currentPromptModel.getType() === "photo");
+        surveyResponse.recordUserResponse(currentPromptModel.getID(), currentPromptResponse, currentPromptModel.getType() === "photo");
         return true;
     };
 
     var renderNextItem = function () {
         currentItemIndex += 1;
         while (currentItemIndex < surveyItems.length && currentItemFailsCondition()) {
-            surveyResponse.promptNotDisplayed(that.getCurrentItem().getID());
+            surveyResponse.setPromptNotDisplayed(that.getCurrentItem().getID());
             currentItemIndex += 1;
         }
         surveyView.render();
@@ -148,7 +148,7 @@ var SurveyController = function (surveyModel) {
     that.initializeSurvey = function () {
         surveyResponse = SurveyResponseModel.init(surveyModel.getID(), surveyModel.getCampaign().getURN());
         if (ConfigManager.getGpsEnabled()) {
-            surveyResponse.setLocation();
+            surveyResponse.acquireLocation();
         }
     };
 

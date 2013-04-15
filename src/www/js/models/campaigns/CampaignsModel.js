@@ -103,6 +103,12 @@ var CampaignsModel = (function () {
         return CampaignModel(campaignURN);
     };
 
+    /**
+     *
+     * @param campaignURN
+     * @param surveyID
+     * @returns {SurveyModel}
+     */
     that.getSurvey = function (campaignURN, surveyID) {
         return that.getCampaign(campaignURN).getSurvey(surveyID);
     };

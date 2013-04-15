@@ -19,9 +19,9 @@ var PhotoPromptView = function (promptModel) {
 
             //Save the image and store the returned UUID within the image's
             //alt attribute.
-            imageField.alt = SurveyResponseModel.saveImage(imageData);
+            imageField.alt = ImageStoreModel.recordImage(imageData);
 
-            //Display the capture image.
+            //Display the captured image.
             imageField.src =  (encode ? "data:image/jpeg;base64," : "") + imageData;
             imageForm.style.display = 'block';
 

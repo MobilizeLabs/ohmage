@@ -40,7 +40,7 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
         Spinner.show();
 
         //Start the Geolocation process.
-        surveyResponse.setLocation(function(success){
+        surveyResponse.acquireLocation(function(success){
 
             //On response, hide the spinner.
             Spinner.hide();
