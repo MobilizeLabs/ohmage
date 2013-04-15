@@ -178,17 +178,17 @@ SurveyResponseUploadService.uploadAll = function (pendingResponses, uploadComple
 
     //Construct an array of IDs. This allows much easier access with an index
     //inside the recursive call.
-    var uuidList = [],
-        uuid;
-    for (uuid in pendingResponses) {
-        if (pendingResponses.hasOwnProperty(uuid)) {
-            uuidList.push(uuid);
+    var responseUUIDList = [],
+        responseUUID;
+    for (responseUUID in pendingResponses) {
+        if (pendingResponses.hasOwnProperty(responseUUID)) {
+            responseUUIDList.push(responseUUID);
         }
     }
 
     var upload = function (i) {
 
-        if (i >= uuidList.length) {
+        if (i >= responseUUIDList.length) {
             Spinner.hide(function () {
                 if (uploadCompletedCallback !== undefined) {
                     uploadCompletedCallback(count);
@@ -198,25 +198,22 @@ SurveyResponseUploadService.uploadAll = function (pendingResponses, uploadComple
         } else {
 
             //Get the current survey and surveyResponse object to upload.
-            var survey = pendingResponses[uuidList[i]].survey;
-            var surveyResponse = pendingResponses[uuidList[i]].response;
+            var surveyModel = pendingResponses[responseUUIDList[i]].survey,
+                surveyResponseModel = pendingResponses[responseUUIDList[i]].response,
+                uploadNextSurveyResponse = function () {
+                    upload(i += 1);
 
-            var uploadNextSurveyResponse = function () {
-                upload(i);
-                i += 1;
-            };
+                },
+                onSuccess = function (response) {
+                    count += 1;
+                    SurveyResponseStoreModel.deleteSurveyResponse(surveyResponseModel);
+                    uploadNextSurveyResponse();
+                },
+                onError = function (error) {
+                    uploadNextSurveyResponse();
+                };
 
-            var onSuccess = function (response) {
-                count += 1;
-                SurveyResponseModel.deleteSurveyResponse(surveyResponse);
-                uploadNextSurveyResponse();
-            };
-
-            var onError = function (error) {
-                uploadNextSurveyResponse();
-            };
-
-            new SurveyResponseUploadController(survey, surveyResponse).upload(onSuccess, onError, requireLocation);
+            SurveyResponseUploadService(surveyModel, surveyResponseModel).upload(onSuccess, onError, requireLocation);
 
         }
 

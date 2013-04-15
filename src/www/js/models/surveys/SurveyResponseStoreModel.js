@@ -8,7 +8,14 @@ var SurveyResponseStoreModel = (function () {
 
     var surveyResponseMap = LocalMap("survey-responses");
 
+    var log = Logger("SurveyResponseStoreModel");
+
+    /**
+     *
+     * @param surveyResponseModel {SurveyResponseModel}
+     */
     that.saveSurveyResponse = function (surveyResponseModel) {
+        log.info("Saving response for survey[$1].", surveyResponseModel.getSurveyID());
         surveyResponseMap.set(surveyResponseModel.getSurveyKey(), surveyResponseModel.getData());
     };
 
@@ -34,6 +41,7 @@ var SurveyResponseStoreModel = (function () {
      * Deletes the survey response with it associated images if any.
      */
     that.deleteSurveyResponse = function (surveyResponseModel) {
+        log.info("Deleting user response for survey [$1].", surveyResponseModel.getSurveyID());
         var surveyResponseImages = surveyResponseModel.getPhotoResponses(),
             photoPromptID,
             photoUUID;
@@ -59,7 +67,8 @@ var SurveyResponseStoreModel = (function () {
     };
 
     /**
-     * Returns all pending survey responses.
+     * Returns all pending survey responses. The key of the returned object is
+     * the survey response UUID.
      */
     that.getPendingResponses = function () {
         var pendingResponses = {},

@@ -1,49 +1,53 @@
-var UploadQueueController = function(){
+var UploadQueueController = function () {
+    "use strict";
     var that = {};
-    
-    var pendingResponses = SurveyResponseModel.getPendingResponses();
-    
-    var refreshView = function(){
-        PageNavigation.openUploadQueueView();
+
+    var uploadQueueView;
+
+    var refreshView = function () {
+        PageController.refresh();
     };
-    
-    that.deleteAllCallback = function(){
-        var message = "Are you sure you would like to delete all your responses?";
-        var buttonLabels = 'Yes,No';
-        var confirmationCallback = function(yes){
-            if(yes){
-                for(var uuid in pendingResponses){
-                    SurveyResponseModel.deleteSurveyResponse(pendingResponses[uuid].response);
+
+    var deleteAllCallback = function () {
+        var pendingResponses = SurveyResponseStoreModel.getPendingResponses(),
+            message = "Are you sure you would like to delete all your responses?",
+            buttonLabels = 'Yes,No',
+            surveyResponseUUID,
+            confirmationCallback = function (yesDeleteAllSurveysResponses) {
+                if (yesDeleteAllSurveysResponses) {
+                    for (surveyResponseUUID in pendingResponses) {
+                        if (pendingResponses.hasOwnProperty(surveyResponseUUID)) {
+                            SurveyResponseStoreModel.deleteSurveyResponse(pendingResponses[surveyResponseUUID].response);
+                        }
+                    }
+                    refreshView();
                 }
-                refreshView();
-            }
-        };
+            };
         MessageDialogController.showConfirm(message, confirmationCallback, buttonLabels);
     };
-    
-    that.uploadAllCallback = function(){
-        var uploadAllDoneCallback = function(successfulUploadCount){
+
+    var uploadAllCallback = function () {
+        var uploadAllDoneCallback = function (successfulUploadCount) {
             var message;
-            if(successfulUploadCount === 0){
+            if (successfulUploadCount === 0) {
                 message = "Unable to upload any surveys at this time.";
-            }else{
+            } else {
                 message = "Successfully uploaded " + successfulUploadCount + " survey(s).";
-            }  
-            MessageDialogController.showMessage(message, function(){
-                refreshView();
-            });
-        };
-        SurveyResponseUploadController.uploadAll( pendingResponses, uploadAllDoneCallback, ConfigManager.getGpsEnabled() );
+            }
+
+            MessageDialogController.showMessage(message, refreshView);
+        },
+            pendingResponses = SurveyResponseStoreModel.getPendingResponses();
+        SurveyResponseUploadService.uploadAll(pendingResponses, uploadAllDoneCallback, ConfigManager.getGpsEnabled());
     };
-    
-    that.getPendingResponses = function() {
-        return pendingResponses;
+
+    that.getView = function () {
+        uploadQueueView = UploadQueueView(that);
+        uploadQueueView.deleteAllResponsesCallback = deleteAllCallback;
+        uploadQueueView.uploadAllResponsesCallback = uploadAllCallback;
+        return uploadQueueView;
+
     };
-    
-    that.render = function() {
-        var uploadQueueView = new UploadQueueView(that);
-        return uploadQueueView.render();
-    };
-    
+
     return that;
 };

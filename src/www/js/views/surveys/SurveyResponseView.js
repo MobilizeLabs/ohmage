@@ -1,18 +1,19 @@
-var SurveyResponseView = function(surveyResponseController){
-    var self = {};
+var SurveyResponseView = function (surveyResponseController) {
+    "use strict";
+    var that = {};
 
     var campaign = surveyResponseController.getCampaign();
     var survey = surveyResponseController.getSurvey();
     var surveyResponseModel = surveyResponseController.getSurveyResponseModel();
 
-    var renderSurveyResponseDetailsView = function(){
+    var renderSurveyResponseDetailsView = function () {
         var location = surveyResponseModel.getLocation();
         var surveyResponseDetailsView = mwf.decorator.Menu(survey.getTitle());
         surveyResponseDetailsView.addMenuLinkItem("Campaign", null, campaign.getName());
         surveyResponseDetailsView.addMenuLinkItem("Survey", null, survey.getTitle());
         surveyResponseDetailsView.addMenuLinkItem("Time Submitted", null, surveyResponseModel.getSubmitDateString());
         surveyResponseDetailsView.addMenuLinkItem("GPS Status", null, surveyResponseModel.getLocationStatus());
-        if(location !== null){
+        if (location !== null) {
             surveyResponseDetailsView.addMenuLinkItem("GPS Location", null, location.latitude + ", " + location.longitude);
         }
 
@@ -20,11 +21,11 @@ var SurveyResponseView = function(surveyResponseController){
         return surveyResponseDetailsView;
     };
 
-    var renderUserResponsesView = function(){
+    var renderUserResponsesView = function () {
         var userResponsesView = mwf.decorator.Menu("User Responses");
-        for (var promptID in surveyResponseModel.data._responses) {
+        for (var promptID in surveyResponseModel.data.recordedUserResponses) {
             var prompt = survey.getPrompt(promptID);
-            var value  = surveyResponseModel.data._responses[promptID].value;
+            var value  = surveyResponseModel.data.recordedUserResponses[promptID].value;
 
             // Don't display prompts that were conditionally not displayed.
             if( value === SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE ) {
@@ -37,7 +38,7 @@ var SurveyResponseView = function(surveyResponseController){
         return userResponsesView;
     };
 
-    self.render = function(){
+    that.render = function(){
         var surveyResponseDetailsView = renderSurveyResponseDetailsView();
         var userResponsesView = renderUserResponsesView();
         userResponsesView.style.display = "none";
@@ -61,5 +62,5 @@ var SurveyResponseView = function(surveyResponseController){
         return surveyResponseViewContainer;
     };
 
-    return self;
+    return that;
 };

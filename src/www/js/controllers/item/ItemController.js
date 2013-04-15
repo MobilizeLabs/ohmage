@@ -85,7 +85,7 @@ var ItemController = function (surveyController) {
             if (!prompt.isSkippable()) {
                 return false;
             }
-            surveyResponse.promptSkipped(prompt.getID());
+            surveyResponse.setPromptSkipped(prompt.getID());
             return true;
         }
 
@@ -96,7 +96,7 @@ var ItemController = function (surveyController) {
         }
 
         //Save the response.
-        surveyResponse.respond(prompt.getID(), prompt.getResponse(), prompt.getType() === "photo");
+        surveyResponse.recordUserResponse(prompt.getID(), prompt.getResponse(), prompt.getType() === "photo");
 
         return true;
     };
@@ -105,7 +105,7 @@ var ItemController = function (surveyController) {
         if (processResponse(skipped)) {
             currentItemIndex += 1;
             while (currentItemIndex < surveyItems.length && failsCondition()) {
-                surveyResponse.promptNotDisplayed(getCurrentItem().getID());
+                surveyResponse.setPromptNotDisplayed(getCurrentItem().getID());
                 currentItemIndex += 1;
             }
             render();
@@ -175,7 +175,7 @@ var ItemController = function (surveyController) {
 
         if (ConfigManager.getGpsEnabled()) {
             //Update survey response geolocation information.
-            surveyResponse.setLocation();
+            surveyResponse.acquireLocation();
         }
 
         //Render the initial prompt.
