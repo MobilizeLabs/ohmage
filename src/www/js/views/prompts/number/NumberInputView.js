@@ -10,6 +10,8 @@ var NumberInputView = function (promptModel) {
     var minValue = promptModel.getMinValue();
     var maxValue = promptModel.getMaxValue();
 
+    var rangeMessage = "Please enter a number between " + minValue + " and " + maxValue + ", inclusive.";
+
     var userInputField = null;
 
     var isValueInRange = function (inputString) {
@@ -28,7 +30,7 @@ var NumberInputView = function (promptModel) {
         return String(s).search(/^(\+|-)?$/) !== -1;
     };
 
-    var rangeMessage = "Please enter a number between " + minValue + " and " + maxValue + ", inclusive.";
+
 
     var validateNumberInputKeyPress = function (evt) {
 
@@ -52,7 +54,7 @@ var NumberInputView = function (promptModel) {
     };
 
     that.isValid = function () {
-        if (!isValueInRange(textBox.value)) {
+        if (!isValueInRange(that.getResponse())) {
             that.setErrorMessage(rangeMessage);
             return false;
         }
@@ -76,7 +78,7 @@ var NumberInputView = function (promptModel) {
         var container = document.createElement('div');
         container.appendChild(mwf.decorator.SingleClickButton("Switch to Number Picker", function () {
             container.innerHTML = "";
-            that = NumberPickerView(promptModel, (isValueInRange(userInputField.value)) ? that.getResponse() : promptModel.getDefaultValue());
+            that.switchViewTo(NumberPickerView(promptModel, (isValueInRange(userInputField.value)) ? that.getResponse() : promptModel.getDefaultValue()));
             container.appendChild(that.render());
         }));
         container.appendChild(form);

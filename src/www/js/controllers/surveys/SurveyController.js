@@ -10,19 +10,13 @@ var SurveyController = function (surveyModel) {
     /**
      * The response object for the current survey.
      */
-    var surveyResponse = SurveyResponseModel.init(surveyModel.getID(), surveyModel.getCampaign().getURN());
+    var surveyResponse = null;
 
     /**
      * Stores the index of the currently displayed survey item. Initialized to
      * the first item at index 0.
      */
     var currentItemIndex = 0;
-
-    /**
-     * Message displayed to the user when exiting the current survey without
-     * submitting.
-     */
-    var confirmToLeaveMessage = "Data from your current survey response will be lost. Are you sure you would like to continue?";
 
     var surveyView = null;
 
@@ -39,43 +33,11 @@ var SurveyController = function (surveyModel) {
      * fails.
      * @returns {Boolean}
      */
-    var failsCondition = function () {
+    var currentItemFailsCondition = function () {
         var currentCondition = getCurrentCondition(),
             currentResponse  = surveyResponse.getResponses();
         return currentCondition &&
             !ConditionalParser.parse(currentCondition, currentResponse);
-    };
-
-
-    /**
-     * Callback for when the user completes taking survey.
-     */
-    var onSurveyComplete = function (surveyResponse) {
-
-        surveyResponse.submit();
-        surveyCompletedCallback(surveyResponse);
-
-        ReminderModel.supressSurveyReminders(surveyModel.getID());
-
-        //Confirmation box related properties.
-        var title = 'ohmage';
-        var buttonLabels = 'Yes,No';
-        var message = "Would you like to upload your response?";
-
-
-        if (ConfigManager.getConfirmToUploadOnSubmit()) {
-            MessageDialogController.showConfirm(message, onUploadConfirmCallback, buttonLabels, title);
-        } else {
-            onUploadConfirmCallback(true);
-        }
-
-        if (DeviceDetection.isNativeApplication()) {
-            PageController.goBack();
-        } else {
-            window.onbeforeunload = null;
-            close();
-        }
-
     };
 
     var onUploadConfirmCallback = function (yes) {
@@ -105,86 +67,86 @@ var SurveyController = function (surveyModel) {
         }
     };
 
-    var processResponse = function (skipped) {
-        var prompt = that.getCurrentItem();
-        if (skipped) {
-            if (!prompt.isSkippable()) {
-                return false;
-            }
-            surveyResponse.promptSkipped(prompt.getID());
-            return true;
+    /**
+     * Callback for when the user completes taking survey.
+     */
+    var submitCallback = function (surveyResponse) {
+
+        surveyResponse.submit();
+
+        ReminderModel.supressSurveyReminders(surveyModel.getID());
+
+        //Confirmation box related properties.
+        var title = 'ohmage';
+        var buttonLabels = 'Yes,No';
+        var message = "Would you like to upload your response?";
+
+
+        if (ConfigManager.getConfirmToUploadOnSubmit()) {
+            MessageDialogController.showConfirm(message, onUploadConfirmCallback, buttonLabels, title);
+        } else {
+            onUploadConfirmCallback(true);
         }
 
-        //Handle invalid responses.
-        if (!prompt.isValid()) {
-            MessageDialogController.showMessage(prompt.getErrorMessage());
-            return false;
+        if (DeviceDetection.isNativeApplication()) {
+            PageController.goBack();
+        } else {
+            window.onbeforeunload = null;
+            close();
         }
 
-        //Save the response.
-        surveyResponse.respond(prompt.getID(), prompt.getResponse(), prompt.getType() === "photo");
+    };
 
+    var recordSkippedResponse = function () {
+        surveyResponse.promptSkipped(that.getCurrentItem().getID());
+    };
+
+    var recordPromptResponse = function () {
+        var currentPromptModel = that.getCurrentItem(),
+            currentPromptResponse = surveyView.getCurrentItemView().getResponse();
+        surveyResponse.respond(currentPromptModel.getID(), currentPromptResponse, currentPromptModel.getType() === "photo");
         return true;
     };
 
-    var nextPrompt = function (skipped) {
-        if (processResponse(skipped)) {
+    var renderNextItem = function () {
+        currentItemIndex += 1;
+        while (currentItemIndex < surveyItems.length && currentItemFailsCondition()) {
+            surveyResponse.promptNotDisplayed(that.getCurrentItem().getID());
             currentItemIndex += 1;
-            while (currentItemIndex < surveyItems.length && failsCondition()) {
-                surveyResponse.promptNotDisplayed(that.getCurrentItem().getID());
-                currentItemIndex += 1;
-            }
+        }
+        surveyView.render();
+    };
+
+    var skipItem = function () {
+        recordSkippedResponse();
+        renderNextItem();
+    };
+
+    var goToNextItem = function () {
+        var itemView = surveyView.getCurrentItemView();
+        if (itemView.isValid()) {
+            recordPromptResponse();
+            renderNextItem();
+        } else {
+            MessageDialogController.showMessage(itemView.getErrorMessage());
         }
     };
 
-    var previousPrompt = function () {
+    var goToPreviousItem = function () {
         if (currentItemIndex > 0) {
             currentItemIndex -= 1;
         }
 
         //Skip all prompts that fail the condition.
-        while (currentItemIndex > 0 && failsCondition()) {
+        while (currentItemIndex > 0 && currentItemFailsCondition()) {
             currentItemIndex -= 1;
         }
 
+        surveyView.render();
     };
 
-
-    /**
-     * Aborts the current survey participation and deletes the users responses.
-     * This method should be called to do the clean up before the user navigates
-     * to another page without completing the survey.
-     */
-    var abort = function () {
-        if (surveyResponse !== null && !surveyResponse.isSubmitted()) {
-            SurveyResponseModel.deleteSurveyResponse(surveyResponse);
-        }
-    };
-
-    /**
-     * Method used for getting user's confirmation before exiting an incomplete
-     * survey. In case of a positive confirmation, the current survey response
-     * will be aborted response gets deleted from localStorage) and the
-     * specified callback is invoked.
-     *
-     * @param positiveConfirmationCallback A callback invoked when the user
-     *        confirms the current action.
-     */
-    var confirmSurveyExit = function (positiveConfirmationCallback) {
-        MessageDialogController.showConfirm(confirmToLeaveMessage, function (isResponseYes) {
-            if (isResponseYes) {
-                abort();
-                if (typeof positiveConfirmationCallback === "function") {
-                    positiveConfirmationCallback();
-                }
-            }
-        }, "Yes,No");
-    };
-
-    /**
-     * Fetches the current location and renders the first prompt.
-     */
-    that.startSurvey = function () {
+    that.initializeSurvey = function () {
+        surveyResponse = SurveyResponseModel.init(surveyModel.getID(), surveyModel.getCampaign().getURN());
         if (ConfigManager.getGpsEnabled()) {
             surveyResponse.setLocation();
         }
@@ -193,6 +155,10 @@ var SurveyController = function (surveyModel) {
     that.getView = function () {
         if (surveyView === null) {
             surveyView = SurveyView(that);
+            surveyView.nextButtonCallback = goToNextItem;
+            surveyView.skipButtonCallback = skipItem;
+            surveyView.previousButtonCallback = goToPreviousItem;
+            surveyView.submitButtonCallback = submitCallback;
         }
         return surveyView;
 
@@ -222,6 +188,39 @@ var SurveyController = function (surveyModel) {
      */
     that.getCurrentItem = function () {
         return surveyItems[currentItemIndex] || null;
+    };
+
+
+    /**
+     * Aborts the current survey participation and deletes the users responses.
+     * This method should be called to do the clean up before the user navigates
+     * to another page without completing the survey.
+     */
+    var abort = function () {
+        if (surveyResponse !== null && !surveyResponse.isSubmitted()) {
+            SurveyResponseModel.deleteSurveyResponse(surveyResponse);
+        }
+    };
+
+    /**
+     * Method used for getting user's confirmation before exiting an incomplete
+     * survey. In case of a positive confirmation, the current survey response
+     * will be aborted response gets deleted from localStorage) and the
+     * specified callback is invoked.
+     *
+     * @param positiveConfirmationCallback A callback invoked when the user
+     *        confirms the current action.
+     */
+    var confirmSurveyExit = function (positiveConfirmationCallback) {
+        var confirmToLeaveMessage = "Data from your current survey response will be lost. Are you sure you would like to continue?";
+        MessageDialogController.showConfirm(confirmToLeaveMessage, function (isResponseYes) {
+            if (isResponseYes) {
+                abort();
+                if (typeof positiveConfirmationCallback === "function") {
+                    positiveConfirmationCallback();
+                }
+            }
+        }, "Yes,No");
     };
 
     return that;

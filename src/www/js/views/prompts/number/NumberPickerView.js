@@ -79,7 +79,7 @@ var NumberPickerView = function (promptModel, defaultValue) {
         var container = document.createElement('div');
         container.appendChild(mwf.decorator.SingleClickButton("Switch to Number Input", function () {
             container.innerHTML = "";
-            that = NumberInputView(promptModel, that.getResponse());
+            that.switchViewTo(NumberInputView(promptModel, that.getResponse()));
             container.appendChild(that.render());
         }));
         container.appendChild(menu);

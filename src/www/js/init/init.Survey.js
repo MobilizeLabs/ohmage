@@ -11,7 +11,7 @@ Init.invokeOnReady(function () {
             surveyController = SurveyController(surveyModel);
         pageModel.setPageTitle(surveyModel.getTitle());
         pageModel.setView(surveyController.getView());
-        surveyController.startSurvey();
+        surveyController.initializeSurvey();
         pageModel.setTopButton("All Surveys", function () {
             PageController.goBack();
         });

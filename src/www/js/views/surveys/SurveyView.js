@@ -15,6 +15,11 @@ var SurveyView = function (surveyController) {
      */
     var itemBuffer = {};
 
+    /**
+     * Stores the view for each item keyed on item ID.
+     */
+    var itemViews = {};
+
     var viewContainer = null;
 
     var renderControlButtons = function () {
@@ -44,12 +49,11 @@ var SurveyView = function (surveyController) {
         return controlButtonsPanel;
     };
 
+    that.getCurrentItemView = function () {
+        return itemViews[surveyController.getCurrentItem().getID()];
+    };
 
-    /**
-     * Enables or disables next, previous, submit, and skip buttons.
-     */
-
-    var render = function () {
+    that.render = function () {
         var controlButtons = renderControlButtons(),
             currentItem,
             currentItemID,
@@ -67,11 +71,12 @@ var SurveyView = function (surveyController) {
             currentItemID = currentItem.getID();
 
             if (!itemBuffer[currentItemID]) {
-                itemBuffer[currentItemID] = PromptViewFactory.getView(currentItem).render();
+                itemViews[currentItemID] = PromptViewFactory.getView(currentItem);
+                itemBuffer[currentItemID] = itemViews[currentItemID].render();
             }
             viewContainer.appendChild(itemBuffer[currentItemID]);
 
-        //Render submit page if at the last prompt.
+            //Render submit page if at the last prompt.
         } else {
 
             surveyCompletedMenu = mwf.decorator.Menu('Survey Completed');
@@ -82,17 +87,12 @@ var SurveyView = function (surveyController) {
         viewContainer.appendChild(controlButtons);
 
         return viewContainer;
-
     };
 
     that.nextButtonCallback = function () {};
     that.previousButtonCallback = function () {};
     that.skipButtonCallback = function () {};
     that.submitButtonCallback = function () {};
-
-    that.render = function () {
-        return render();
-    };
 
     return that;
 };
