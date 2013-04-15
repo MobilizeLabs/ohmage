@@ -1,50 +1,46 @@
 /**
  * The class is designed to facilitate flexible permanent storage of key value
- * pairs utilzing HTML5 localStorage.
+ * pairs utilizing HTML5 localStorage.
  *
  * @class LocalMap
  * @author Zorayr Khalapyan
  * @version 10/25/2012
  */
-var LocalMap = function ( name ) {
+var LocalMap = function (name) {
+    "use strict";
     var that = {};
 
-    //Prevent compatability issues in different execution environments.
-    if ( !localStorage ) {
-        localStorage = {};
-    }
-
-    if ( !localStorage[name] ) {
+    if (!localStorage[name]) {
         localStorage[name] = "{}";
     }
 
-    var setMap = function ( map ) {
-        localStorage[name] = JSON.stringify( map );
+    var setMap = function (map) {
+        localStorage[name] = JSON.stringify(map);
     };
 
     that.getMap = function () {
-        return JSON.parse( localStorage[name] );
+        return JSON.parse(localStorage[name]);
     };
 
     /**
      * Stores the specified (key, value) pair in the localStorage
      * under the map's namespace.
      */
-    that.set = function ( name, object ) {
+    that.set = function (name, object) {
         var map = that.getMap();
-        map[ name ] = object;
-        setMap( map );
+        map[name] = object;
+        setMap(map);
     };
 
-    that.get = function ( name ) {
+    that.get = function (name) {
         var map = that.getMap();
-        return typeof( map[ name ] ) !== "undefined" ? map[name] : null;
+        return map[name] !== undefined ? map[name] : null;
     };
 
-    that.importMap = function ( object ) {
-        var map = that.getMap();
-        var key;
-        for ( key in object ) {
+    that.importMap = function (object) {
+        var map = that.getMap(),
+            key;
+        for (key in object) {
             if (object.hasOwnProperty(key)) {
                 map[key] = object[key];
             }
@@ -53,10 +49,13 @@ var LocalMap = function ( name ) {
     };
 
     that.length = function () {
-        var map = that.getMap();
-        var size = 0, key;
+        var map = that.getMap(),
+            size = 0,
+            key;
         for (key in map) {
-            if (map.hasOwnProperty(key)) size++;
+            if (map.hasOwnProperty(key)) {
+                size += 1;
+            }
         }
         return size;
     };
@@ -66,7 +65,7 @@ var LocalMap = function ( name ) {
     };
 
     that.isSet = function (name) {
-        return that.get(name) != null;
+        return that.get(name) !== null;
     };
 
     that.release = function (name) {
@@ -77,7 +76,7 @@ var LocalMap = function ( name ) {
         setMap(map);
     };
 
-    that.deleteNamespace = function(){
+    that.deleteNamespace = function () {
         if (localStorage.hasOwnProperty(name)) {
             delete localStorage[name];
         }
@@ -88,13 +87,16 @@ var LocalMap = function ( name ) {
 };
 
 LocalMap.destroy = function () {
-    for ( var item in localStorage ) {
-        if ( localStorage.hasOwnProperty( item ) ) {
-            delete localStorage[ item ];
+    "use strict";
+    var item;
+    for (item in localStorage ) {
+        if (localStorage.hasOwnProperty(item)) {
+            delete localStorage[item];
         }
     }
 };
 
 LocalMap.exists = function (name) {
+    "use strict";
     return (localStorage[name]) ? true : false;
 };
