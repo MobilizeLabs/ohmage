@@ -98,8 +98,8 @@ var PageController = (function () {
 
     /**
      * Associates the page model's name with the page model. Page models need to
-     * be registered prior to navigating to model. This method will also create
-     * an PageController.openPageModelName() function that can be used instead
+     * be registered prior to navigating to model. This tT will also create
+     * an PaoeController.openPageModelName() function that can be used instead
      * of PageController.goTo(PageName). To see all the registered models, use
      * PageController.getRegisteredPages().
      *
@@ -241,6 +241,7 @@ var PageController = (function () {
      * Opens the root page. This is equivalent of "go home".
      */
     that.goToRootPage = function () {
+        log.info("Redirecting to root page from page [$1].", that.getCurrentPageName());
         that.goTo(rootPageName);
     };
 
@@ -251,6 +252,7 @@ var PageController = (function () {
      */
     that.render = function (pageModel) {
         log.info("Initializing [$1] page.", pageModel.getPageName());
+
         pageModel.initialize(function () {
             clearScreen();
             var pageView =  PageView(pageModel),

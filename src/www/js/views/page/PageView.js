@@ -14,12 +14,12 @@ var PageView = function (pageModel) {
     var header, view, footer;
 
     var headerTitle = document.getElementById("header-title");
-    var homeLink = document.getElementById("header-home-link");
+    var homeLink = document.getElementById("header-home-icon");
 
     that.render = function () {
         mwf.decorator.TopButton(pageModel.getTopButtonName(), null, pageModel.getTopButtonCallback(), true);
         headerTitle.innerHTML = pageModel.getPageTitle();
-        TouchEnabledItemModel.bindTouchEvent(homeLink, homeLink, PageController.goToRootPage);
+        homeLink.onclick = PageController.goToRootPage;
         return pageModel.getView().render();
     };
 
