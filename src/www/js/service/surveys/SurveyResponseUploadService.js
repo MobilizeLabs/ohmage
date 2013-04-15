@@ -202,7 +202,8 @@ SurveyResponseUploadService.uploadAll = function (pendingResponses, uploadComple
             var surveyResponse = pendingResponses[uuidList[i]].response;
 
             var uploadNextSurveyResponse = function () {
-                upload(++i);
+                upload(i);
+                i += 1;
             };
 
             var onSuccess = function (response) {

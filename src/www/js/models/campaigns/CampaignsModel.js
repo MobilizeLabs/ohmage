@@ -123,7 +123,7 @@ var CampaignsModel = (function () {
         installedCampaigns.release(campaignURN);
         campaignConfigurations.release(campaignURN);
         //TODO: Use publish-subscribe pattern instead!
-        ReminderModel.deleteCampaignReminders(campaignURN);
+        //ReminderModel.deleteCampaignReminders(campaignURN);
     };
 
     /**
@@ -160,10 +160,36 @@ var CampaignsModel = (function () {
 
     /**
      * Returns a list of campaign objects that the user has currently
-     * installed.
+     * installed. The returned object's key is the URN of the campaign.
      */
     that.getInstalledCampaigns = function () {
         return getCampaignModelsFromLocalMap(installedCampaigns);
+    };
+
+    /**
+     * Returns all currently installed surveys. This basically combines all the
+     * surveys from all the installed campaigns.
+     * @returns {Array}
+     */
+    that.getAllSurveys = function () {
+        var allSurveys = [],
+            installedCampaigns = that.getInstalledCampaigns(),
+            campaignURN,
+            campaignModel,
+            surveyID,
+            campaignSurveys;
+        for (campaignURN in installedCampaigns) {
+            if (installedCampaigns.hasOwnProperty(campaignURN)) {
+                campaignModel = that.getCampaign(campaignURN);
+                campaignSurveys = campaignModel.getSurveys();
+                for (surveyID in campaignSurveys) {
+                    if (campaignSurveys.hasOwnProperty(surveyID)) {
+                        allSurveys.push(campaignSurveys[surveyID]);
+                    }
+                }
+            }
+        }
+        return allSurveys;
     };
 
     return that;

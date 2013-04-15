@@ -33,15 +33,47 @@ module("models.campaigns.CampaignsModel", {
             }
         };
 
-        //Sets test campaigns metadata for testing.
+        //This is a full campaign configuration for the Demo Snack survey
+        //although this module only concentrates on testing campaign model -
+        //so prompts, survey models are not tested here.
+        fixture.testCampaignConfiguration = {
+            "campaignurn": "urn:campaign:demo:scott2",
+            "campaignname": "G Men Peers Health Behaviors",
+            "serverurl": "https://dev.mobilizingcs.org/",
+            "surveys": {
+                "survey": {
+                    "id": "Snack",
+                    "title": "Snack",
+                    "description": "observe and sample snack events.",
+                    "submittext": "Snack",
+                    "showsummary": "true",
+                    "editsummary": "false",
+                    "summarytext": "Observe and collect forms of advertising media in the community",
+                    "anytime": "true",
+                    "contentlist": {
+                        "prompt": []
+                    }
+                }
+            }
+        };
+
+        /**
+         * Sets test campaigns metadata for testing.
+         */
         fixture.setCampaignsMetadata = function () {
             CampaignsMetadataService.setCampaignsMetadata(fixture.testCampaignsMetadata);
+        };
+
+        fixture.installSurvey = function () {
+            CampaignsModel.installCampaign("urn:campaign:demo:scott2", fixture.testCampaignConfiguration);
         };
 
         //Erases any downloaded or set campaigns metadata.
         fixture.eraseCampaignsMetadata = function () {
             CampaignsMetadataService.setCampaignsMetadata({});
         };
+
+        CampaignsModel.uninstallAllCampaigns();
     },
 
     teardown: function () {
@@ -54,6 +86,7 @@ module("models.campaigns.CampaignsModel", {
         delete fixture.testCampaignsMetadata;
         delete fixture.setCampaignsMetadata;
         delete fixture.eraseCampaignsMetadata;
+        delete fixture.installSurvey;
 
     }
 });
@@ -190,4 +223,24 @@ test("Test uninstalling several campaigns with CampaignsModel.uninstallAllCampai
     CampaignsModel.uninstallAllCampaigns();
     ///
     strictEqual(CampaignsModel.getInstalledCampaignsCount(), 0, "After installing and uninstalling a single campaign, there should be no installed campaigns.");
+});
+
+test("Test getting all the surveys from all the campaigns with a single available survey.", function () {
+    "use strict";
+    fixture.setCampaignsMetadata();
+    fixture.installSurvey();
+    ///
+    var surveys = CampaignsModel.getAllSurveys();
+    ///
+    strictEqual(surveys.length, 1, "Since only one survey included in the installed campaigns, the list should only consist of a single survey model.");
+    strictEqual(surveys[0].getID(), "Snack", "The ID of the retrieved survey should match the installed survey.");
+});
+
+test("Test getting all the surveys from all the campaigns with no available surveys.", function () {
+    "use strict";
+    fixture.setCampaignsMetadata();
+    ///
+    var surveys = CampaignsModel.getAllSurveys();
+    ///
+    strictEqual(surveys.length, 0, "Since no survey was installed/available the list should be an empty array.");
 });

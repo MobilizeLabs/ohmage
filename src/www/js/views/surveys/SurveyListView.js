@@ -1,44 +1,44 @@
-var SurveyListView = function(surveys, title, onSurveyClickCallback){
-
-    var self = {};
+var SurveyListView = function (surveyList, title) {
+    "use strict";
+    var that = AbstractView();
 
     var emptyListText = "No Surveys Found";
     var emptyListDetails = null;
     var emptyListClickCallback = null;
 
-    self.setEmptyListViewParameters = function(listText, listDetails, listClickCallback){
+    var onSurveyClickCallbackClosure = function (survey) {
+        return function () {
+            that.onSurveyClickCallback(survey);
+        };
+    };
+
+    that.setEmptyListViewParameters = function (listText, listDetails, listClickCallback) {
         emptyListText = listText;
         emptyListDetails = listDetails;
         emptyListClickCallback = listClickCallback;
     };
 
-    self.render = function(menu){
+    that.onSurveyClickCallback = function (surveyModel) {};
 
-        menu = menu || mwf.decorator.Menu(title);
-        var menuItem;
-        if(surveys.length > 0) {
-            var onSurveyClickCallbackClosure = function(survey){
-                return function(){
-                    if (onSurveyClickCallback === undefined) {
-                        PageNavigation.openSurveyView(survey.getCampaign().getURN(), survey.getID());
-                    } else {
-                        onSurveyClickCallback(survey);
-                    }
+    that.render = function (surveyListMenu) {
 
-                };
-            };
+        surveyListMenu = surveyListMenu || mwf.decorator.Menu(title);
+        var menuItem,
+            i;
 
-            for(var i = 0; i < surveys.length; i++){
-                menuItem = menu.addMenuLinkItem(surveys[i].getTitle(), null, surveys[i].getDescription());
-                TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallbackClosure(surveys[i]), "menu-highlight");
+        if (surveyList.length > 0) {
+            for (i = 0; i < surveyList.length; i += 1) {
+                menuItem = surveyListMenu.addMenuLinkItem(surveyList[i].getTitle(), null, surveyList[i].getDescription());
+                TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallbackClosure(surveyList[i]), "menu-highlight");
             }
-        }else if (emptyListText !== null) {
-            menuItem = menu.addMenuLinkItem(emptyListText, null, emptyListDetails);
+
+        } else if (emptyListText !== null) {
+            menuItem = surveyListMenu.addMenuLinkItem(emptyListText, null, emptyListDetails);
             TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, emptyListClickCallback, "menu-highlight");
         }
 
-        return menu;
+        return surveyListMenu;
     };
 
-    return self;
+    return that;
 };

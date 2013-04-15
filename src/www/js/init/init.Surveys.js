@@ -1,5 +1,14 @@
-Init.invokeOnReady(function() {
+Init.invokeOnReady(function () {
+    "use strict";
 
+
+
+    var pageModel = PageModel("surveys", "Available Surveys");
+    pageModel.setTopButton("Dashboard", PageController.openDashboard);
+    pageModel.setView(SurveysController.getView());
+    PageController.registerPage(pageModel);
+
+    /*
     var surveyMenu = mwf.decorator.Menu("Available Surveys");
 
     var campaigns = Campaigns.getInstalledCampaigns();
@@ -19,5 +28,6 @@ Init.invokeOnReady(function() {
     $("#surveys").append(mwf.decorator.SingleClickButton("Upload Queue", PageNavigation.openUploadQueueView));
 
     mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView , true);
+    */
 
 });

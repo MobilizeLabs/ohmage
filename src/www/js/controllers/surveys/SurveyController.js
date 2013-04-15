@@ -188,7 +188,6 @@ var SurveyController = function (surveyModel) {
         return surveyItems[currentItemIndex] || null;
     };
 
-
     /**
      * Aborts the current survey participation and deletes the users responses.
      * This method should be called to do the clean up before the user navigates

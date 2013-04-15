@@ -23,8 +23,9 @@ module("models.campaigns.CampaignModel", {
             }
         };
 
-        //This is a full campaign configuration for the Demo Snack survey although this module only concentrates on
-        //testing campaign model - so prompts, survey models are not tested here.
+        //This is a full campaign configuration for the Demo Snack survey
+        //although this module only concentrates on testing campaign model -
+        //so prompts, survey models are not tested here.
         fixture.testCampaignConfiguration = {
             "campaignurn": "urn:campaign:ca:ucla:Demo:Snack",
             "campaignname": "Demo Snack",
