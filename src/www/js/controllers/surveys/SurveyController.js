@@ -40,29 +40,36 @@ var SurveyController = function (surveyModel) {
             !ConditionalParser.parse(currentCondition, currentResponse);
     };
 
-    var onUploadConfirmCallback = function (yes) {
+    /**
+     * Whether the user has uploaded the survey response, or has chosen to wait
+     * and upload the survey response later (or failed to upload the response),
+     * this method will be eventually called to redirect the user to the next
+     * page.
+     */
+    var afterSurveyCompleted = function () {
+        PageController.goBack();
+    };
 
-        //Yes upload my response now.
-        if (yes) {
+    var onUploadConfirmCallback = function (yesUploadNow) {
 
-            var uploader = new SurveyResponseUploadController(surveyModel, surveyResponse);
+        if (yesUploadNow) {
 
-            var onSuccess = function (response) {
-                MessageDialogController.showMessage("Successfully uploaded your survey response.", function () {
-                    SurveyResponseModel.deleteSurveyResponse(surveyResponse);
-                    afterSurveyComplete();
-                });
-            };
-
-            var onError = function (error) {
-                MessageDialogController.showMessage("Unable to upload your survey response at this time.", afterSurveyComplete);
-            };
+            var uploader = SurveyResponseUploadService(surveyModel, surveyResponse),
+                onSuccess = function (response) {
+                    MessageDialogController.showMessage("Successfully uploaded your survey response.", function () {
+                        SurveyResponseStoreModel.deleteSurveyResponse(surveyResponse);
+                        afterSurveyCompleted();
+                    });
+                },
+                onError = function (error) {
+                    MessageDialogController.showMessage("Unable to upload your survey response at this time.", afterSurveyCompleted);
+                };
 
             uploader.upload(onSuccess, onError, ConfigManager.getGpsEnabled());
 
         } else {
             MessageDialogController.showMessage("Your survey response has been saved. You may upload it any time from the survey upload queue.", function () {
-                afterSurveyComplete();
+                afterSurveyCompleted();
             });
         }
     };
@@ -77,22 +84,13 @@ var SurveyController = function (surveyModel) {
         ReminderModel.supressSurveyReminders(surveyModel.getID());
 
         //Confirmation box related properties.
-        var title = 'ohmage';
         var buttonLabels = 'Yes,No';
         var message = "Would you like to upload your response?";
 
-
         if (ConfigManager.getConfirmToUploadOnSubmit()) {
-            MessageDialogController.showConfirm(message, onUploadConfirmCallback, buttonLabels, title);
+            MessageDialogController.showConfirm(message, onUploadConfirmCallback, buttonLabels);
         } else {
             onUploadConfirmCallback(true);
-        }
-
-        if (DeviceDetection.isNativeApplication()) {
-            PageController.goBack();
-        } else {
-            window.onbeforeunload = null;
-            close();
         }
 
     };
@@ -146,7 +144,7 @@ var SurveyController = function (surveyModel) {
     };
 
     that.initializeSurvey = function () {
-        surveyResponse = SurveyResponseModel.init(surveyModel.getID(), surveyModel.getCampaign().getURN());
+        surveyResponse = SurveyResponseModel(surveyModel.getID(), surveyModel.getCampaign().getURN());
         if (ConfigManager.getGpsEnabled()) {
             surveyResponse.acquireLocation();
         }

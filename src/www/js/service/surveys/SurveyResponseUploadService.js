@@ -2,25 +2,25 @@
  * SurveyResponseUploadController is responsible for the actual upload of the response
  * data.
  */
-var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
-
+var SurveyResponseUploadService = function (surveyModel, surveyResponse) {
+    "use strict";
     var that = {};
 
     /**
      * Compiles and returns an upload package with the current values set in the
-     * survey response. In this case, no extra check of validity or availaility
+     * survey response. In this case, no extra check of validity or availability
      * of GPS location will be done - what you see, is what you get.
      */
-    var getResponseData = function(){
+    var getResponseData = function () {
 
         var responseData = surveyResponse.getUploadData();
 
         var data = {
-                        campaign_urn               : surveyResponse.getCampaignURN(),
-                        campaign_creation_timestamp: surveyModel.getCampaign().getCreationTimestamp(),
-                        surveys                    : JSON.stringify([responseData.responses]),
-                        images                     : JSON.stringify(responseData.images)
-                   };
+            campaign_urn               : surveyResponse.getCampaignURN(),
+            campaign_creation_timestamp: surveyModel.getCampaign().getCreationTimestamp(),
+            surveys                    : JSON.stringify([responseData.responses]),
+            images                     : JSON.stringify(responseData.images)
+        };
 
         return data;
 
@@ -28,45 +28,45 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
 
     /**
      * Recursively tries to acquire the user's current geolocation until GPS
-     * location is successfuly acquired or the user chooses to quit trying.
+     * location is successfully acquired or the user chooses to quit trying.
      *
-     * @param At base case, callback will be invoked with a single boolean
-     *        parameter indicating the success or failure of acquiring the GPS
-     *        location i.e. false == user quit or unable to get GPS location.
+     * @param callback At base case, callback will be invoked with a single
+     * boolean parameter indicating the success or failure of acquiring the GPS
+     * location i.e. false == user quit or unable to get GPS location.
      */
-    var setResponseLocation = function( callback ) {
+    var setResponseLocation = function (callback) {
 
         //Show the spinner while trying to acquire user's GPS location.
         Spinner.show();
 
         //Start the Geolocation process.
-        surveyResponse.acquireLocation(function(success){
+        surveyResponse.acquireLocation(function (success) {
 
             //On response, hide the spinner.
             Spinner.hide();
 
-            //If the GPS location was succsesfuly set, then invoke the
+            //If the GPS location was successfully set, then invoke the
             //callback and exit.
-            if(success){
+            if (success) {
                 callback(true);
 
 
             //In case the geolocation process timed out or was unsuccessful,
             //then ask the user if he/she would like to retry the process.
-            }else{
+            } else {
 
-                var errorMessage = "Geolocation failed. Would you like to try again?"
+                var errorMessage = "Geolocation failed. Would you like to try again?";
 
-                MessageDialogController.showConfirm(errorMessage, function(yes){
+                MessageDialogController.showConfirm(errorMessage, function (yes) {
 
                     //In case the user chooses to try the geolocation process
                     //again, then recursively call this function.
-                    if(yes){
+                    if (yes) {
                         setResponseLocation(callback);
 
                     //If the user is tired of trying and quits, invoke the
                     //callback indicating failure.
-                    }else{
+                    } else {
                         callback(false);
                     }
                 }, "Yes,No");
@@ -77,35 +77,35 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
 
     };
 
-    var getFinalizedUploadResponse = function(callback, requireLocation){
+    var getFinalizedUploadResponse = function (callback, requireLocation) {
 
-        var returnResponseData = function(){
+        var returnResponseData = function () {
             callback(getResponseData());
         };
 
         //If the survey response does not have a valid location and the location
         //parameter is required, then ask the user if he/she wants to try to
         //get the GPS location for the survey.
-        if( !surveyResponse.isLocationAvailable() && requireLocation ) {
+        if (!surveyResponse.isLocationAvailable() && requireLocation) {
 
             var message = "Survey '" + surveyModel.getTitle() + "' does not have a valid GPS location. Would you like to try set it?";
 
-            var confirmCallback = function( yes ) {
+            var confirmCallback = function (yes) {
 
                 //If the user wants to get the current GPS location, then try
                 //to acquire the current GPS location.
-                if( yes ) {
+                if (yes) {
 
-                    setResponseLocation(function(){
+                    setResponseLocation(function () {
                         returnResponseData();
                     });
 
-                }else{
+                } else {
                     returnResponseData();
                 }
             };
 
-            MessageDialogController.showConfirm( message, confirmCallback, "Yes,No" );
+            MessageDialogController.showConfirm(message, confirmCallback, "Yes,No");
 
         //If validity of survey response location is not required or is
         //correctly set, then invoke the callback with the upload response data.
@@ -121,27 +121,27 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
      * @param requireLocation If set to true, the user will be asked to try to
      *        set the GPS location if the survey is lacking one.
      */
-    that.upload = function( onSuccess, onError, requireLocation ) {
+    that.upload = function (onSuccess, onError, requireLocation) {
 
-        if( typeof(requireLocation) === "undefined" || new Date().getTime() - surveyResponse.getSubmitDate().getTime() > 120000) {
+        if (requireLocation === undefined || new Date().getTime() - surveyResponse.getSubmitDate().getTime() > 120000) {
             requireLocation = false;
         }
 
-        getFinalizedUploadResponse( function( data ) {
+        getFinalizedUploadResponse(function (data) {
 
-            var _onError = function( error ) {
-                Spinner.hide( function() {
-                    if( onError ) {
-                        onError( error );
+            var _onError = function (error) {
+                Spinner.hide(function () {
+                    if (onError) {
+                        onError(error);
                     }
                 });
             };
 
-            var _onSuccess = function( response ) {
+            var _onSuccess = function (response) {
                 console.log("SurveyResponseUploadController: Successfully returned from single survey response upload script.");
-                Spinner.hide( function() {
-                    if( onSuccess ) {
-                        onSuccess( response );
+                Spinner.hide(function () {
+                    if (onSuccess) {
+                        onSuccess(response);
                     }
                 });
             };
@@ -150,12 +150,12 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
 
             console.log(data);
             ServiceController.serviceCall(
-                 "POST",
-                 ConfigManager.getSurveyUploadUrl(),
-                 data,
-                 "JSON",
-                 _onSuccess,
-                 _onError
+                "POST",
+                ConfigManager.getSurveyUploadUrl(),
+                data,
+                "JSON",
+                _onSuccess,
+                _onError
             );
 
         }, requireLocation);
@@ -171,44 +171,47 @@ var SurveyResponseUploadController = function( surveyModel, surveyResponse ) {
  * recursively tries to upload the surveys and invokes the callback with the
  * final number of successfully uploaded surveys.
  */
-SurveyResponseUploadController.uploadAll = function( pendingResponses, uploadCompletedCallback, requireLocation ){
-
+SurveyResponseUploadService.uploadAll = function (pendingResponses, uploadCompletedCallback, requireLocation) {
+    "use strict";
     //Counts the number of successful uploads.
     var count = 0;
 
     //Construct an array of IDs. This allows much easier access with an index
     //inside the recursive call.
-    var uuidList = [];
-    for(var uuid in pendingResponses){
-        uuidList.push(uuid);
+    var uuidList = [],
+        uuid;
+    for (uuid in pendingResponses) {
+        if (pendingResponses.hasOwnProperty(uuid)) {
+            uuidList.push(uuid);
+        }
     }
 
-    var upload = function(i) {
+    var upload = function (i) {
 
-        if( i >= uuidList.length ) {
-            Spinner.hide(function(){
-                if(typeof(uploadCompletedCallback) === "function"){
+        if (i >= uuidList.length) {
+            Spinner.hide(function () {
+                if (uploadCompletedCallback !== undefined) {
                     uploadCompletedCallback(count);
                 }
             });
 
-        }else{
+        } else {
 
             //Get the current survey and surveyResponse object to upload.
             var survey = pendingResponses[uuidList[i]].survey;
             var surveyResponse = pendingResponses[uuidList[i]].response;
 
-            var uploadNextSurveyResponse = function(){
+            var uploadNextSurveyResponse = function () {
                 upload(++i);
             };
 
-            var onSuccess = function(response){
-                count++;
+            var onSuccess = function (response) {
+                count += 1;
                 SurveyResponseModel.deleteSurveyResponse(surveyResponse);
                 uploadNextSurveyResponse();
             };
 
-            var onError = function(error){
+            var onError = function (error) {
                 uploadNextSurveyResponse();
             };
 
@@ -220,4 +223,4 @@ SurveyResponseUploadController.uploadAll = function( pendingResponses, uploadCom
 
     Spinner.show();
     upload(0);
-}
+};
