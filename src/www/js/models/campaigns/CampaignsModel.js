@@ -30,6 +30,11 @@ var CampaignsModel = (function () {
      */
     var installedCampaigns = LocalMap("installed-campaigns");
 
+    /**
+     * Cached use to control the number of campaign models created.
+     * @type {{}}
+     */
+    var campaignCache = {};
 
     var log = Logger("CampaignsModel");
 
@@ -100,7 +105,10 @@ var CampaignsModel = (function () {
      * @returns {CampaignModel}
      */
     that.getCampaign = function (campaignURN) {
-        return CampaignModel(campaignURN);
+        if (campaignCache[campaignURN] === undefined) {
+            campaignCache[campaignURN] = CampaignModel(campaignURN);
+        }
+        return campaignCache[campaignURN];
     };
 
     /**
