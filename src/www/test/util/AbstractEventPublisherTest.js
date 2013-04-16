@@ -55,7 +55,7 @@ test("Test subscribing to an event.", function () {
     strictEqual(eventPublisher.getEvents().EventName[0], onEventTriggeredCallback, "The first subscriber of the registered event should be the correct callback function.");
 });
 
-test("Test subscribing from an event.", function () {
+test("Test unsubscribing from an event.", function () {
     "use strict";
     var eventPublisher = AbstractEventPublisher(),
         onEventTriggeredCallback = function () {};
@@ -70,13 +70,15 @@ test("Test subscribing from an event.", function () {
 test("Test triggering an event.", function () {
     "use strict";
     var eventPublisher = AbstractEventPublisher(),
-        onEventTriggeredCallback = JsMockito.mockFunction("onEventTriggeredCallback");
+        onEventTriggeredCallback = JsMockito.mockFunction("onEventTriggeredCallback"),
+        args = {arg : "value"};
     eventPublisher.registerEvent("EventName");
     eventPublisher.subscribeToEventNameEvent(onEventTriggeredCallback);
+
     ///
-    eventPublisher.triggerEvent("EventName");
+    eventPublisher.triggerEvent("EventName", args);
     ///
-    JsMockito.verify(onEventTriggeredCallback)();
+    JsMockito.verify(onEventTriggeredCallback)(args);
     JsMockito.verifyNoMoreInteractions(onEventTriggeredCallback);
     notStrictEqual(eventPublisher.triggerEventNameEvent, undefined, "A trigger function should be dynamically added to the event publisher.");
 });

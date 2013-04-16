@@ -6,7 +6,7 @@
 var PageController = (function () {
     "use strict";
 
-    var that = {};
+    var that = AbstractEventPublisher("PageController");
 
     var screen = null;
 
@@ -114,7 +114,7 @@ var PageController = (function () {
                 that.goTo(pageName, pageParams);
             };
         }(pageName));
-
+        that.triggerPageRegisteredEvent(pageModel.getPageName());
     };
 
     that.unregisterPage = function (pageModel) {
@@ -207,8 +207,12 @@ var PageController = (function () {
         }
         PageStackModel.push(pageName, pageParams);
 
+        that.triggerPageLoadedEvent(pageName);
+
         //Finally render the page on the screen.
         that.render(pageModel);
+
+
 
         //Return true to indicate that the page has been successfully
         //transitioned.
@@ -267,6 +271,9 @@ var PageController = (function () {
 
         });
     };
+
+    that.registerEvent("PageLoaded");
+    that.registerEvent("PageRegistered");
 
     return that;
 }());

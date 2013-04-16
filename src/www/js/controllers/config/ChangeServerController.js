@@ -16,7 +16,7 @@ var ChangeServerController = function () {
         } else {
             ConfigManager.setServerEndpoint(serverEndpoint);
             log.info("Saved a new server endpoint [$1].", ConfigManager.getServerEndpoint());
-            MessageDialogController.showMessage("Your selection has been saved.", PageController.goBack);
+            MessageDialogController.showMessage("Your selection has been saved.", PageController.openDashboard);
         }
     };
 

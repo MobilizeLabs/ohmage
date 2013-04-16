@@ -3,14 +3,17 @@
  * @version 4/16/13
  */
 
-var AbstractEventPublisher = function () {
+var AbstractEventPublisher = function (eventPublisherName) {
     "use strict";
     var that = {};
 
     var events = {};
 
+    var log = Logger(eventPublisherName || "AbstractEventPublisher");
+
     var addSubscriptionFunction = function (eventName) {
         that["subscribeTo" + eventName + "Event"] = function (onEventTriggeredCallback) {
+            log.info("Added new subscriber for event [$1].", eventName);
             events[eventName].push(onEventTriggeredCallback);
         };
     };
@@ -29,8 +32,8 @@ var AbstractEventPublisher = function () {
     };
 
     var addTriggerFunction = function (eventName) {
-        that["trigger" + eventName + "Event"] = function () {
-            that.triggerEvent(eventName);
+        that["trigger" + eventName + "Event"] = function (args) {
+            that.triggerEvent(eventName, args);
         };
     };
 
@@ -41,12 +44,13 @@ var AbstractEventPublisher = function () {
         addTriggerFunction(eventName);
     };
 
-    that.triggerEvent = function (eventName) {
+    that.triggerEvent = function (eventName, args) {
         var subscribers = events[eventName],
             numSubscribers = subscribers.length,
             i;
+        log.info("Triggered event [$1] with arguments [$2].", eventName, args);
         for (i = 0; i < numSubscribers; i += 1) {
-            subscribers[i]();
+            subscribers[i](args);
         }
     };
 

@@ -7,9 +7,12 @@ Init.invokeOnReady(function () {
         if (AuthenticationModel.isUserAuthenticated()) {
             pageModel.setTopButton("Switch User", AuthenticationController.logoutUser);
         } else {
-            pageModel.setTopButton("Switch Server", PageController.openServerChange);
+            pageModel.setTopButton("Switch Server", function () {
+                PageController.openServerChange();
+            });
         }
         onSuccessCallback();
+
     });
     PageController.registerPage(pageModel);
 });

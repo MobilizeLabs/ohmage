@@ -76,8 +76,29 @@ var ConfigManager = (function () {
         /**
          * Client property sent with AJAX requests.
          */
-        CLIENT_NAME : "ohmage-mwf"
+        CLIENT_NAME : "ohmage-mwf",
 
+        /**
+         * A list of pages that don't require the user to be authenticated.
+         */
+        OPEN_PAGES : ['auth', 'changeServer']
+    };
+
+    /**
+     * Returns true if the specified page is an open page.
+     * @param pageName
+     * @returns {boolean} True if the pageName is open.
+     */
+    that.isOpenPage = function (pageName) {
+        var openPageList = config.OPEN_PAGES,
+            numOpenPages = openPageList.length,
+            i;
+        for (i = 0; i < numOpenPages; i += 1) {
+            if (openPageList[i] === pageName) {
+                return true;
+            }
+        }
+        return false;
     };
 
     /**

@@ -73,9 +73,30 @@ var Init = (function () {
             }
         };
 
+        var authCheckpoint = function () {
+
+            var pageName = PageController.getCurrentPageName();
+            if (!ConfigManager.isOpenPage(pageName) && PageController.getCurrentPageName() !== "auth" && !AuthenticationModel.isUserAuthenticated()) {
+                PageController.openAuth();
+            }
+        };
+
         //Initialize the page controller.
         PageController.setDefaultBackButtonHandler();
         PageController.setScreen(document.getElementById("screen"));
+
+        PageController.subscribeToPageLoadedEvent(function () {
+            if (PageController.isPageRegistered("auth")) {
+                authCheckpoint();
+            } else {
+                PageController.subscribeToPageRegisteredEvent(function (pageName) {
+                    if (pageName === "auth") {
+                        authCheckpoint();
+                    }
+                });
+            }
+
+        });
     });
 
     return that;
