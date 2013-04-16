@@ -1,6 +1,8 @@
 Init.invokeOnReady(function () {
-    $("#reminders").append((new RemindersController()).render());
-    $("#reminders").append(mwf.decorator.DoubleClickButton("Dashboard", PageNavigation.openDashboard,
-                                                           "Pending", PageNavigation.openPendingSurveysView));
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
+    "use strict";
+    var pageModel = PageModel("reminders", "Available Reminders");
+    pageModel.setTopButton("Dashboard", PageController.openDashboard);
+    pageModel.setView(RemindersController.getView());
+    PageController.registerPage(pageModel);
+
 });

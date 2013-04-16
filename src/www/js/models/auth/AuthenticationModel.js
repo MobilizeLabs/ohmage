@@ -124,7 +124,7 @@ var AuthenticationModel = (function () {
         $.cookie("auth_token", null, {path : "/"});
 
         //TODO: Decouple these two lines from user authentication. Maybe in the form of event subscribers.
-        ReminderModel.cancelAll();
+        RemindersModel.cancelAll();
         //window.localStorage.clear();
 
     };
