@@ -8,7 +8,7 @@ var CampaignModel = function (campaignURN) {
     var that = {};
 
     var metadata = LocalMap("all-campaigns").get(campaignURN);
-    var campaign = LocalMap("campaign-configurations").get(campaignURN);
+    var campaignConfigurations = LocalMap("campaign-configurations");
 
     /**
      * Stores a mapping between survey ID i.e. "Snack" and survey model.
@@ -16,7 +16,6 @@ var CampaignModel = function (campaignURN) {
      * @type {{}|null}
      */
     var surveys = null;
-
 
     /**
      * Extract the surveys from the campaign and map IDs to survey model.
@@ -26,7 +25,8 @@ var CampaignModel = function (campaignURN) {
         surveys = {};
 
         //Get the list of surveys from the campaign JSON object.
-        var surveysSpec  = campaign.surveys.survey;
+        var campaignConfiguration = campaignConfigurations.get(campaignURN),
+            surveysSpec  = campaignConfiguration.surveys.survey;
 
         //If survey spec is returned as a single item, then go ahead and place
         //it in an array. This is a kind of a dirty fix, if you have any
@@ -48,10 +48,7 @@ var CampaignModel = function (campaignURN) {
      * @return {*} An object that maps a survey ID to survey model.
      */
     that.getSurveys = function () {
-        //Lazy instantiation.
-        if (surveys === null) {
-            initializeSurveys();
-        }
+        initializeSurveys();
         return surveys;
     };
 
