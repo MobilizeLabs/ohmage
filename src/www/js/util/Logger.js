@@ -9,9 +9,13 @@ var Logger = (function () {
     var ARG_INSERT_SENTINEL = "$";
 
     var formatOutput = function (namespace, message, args) {
-        var i, argsLength;
+        var i, argsLength, arg;
         for (i = 0, argsLength = args.length; i < argsLength; i += 1) {
-            message = message.replace(ARG_INSERT_SENTINEL + i, args[i]);
+            arg = args[i];
+            if (typeof arg !== "string") {
+                arg = JSON.stringify(arg);
+            }
+            message = message.replace(ARG_INSERT_SENTINEL + i, arg);
         }
         return namespace + ": " + message;
     };
