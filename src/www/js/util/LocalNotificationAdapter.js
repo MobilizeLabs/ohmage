@@ -3,7 +3,7 @@ var LocalNotificationAdapter = (function () {
     var that = {};
 
     var isLocalNotificationAvailable = function () {
-        return plugins !== undefined && plugins.localNotification !== undefined;
+        return typeof plugins !== "undefined" && plugins.localNotification !== undefined;
     };
 
     that.add = function (options) {
