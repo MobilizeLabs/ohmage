@@ -32,9 +32,7 @@ var ProfileController = function () {
     };
 
     profileView.logoutAndClearDataHandler = function () {
-        if (auth.logout()) {
-            PageNavigation.openAuthenticationPage();
-        }
+        AuthenticationController.logoutUser();
     };
 
     that.getView = function () {
