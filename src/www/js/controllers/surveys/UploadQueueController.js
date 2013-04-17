@@ -12,17 +12,18 @@ var UploadQueueController = function () {
         var pendingResponses = SurveyResponseStoreModel.getPendingResponses(),
             message = "Are you sure you would like to delete all your responses?",
             buttonLabels = 'Yes,No',
-            surveyResponseUUID,
-            confirmationCallback = function (yesDeleteAllSurveysResponses) {
-                if (yesDeleteAllSurveysResponses) {
-                    for (surveyResponseUUID in pendingResponses) {
-                        if (pendingResponses.hasOwnProperty(surveyResponseUUID)) {
-                            SurveyResponseStoreModel.deleteSurveyResponse(pendingResponses[surveyResponseUUID].response);
-                        }
+            surveyResponseUUID;
+
+        var confirmationCallback = function (yesDeleteAllSurveysResponses) {
+            if (yesDeleteAllSurveysResponses) {
+                for (surveyResponseUUID in pendingResponses) {
+                    if (pendingResponses.hasOwnProperty(surveyResponseUUID)) {
+                        SurveyResponseStoreModel.deleteSurveyResponse(pendingResponses[surveyResponseUUID].response);
                     }
-                    refreshView();
                 }
-            };
+                refreshView();
+            }
+        };
         MessageDialogController.showConfirm(message, confirmationCallback, buttonLabels);
     };
 
@@ -41,10 +42,15 @@ var UploadQueueController = function () {
         SurveyResponseUploadService.uploadAll(pendingResponses, uploadAllDoneCallback, ConfigManager.getGpsEnabled());
     };
 
+    var onPendingUploadClickCallback = function (surveyResponseKey) {
+        PageController.openSurveyResponse({surveyResponseKey : surveyResponseKey});
+    };
+
     that.getView = function () {
         uploadQueueView = UploadQueueView(that);
         uploadQueueView.deleteAllResponsesCallback = deleteAllCallback;
         uploadQueueView.uploadAllResponsesCallback = uploadAllCallback;
+        uploadQueueView.onPendingUploadClickCallback = onPendingUploadClickCallback;
         return uploadQueueView;
 
     };

@@ -1,8 +1,10 @@
 /**
- * SurveyResponseUploadController is responsible for the actual upload of the response
- * data.
+ * SurveyResponseUploadController is responsible for the actual upload of the
+ * response data.
+ * @author Zorayr Khalapyan
+ * @version 4/15/13
  */
-var SurveyResponseUploadService = function (surveyModel, surveyResponse) {
+var SurveyResponseUploadService = function (surveyModel, surveyResponseModel) {
     "use strict";
     var that = {};
 
@@ -13,10 +15,10 @@ var SurveyResponseUploadService = function (surveyModel, surveyResponse) {
      */
     var getResponseData = function () {
 
-        var responseData = surveyResponse.getUploadData();
+        var responseData = surveyResponseModel.getUploadData();
 
         var data = {
-            campaign_urn               : surveyResponse.getCampaignURN(),
+            campaign_urn               : surveyResponseModel.getCampaignURN(),
             campaign_creation_timestamp: surveyModel.getCampaign().getCreationTimestamp(),
             surveys                    : JSON.stringify([responseData.responses]),
             images                     : JSON.stringify(responseData.images)
@@ -40,7 +42,7 @@ var SurveyResponseUploadService = function (surveyModel, surveyResponse) {
         Spinner.show();
 
         //Start the Geolocation process.
-        surveyResponse.acquireLocation(function (success) {
+        surveyResponseModel.acquireLocation(function (success) {
 
             //On response, hide the spinner.
             Spinner.hide();
@@ -86,7 +88,7 @@ var SurveyResponseUploadService = function (surveyModel, surveyResponse) {
         //If the survey response does not have a valid location and the location
         //parameter is required, then ask the user if he/she wants to try to
         //get the GPS location for the survey.
-        if (!surveyResponse.isLocationAvailable() && requireLocation) {
+        if (!surveyResponseModel.isLocationAvailable() && requireLocation) {
 
             var message = "Survey '" + surveyModel.getTitle() + "' does not have a valid GPS location. Would you like to try set it?";
 
@@ -123,7 +125,7 @@ var SurveyResponseUploadService = function (surveyModel, surveyResponse) {
      */
     that.upload = function (onSuccess, onError, requireLocation) {
 
-        if (requireLocation === undefined || new Date().getTime() - surveyResponse.getSubmitDate().getTime() > 120000) {
+        if (requireLocation === undefined || new Date().getTime() - surveyResponseModel.getSubmitDate().getTime() > 120000) {
             requireLocation = false;
         }
 

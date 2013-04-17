@@ -30,16 +30,6 @@ var SurveyResponseModel = (function () {
         STALE       : 'stale'
     };
 
-    /**
-     * Value tag that indicates skipped prompt response value.
-     */
-    var SKIPPED_PROMPT_VALUE = "SKIPPED";
-
-    /**
-     * Value tag that indicates not displayed prompt response value.
-     */
-    var NOT_DISPLAYED_PROMPT_VALUE = "NOT_DISPLAYED";
-
     return function (surveyID, campaignURN, surveyResponseUUID) {
         var that = {};
 
@@ -204,14 +194,14 @@ var SurveyResponseModel = (function () {
          * Marks the specified prompt as skipped.
          */
         that.setPromptSkipped = function (promptID) {
-            that.recordUserResponse(promptID, SKIPPED_PROMPT_VALUE, false);
+            that.recordUserResponse(promptID, SurveyResponseModel.SKIPPED_PROMPT_VALUE, false);
         };
 
         /**
          * Marks the specified prompt as not displayed.
          */
         that.setPromptNotDisplayed = function (promptID) {
-            that.recordUserResponse(promptID, NOT_DISPLAYED_PROMPT_VALUE, false);
+            that.recordUserResponse(promptID, SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE, false);
         };
 
         that.submit = function () {
@@ -352,14 +342,25 @@ var SurveyResponseModel = (function () {
         };
 
         that.getSkippedPromptValue = function () {
-            return SKIPPED_PROMPT_VALUE;
+            return SurveyResponseModel.SKIPPED_PROMPT_VALUE;
         };
 
         that.getNotDisplayedPromptValue = function () {
-            return NOT_DISPLAYED_PROMPT_VALUE;
+            return SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE;
         };
 
         return that;
     };
 
 }());
+
+
+/**
+ * Value tag that indicates skipped prompt response value.
+ */
+SurveyResponseModel.SKIPPED_PROMPT_VALUE = "SKIPPED";
+
+/**
+ * Value tag that indicates not displayed prompt response value.
+ */
+SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE = "NOT_DISPLAYED";

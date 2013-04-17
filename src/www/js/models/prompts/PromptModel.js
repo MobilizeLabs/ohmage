@@ -162,6 +162,44 @@ var PromptModel = function (promptData, surveyModel, campaignModel) {
         return customPromptPropertyVault;
     };
 
+    that.summarizeResponse = function (userResponseValue) {
+        var summary = "",
+            base64,
+            keys,
+            i;
+
+        if (userResponseValue === SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE ||
+                userResponseValue === SurveyResponseModel.SKIPPED_PROMPT_VALUE) {
+            return userResponseValue;
+        }
+
+        switch (that.getType()) {
+
+        case 'photo':
+            base64 = Base64.formatImageSrcString(ImageStoreModel.getImage(userResponseValue));
+            summary = "<center><img src='" + base64 + "' width='100%' /></center>";
+            break;
+
+        case 'single_choice':
+            summary = that.getProperty(userResponseValue);
+            break;
+
+        case 'multi_choice':
+            keys = userResponseValue;
+            var labels = [];
+            for (i = 0; i < keys.length; i += 1) {
+                labels.push(that.getProperty(keys[i]));
+            }
+            summary = labels.join(", ");
+            break;
+
+        default:
+            summary = userResponseValue;
+        }
+
+        return summary;
+    };
+
     /*
      * Initialization: Populates the list of both specified and custom
      * properties.

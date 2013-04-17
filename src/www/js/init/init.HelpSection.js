@@ -1,7 +1,7 @@
 Init.invokeOnReady(function () {
     "use strict";
 
-    var helpController = new HelpController();
+    var helpController = HelpController();
 
     var pageModel = PageModel("helpSection", "Help Section");
     pageModel.setTopButton("Help Menu", PageController.openHelp);

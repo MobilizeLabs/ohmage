@@ -13,9 +13,9 @@ var UploadQueueView = function () {
     that.render = function () {
         var pendingResponses = SurveyResponseStoreModel.getPendingResponses(),
             queueMenu = mwf.decorator.Menu(uploadQueueMenuTitle),
-            onSurveyClickCallback = function (response) {
+            onPendingUploadClickCallback = function (response) {
                 return function () {
-                    PageNavigation.openSurveyResponseView(response.getSurveyKey());
+                    that.onPendingUploadClickCallback(response.getSurveyKey());
                 };
             },
             survey,
@@ -30,7 +30,7 @@ var UploadQueueView = function () {
                 response = pendingResponses[uuid].response;
                 details  = "Submitted on " + response.getSubmitDateString() + ".";
                 menuItem = queueMenu.addMenuLinkItem(survey.getTitle(), null, details);
-                TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onSurveyClickCallback(response), "menu-highlight");
+                TouchEnabledItemModel.bindTouchEvent(menuItem, menuItem, onPendingUploadClickCallback(response), "menu-highlight");
             }
         }
 
@@ -49,6 +49,7 @@ var UploadQueueView = function () {
 
     that.deleteAllResponsesCallback = function () {};
     that.uploadAllResponsesCallback = function () {};
+    that.onPendingUploadClickCallback = function (surveyResponseKey) {};
 
     return that;
 };

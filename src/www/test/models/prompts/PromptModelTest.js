@@ -319,4 +319,79 @@ test("Test adding a property with a unique label, without defining key value.", 
     strictEqual(promptModel.getCustomPromptPropertyVault().getCustomProperties()[3], "Unique Label", "The added property should also be added to the custom property vault.");
 });
 
+test("Test summarizing a skipped prompt response.", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    ///
+    var summary = promptModel.summarizeResponse(SurveyResponseModel.SKIPPED_PROMPT_VALUE);
+    ///
+    strictEqual(summary, SurveyResponseModel.SKIPPED_PROMPT_VALUE, "Skipped prompts should be summarized as a string.");
+});
+
+test("Test summarizing a not displayed prompt response.", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    ///
+    var summary = promptModel.summarizeResponse(SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE);
+    ///
+    strictEqual(summary, SurveyResponseModel.NOT_DISPLAYED_PROMPT_VALUE, "Not displayed prompts should be summarized as a string.");
+});
+
+test("Test summarizing a single choice prompt response", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    promptModel.getType = function () {
+        return "single_choice";
+    };
+    promptModel.addProperty("choice-label", 10);
+    ///
+    var summary = promptModel.summarizeResponse(10);
+    ///
+    strictEqual(summary, "choice-label", "Single choice prompt response summary should consist of the string label of that choice.");
+});
+
+test("Test summarizing a photo prompt response", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2"),
+        imageUUID = ImageStoreModel.recordImage("base64-image");
+    promptModel.getType = function () {
+        return "photo";
+    };
+
+    ///
+    var summary = promptModel.summarizeResponse(imageUUID);
+    ///
+    strictEqual(summary, "<center><img src='base64-image' width='100%' /></center>", "Photo.");
+});
+
+test("Test summarizing a single choice prompt response", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    promptModel.getType = function () {
+        return "single_choice";
+    };
+    promptModel.addProperty("choice-label", 10);
+    ///
+    var summary = promptModel.summarizeResponse(10);
+    ///
+    strictEqual(summary, "choice-label", "Single choice prompt response summary should consist of the string label of that choice.");
+});
+
+test("Test summarizing a multi choice prompt response", function () {
+    "use strict";
+    var promptModel = fixture.getTestPromptModel("multiChoiceCustomSurvey", "multiChoiceCustom2");
+    promptModel.getType = function () {
+        return "multi_choice";
+    };
+    promptModel.addProperty("choice-label10", 10);
+    promptModel.addProperty("choice-label11", 11);
+    promptModel.addProperty("choice-label12", 12);
+    ///
+    var summary = promptModel.summarizeResponse([10, 11, 12]);
+    ///
+    strictEqual(summary, "choice-label10, choice-label11, choice-label12", "Multi choice prompt response summary should consist of the string label of that choice.");
+});
+
+
+
 
