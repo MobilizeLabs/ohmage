@@ -81,7 +81,7 @@ var SurveyController = function (surveyModel) {
 
         surveyResponse.submit();
 
-        ReminderModel.supressSurveyReminders(surveyModel.getID());
+        RemindersModel.suppressSurveyReminders(surveyModel.getID());
 
         //Confirmation box related properties.
         var buttonLabels = 'Yes,No';
