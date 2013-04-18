@@ -7,7 +7,7 @@ potential problems in JavaScript code.
 
 You can run it on the command line:
 
-    % java -jar jslint4java-${project.version}.jar application.js
+    % java -jar jslint4java-2.0.3.jar application.js
     jslint:application.js:11:9:Line breaking error ')'.
     jslint:application.js:11:10:Missing semicolon.
 
@@ -33,7 +33,7 @@ If you wish to use jslint4java from within Java, please use a maven dependency:
     <dependency>
       <groupId>com.googlecode.jslint4java</groupId>
       <artifactId>jslint4java</artifactId>
-      <version>${project.version}</version>
+      <version>2.0.3</version>
     </dependency>
 
 If you have any comments or queries, please send them to `dom [at] happygiraffe.net`.
