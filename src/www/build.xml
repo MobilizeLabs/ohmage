@@ -1,0 +1,58 @@
+<project name = "ohmageMFW"  basedir = ".">
+
+    <property name = "root"    location = "" />
+    <property name = "js"      location = "${root}/js" />
+    <property name = "lib"     location = "${root}/lib" />
+    <property name = "tools"   location = "${root}/tools" />
+    <property name = "externs" location = "${tools}/closure/externs" />
+    <property name = "build"   location = "${root}/build" />
+
+    <property name = "build.js"     location = "${build}/js/build.js" />
+    <property name = "build.min.js" location = "${build}/js/build.min.js" />
+
+    <taskdef name = "jslint"
+             classname="com.googlecode.jslint4java.ant.JSLintTask"
+             classpath="${root}/tools/jslint4java-2.0.2/jslint4java-2.0.2.jar" />
+
+    <taskdef name = "jscomp"
+             classname = "com.google.javascript.jscomp.ant.CompileTask"
+             classpath="${root}/tools/closure/compiler.jar"/>
+
+    <target name = "clean">
+        <delete dir = "${build}/"/>
+    </target>
+
+    <target name = "lint">
+        <echo message = "Running source files through JSLint..."></echo>
+        <jslint options="white,vars,undef,sloppy,nomen,continue,bitwise,newcap,forin">
+            <formatter type="plain" />
+            <fileset dir="${js}" includes="**/*.js" excludes="util/jstz.js, pegjs/*" />
+        </jslint>
+    </target>
+
+    <target name = "concat">
+        <echo message = "Combining source files..."></echo>
+        <concat destfile = "${build.js}" encoding = "UTF-8" fixlastline = "true" >
+            <fileset dir = "${js}" includes = "**/*.js" excludes = "**/init.*.js"/>
+        </concat>
+    </target>
+
+    <target name="min">
+        <echo message="Running Google Closure..."></echo>
+        <jscomp compilationLevel = "simple"
+                warning = "quiet"
+                debug = "off"
+                output = "${build.min.js}">
+            <externs dir = "${externs}">
+                <file name = "ohmage.externs.js"/>
+                <file name = "jquery-1.3.2.ohmage.externs.js"/>
+            </externs>
+            <sources dir="${build}/js/">
+                <file name="build.js"/>
+            </sources>
+        </jscomp>
+    </target>
+
+    <target name="run" depends="clean, lint, concat, min"></target>
+
+</project>
