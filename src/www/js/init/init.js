@@ -82,25 +82,11 @@ var Init = (function () {
     };
 
     that.invokeOnReady(function () {
-
-        //The presence of this event handler disables previous page DOM
-        //caching in some browsers - see issue #189 on GitHub for details.
-        window.onunload = function () {};
-
-        //In case the loaded page has been cached/persisted, reload it.
-        //See issue #189 on GitHub for more details.
-        window.onpageshow = function (event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
-        };
-
         //Initialize the page controller.
         PageController.setDefaultBackButtonHandler();
         PageController.setScreen(document.getElementById("screen"));
 
         initializeCheckpoint();
-
     });
 
     return that;
