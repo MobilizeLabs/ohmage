@@ -65,7 +65,6 @@ var PageStackModel = (function () {
      */
     that.push = function (pageName, pageParams) {
         pageStack.push(constructPageObject(pageName, pageParams));
-        save();
     };
 
     /**
@@ -73,14 +72,11 @@ var PageStackModel = (function () {
      * @returns {{pageName : string, pageParams : object}}
      */
     that.pop = function () {
-        var page = pageStack.pop();
-        save();
-        return page;
+        return pageStack.pop();
     };
 
     that.clearPageStack = function () {
         pageStack = [];
-        save();
     };
 
     that.getStackSize = function () {
@@ -89,7 +85,6 @@ var PageStackModel = (function () {
 
     that.setPageStack = function (newPageStack) {
         pageStack = newPageStack;
-        save();
     };
 
     that.getPageStack = function () {
@@ -101,6 +96,10 @@ var PageStackModel = (function () {
     };
 
     restore();
+
+    window.onbeforeunload = function () {
+        save();
+    };
 
     return that;
 }());
