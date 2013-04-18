@@ -1,4 +1,4 @@
-<project name = "ohmageMFW"  basedir = ".">
+<project name = "ohmageMFW"  basedir = "." default = "compile">
 
     <property name = "root"    location = "" />
     <property name = "js"      location = "${root}/js" />
@@ -12,7 +12,7 @@
 
     <taskdef name = "jslint"
              classname="com.googlecode.jslint4java.ant.JSLintTask"
-             classpath="${root}/tools/jslint4java-2.0.2/jslint4java-2.0.2.jar" />
+             classpath="${root}/tools/jslint4java-2.0.3/jslint4java-2.0.3.jar" />
 
     <taskdef name = "jscomp"
              classname = "com.google.javascript.jscomp.ant.CompileTask"
@@ -22,13 +22,16 @@
         <delete dir = "${build}/"/>
     </target>
 
+    <!-- BUILD TIME LINTING REQUIRES SINGLE NAMESPACE.
     <target name = "lint">
         <echo message = "Running source files through JSLint..."></echo>
-        <jslint options="white,vars,undef,sloppy,nomen,continue,bitwise,newcap,forin">
+        <jslint options="vars, newcap">
             <formatter type="plain" />
+            <predef>mwf,$</predef>
             <fileset dir="${js}" includes="**/*.js" excludes="util/jstz.js, pegjs/*" />
         </jslint>
     </target>
+    -->
 
     <target name = "concat">
         <echo message = "Combining source files..."></echo>
@@ -45,7 +48,7 @@
                 output = "${build.min.js}">
             <externs dir = "${externs}">
                 <file name = "ohmage.externs.js"/>
-                <file name = "jquery-1.3.2.ohmage.externs.js"/>
+                <file name = "jquery-1.3.2.externs.js"/>
             </externs>
             <sources dir="${build}/js/">
                 <file name="build.js"/>
@@ -53,6 +56,6 @@
         </jscomp>
     </target>
 
-    <target name="run" depends="clean, lint, concat, min"></target>
+    <target name="compile" depends="clean, concat, min"></target>
 
 </project>
