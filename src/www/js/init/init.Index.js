@@ -6,8 +6,7 @@ Init.invokeOnReady(function () {
     var pageModel = PageModel("dashboard", "Dashboard");
     pageModel.setTopButton("Logout", AuthenticationController.logoutUser);
     pageModel.setView(dashboardController.getView());
-    PageController.registerPage(pageModel);
     PageController.setRootPageModel(pageModel);
-    PageController.goToRootPage();
+    PageController.registerPage(pageModel);
 
 });

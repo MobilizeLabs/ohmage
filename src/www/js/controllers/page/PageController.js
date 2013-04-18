@@ -36,6 +36,16 @@ var PageController = (function () {
         }
     };
 
+    var openInitialPageOnPageRegistration = function (registeredPageName) {
+        if (PageStackModel.isEmpty() && PageController.isRootPageName(registeredPageName)) {
+            PageController.goToRootPage();
+            that.unsubscribeFromPageRegisteredEvent(openInitialPageOnPageRegistration);
+        } else if (PageStackModel.top().pageName === registeredPageName) {
+            PageController.refresh();
+            that.unsubscribeFromPageRegisteredEvent(openInitialPageOnPageRegistration);
+        }
+    };
+
     /**
      * The callback is invoked when the user hits the back button on an Android
      * device. If the back button is pressed from the index page (or also known
@@ -171,7 +181,11 @@ var PageController = (function () {
      * otherwise.
      */
     that.isRootPage = function (pageModel) {
-        return pageModel.getPageName() === rootPageName;
+        return that.isRootPageName(pageModel.getPageName());
+    };
+
+    that.isRootPageName = function (pageName) {
+        return pageName === rootPageName;
     };
 
     /**
@@ -274,6 +288,8 @@ var PageController = (function () {
 
     that.registerEvent("PageLoaded");
     that.registerEvent("PageRegistered");
+
+    that.subscribeToPageRegisteredEvent(openInitialPageOnPageRegistration);
 
     return that;
 }());
