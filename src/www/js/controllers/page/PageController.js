@@ -106,10 +106,15 @@ var PageController = (function () {
         }
     };
 
+    that.replaceCurrentPage = function (pageName, pageParams) {
+        PageStackModel.replaceCurrentPage(pageName, pageParams);
+        that.refresh();
+    };
+
     /**
      * Associates the page model's name with the page model. Page models need to
      * be registered prior to navigating to model. This tT will also create
-     * an PaoeController.openPageModelName() function that can be used instead
+     * an PageController.openPageModelName() function that can be used instead
      * of PageController.goTo(PageName). To see all the registered models, use
      * PageController.getRegisteredPages().
      *
