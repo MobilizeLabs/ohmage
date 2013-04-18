@@ -12,8 +12,7 @@ var SurveysController = (function () {
     };
 
     that.getView = function () {
-        var allSurveys = CampaignsModel.getAllSurveys(),
-            surveyListView = SurveyListView(allSurveys, "Available Surveys");
+        var surveyListView = SurveyListView("Available Surveys");
         surveyListView.onSurveyClickCallback = onSurveyClickCallback;
         return surveyListView;
     };

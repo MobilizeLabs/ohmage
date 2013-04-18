@@ -1,4 +1,4 @@
-var SurveyListView = function (surveyList, title) {
+var SurveyListView = function (title) {
     "use strict";
     var that = AbstractView();
 
@@ -6,10 +6,17 @@ var SurveyListView = function (surveyList, title) {
     var emptyListDetails = null;
     var emptyListClickCallback = null;
 
-    var onSurveyClickCallbackClosure = function (survey) {
+    var surveyList;
+
+    var onSurveyClickCallbackClosure = function (surveyModel) {
         return function () {
-            that.onSurveyClickCallback(survey);
+            that.onSurveyClickCallback(surveyModel);
         };
+    };
+
+    that.initializeView = function (onSuccessCallback) {
+        surveyList = CampaignsModel.getAllSurveys();
+        onSuccessCallback();
     };
 
     that.setEmptyListViewParameters = function (listText, listDetails, listClickCallback) {
