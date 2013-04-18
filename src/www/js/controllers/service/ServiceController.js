@@ -79,7 +79,7 @@ var ServiceController = (function () {
     that.serviceCall = function (type, url, data, dataType, onSuccessCallback, onErrorCallback, redirectOnAuthError) {
 
         //By default, redirect the user to the login page on authentication error.
-        redirectOnAuthError = (typeof redirectOnAuthError === "undefined") ? true : redirectOnAuthError;
+        redirectOnAuthError = (redirectOnAuthError === undefined) ? true : redirectOnAuthError;
 
 
         if (AuthenticationModel.isUserAuthenticated()) {
@@ -97,8 +97,6 @@ var ServiceController = (function () {
         if (!data.client) {
             data.client = ConfigManager.getClientName();
         }
-
-        console.log("Initiating an API call for URL (" + ConfigManager.getServerEndpoint() + url + ") with the following input data: " + JSON.stringify(data));
 
         that.ajaxRequest({
             type     : type,
