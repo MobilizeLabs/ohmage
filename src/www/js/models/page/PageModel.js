@@ -20,6 +20,12 @@ var PageModel = function (pageName, pageTitle) {
     var topButtonLabel, topButtonCallback;
 
     /**
+     * The navigation buttons are added to the bottom of the rendered view and
+     * are usually used to go back to the main page, or go to another page.
+     */
+    var navigationButtonLabel, navigationButtonCallback;
+
+    /**
      * Stores a callback that is invoked before the page is rendered. This
      * callback can be used to fetch any page parameters for rendering. By
      * default, the method is set to immediately invoke the onSuccessCallback.
@@ -62,6 +68,19 @@ var PageModel = function (pageName, pageTitle) {
     that.removeTopButton = function () {
         topButtonLabel = null;
         topButtonCallback = null;
+    };
+
+    that.setNavigationButton = function (newNavigationButtonLabel, newNavigationButtonCallback) {
+        navigationButtonLabel = newNavigationButtonLabel;
+        navigationButtonCallback = newNavigationButtonCallback;
+    };
+
+    that.getNavigationButtonLabel = function () {
+        return navigationButtonLabel;
+    };
+
+    that.getNavigationButtonCallback = function () {
+        return navigationButtonCallback;
     };
 
     that.setView = function (newView) {

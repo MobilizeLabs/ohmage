@@ -24,7 +24,16 @@ var PageView = function (pageModel) {
         privacyLink.onclick = function () {
             PageController.openPrivacy();
         };
-        return pageModel.getView().render();
+
+        var renderedView = pageModel.getView().render(),
+            containerDiv = document.createElement('div');
+        containerDiv.appendChild(renderedView);
+
+        if (pageModel.getNavigationButtonLabel()) {
+            containerDiv.appendChild(mwf.decorator.SingleClickButton(pageModel.getNavigationButtonLabel(), pageModel.getNavigationButtonCallback()));
+        }
+
+        return containerDiv;
     };
 
     return that;

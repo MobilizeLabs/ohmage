@@ -4,5 +4,4 @@ Init.invokeOnReady(function () {
     pageModel.setTopButton("Go Back", PageController.goBack);
     pageModel.setView(PrivacyView);
     PageController.registerPage(pageModel);
-
 });
