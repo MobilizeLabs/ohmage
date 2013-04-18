@@ -286,8 +286,6 @@ var PageController = (function () {
             } else {
                 log.error("Unable to render page [$1] because the rendered object is invalid.", pageModel.getPageName());
             }
-
-
         });
     };
 

@@ -18,5 +18,11 @@ var PageViewService = (function () {
         });
     };
 
+    that.convertToDiv = function (responseValue) {
+        var divContainer = document.createElement('div');
+        divContainer.innerHTML = responseValue;
+        return divContainer;
+    };
+
     return that;
 }());

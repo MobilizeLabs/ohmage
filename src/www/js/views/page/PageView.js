@@ -15,11 +15,15 @@ var PageView = function (pageModel) {
 
     var headerTitle = document.getElementById("header-title");
     var homeLink = document.getElementById("header-home-icon");
+    var privacyLink = document.getElementById("footer-privacy-link");
 
     that.render = function () {
         mwf.decorator.TopButton(pageModel.getTopButtonName(), null, pageModel.getTopButtonCallback(), true);
         headerTitle.innerHTML = pageModel.getPageTitle();
         homeLink.onclick = PageController.goToRootPage;
+        privacyLink.onclick = function () {
+            PageController.openPrivacy();
+        };
         return pageModel.getView().render();
     };
 
