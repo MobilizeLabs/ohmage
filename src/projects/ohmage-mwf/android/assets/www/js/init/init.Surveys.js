@@ -1,23 +1,17 @@
-invokeOnReady(function(){
+Init.invokeOnReady(function () {
+    "use strict";
 
-    var surveyMenu = mwf.decorator.Menu("Available Surveys");
+    var pageModel = PageModel("surveys", "Available Surveys");
 
-    var campaigns = Campaigns.getInstalledCampaigns();
+    pageModel.setTopButton("Dashboard", function () {
+        PageController.openDashboard();
+    });
 
-    for(var i = 0; i < campaigns.length; i++){
-        if(campaigns[i].isRunning()){
-            campaigns[i].renderSurveyList(surveyMenu);    
-        }
-    }
+    pageModel.setNavigationButton("Campaigns", function () {
+        PageController.openInstalledCampaigns();
+    });
 
-    if(surveyMenu.size() == 0){
-        var noAvailableSurveysMenuItem = surveyMenu.addMenuLinkItem("No Available Surveys", null, "Please install a campaign, to view available surveys.");
-        TouchEnabledItemModel.bindTouchEvent(noAvailableSurveysMenuItem, noAvailableSurveysMenuItem, PageNavigation.openAvailableCampaignsView, "menu-highlight");
-    }
-
-    $("#surveys").append(surveyMenu);
-    $("#surveys").append(mwf.decorator.SingleClickButton("Upload Queue", PageNavigation.openUploadQueueView));
-
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView , true);
+    pageModel.setView(SurveysController.getView());
+    PageController.registerPage(pageModel);
 
 });

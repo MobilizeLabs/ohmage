@@ -2,39 +2,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>QUnit Tests</title>
+    <title>QUnit Tests</title>
 
-  <!-- Include QUnit Library -->
-  <link rel="stylesheet" href="/og/lib/qunit/css/qunit.css">
-  <script src="/og/lib/qunit/js/qunit.js"></script>
+    <!-- IMPORT JQUERY AND EXTENSIONS -->
+    <script type="text/javascript" src="../lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.extensions.js"></script>
 
-  <!-- Include JsHamcrest and JsMockito Library -->
-  <script src="/og/lib/jsmockito/jsmockito-1.0.4.js"></script>
-  <script src="/og/lib/jshamcrest/jshamcrest-0.5.2.js"></script>
-  <script type="text/javascript">
-      JsHamcrest.Integration.QUnit();
-      JsMockito.Integration.QUnit();
-  </script>
+    <!-- Include QUnit Library -->
+    <link rel="stylesheet" href="../lib/qunit/css/qunit.css">
+    <script type="text/javascript" src="../lib/qunit/js/qunit.js"></script>
 
-  <script src="/og/js/util/DeviceDetection.js"></script>
-  <script src="/og/test/util/DeviceDetectionTest.js"></script>
+    <!-- Include JsHamcrest and JsMockito Library -->
+    <script type="text/javascript" src="../lib/jsmockito/jsmockito-1.0.4.js"></script>
+    <script type="text/javascript" src="../lib/jshamcrest/jshamcrest-0.5.2.js"></script>
+    <script type="text/javascript">
+        JsHamcrest.Integration.QUnit();
+        JsMockito.Integration.QUnit();
+    </script>
 
-  <script src="/og/js/util/LocalMap.js"></script>
-  <script src="/og/test/util/LocalMapTest.js"></script>
+    <script type="text/javascript" src="../js/util/jstz.js"></script>
 
-  <script src="/og/js/util/UUIDGen.js"></script>
-  <script src="/og/test/util/UUIDGenTest.js"></script>
+    <script type="text/javascript" src="../js/util/Base64.js"></script>
 
-  <script src="/og/js/pegjs/ConditionalParser.js"></script>
-  <script src="/og/js/pegjs/peg-0.7.0.js"></script>
-  <script src="/og/test/pegjs/ConditionalParserTest.js"></script>
+    <script type="text/javascript" src="../js/util/AbstractEventPublisher.js"></script>
+    <script type="text/javascript" src="./util/AbstractEventPublisherTest.js"></script>
 
-  <script type="text/javascript" src="/og/js/util/LocalNotificationAdapter.js"></script>
+    <script type="text/javascript" src="../js/util/DeviceDetection.js"></script>
+    <script type="text/javascript" src="./util/DeviceDetectionTest.js"></script>
 
-  <script src="/og/js/models/reminders/ReminderModel.js"></script>
-  <script src="/og/test/models/reminders/ReminderModelTest.js"></script>
+    <script type="text/javascript" src="../js/util/ChecksumGen.js"></script>
+    <script type="text/javascript" src="./util/ChecksumGenTest.js"></script>
+
+    <script type="text/javascript" src="../js/util/LocalMap.js"></script>
+    <script type="text/javascript" src="./util/LocalMapTest.js"></script>
+
+    <script type="text/javascript" src="../js/util/Logger.js"></script>
+    <script type="text/javascript" src="./util/LoggerTest.js"></script>
+
+    <script type="text/javascript" src="../js/util/UUIDGen.js"></script>
+    <script type="text/javascript" src="./util/UUIDGenTest.js"></script>
+
+    <script type="text/javascript" src="../js/config/ConfigManager.js"></script>
+    <script type="text/javascript" src="./config/ConfigManagerTest.js"></script>
+
+    <script type="text/javascript" src="../js/config/ConfigManager.js"></script>
+    <script type="text/javascript" src="./config/ConfigManagerTest.js"></script>
+
+
+    <script type="text/javascript" src="../js/pegjs/ConditionalParser.js"></script>
+    <script type="text/javascript" src="../js/pegjs/peg-0.7.0.js"></script>
+    <script type="text/javascript" src="./pegjs/ConditionalParserTest.js"></script>
+
+    <script type="text/javascript" src="../js/util/LocalNotificationAdapter.js"></script>
+
+    <script type="text/javascript" src="../js/models/reminders/RemindersModel.js"></script>
+    <script type="text/javascript" src="./models/reminders/RemindersModelTest.js"></script>
+
+    <script type="text/javascript" src="../js/models/reminders/ReminderModel.js"></script>
+    <script type="text/javascript" src="./models/reminders/ReminderModelTest.js"></script>
+
+    <script type="text/javascript" src="../js/views/page/PageView.js"></script>
+    <script type="text/javascript" src="../js/models/page/PageModel.js"></script>
+    <script type="text/javascript" src="../js/models/page/PageStackModel.js"></script>
+    <script type="text/javascript" src="../js/controllers/page/PageController.js"></script>
+    <script type="text/javascript" src="./models/page/PageStackModelTest.js"></script>
+    <script type="text/javascript" src="./controllers/page/PageControllerTest.js"></script>
+
+    <script type="text/javascript" src="../js/service/campaigns/CampaignsMetadataService.js"></script>
+    <script type="text/javascript" src="../js/models/campaigns/CampaignModel.js"></script>
+    <script type="text/javascript" src="../js/models/campaigns/CampaignsModel.js"></script>
+    <script type="text/javascript" src="./models/campaigns/CampaignsModelTest.js"></script>
+
+    <script type="text/javascript" src="../js/models/surveys/SurveyModel.js"></script>
+    <script type="text/javascript" src="./models/campaigns/CampaignModelTest.js"></script>
+    
+    <script type="text/javascript" src="../js/models/auth/AuthenticationModel.js"></script>
+    <script type="text/javascript" src="./models/auth/AuthenticationModelTest.js"></script>
+    
+    <script type="text/javascript" src="../js/controllers/service/ServiceController.js"></script>
+    <script type="text/javascript" src="../js/service/auth/AuthenticationService.js"></script>
+    <script type="text/javascript" src="./service/auth/AuthenticationServiceTest.js"></script>
+
+    <script type="text/javascript" src="../js/models/surveys/AbstractSurveyItemModel.js"></script>
+    <script type="text/javascript" src="../js/models/prompts/PromptModel.js"></script>
+    <script type="text/javascript" src="../js/models/prompts/CustomPromptPropertyVault.js"></script>
+    <script type="text/javascript" src="./models/prompts/CustomPromptPropertyVaultTest.js"></script>
+    <script type="text/javascript" src="./models/prompts/PromptModelTest.js"></script>
+
+    <script type="text/javascript" src="../js/models/surveys/AbstractSurveyItemModel.js"></script>
+    <script type="text/javascript" src="./models/surveys/AbstractSurveyItemModel.js"></script>
+
+    <script type="text/javascript" src="../js/models/surveys/SurveyModel.js"></script>
+    <script type="text/javascript" src="./models/surveys/SurveyModelTest.js"></script>
+
+    <script type="text/javascript" src="../js/models/surveys/ImageStoreModel.js"></script>
+    <script type="text/javascript" src="../js/models/surveys/SurveyResponseModel.js"></script>
+    <script type="text/javascript" src="./models/surveys/SurveyResponseModelTest.js"></script>
+
+    <script type="text/javascript" src="../js/models/surveys/SurveyResponseStoreModel.js"></script>
+    <script type="text/javascript" src="./models/surveys/SurveyResponseStoreModelTest.js"></script>
+
+    <script type="text/javascript" src="./models/surveys/ImageStoreModelTest.js"></script>
+
 
 </head>
 <body>

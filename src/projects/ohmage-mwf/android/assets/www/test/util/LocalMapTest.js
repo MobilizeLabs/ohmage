@@ -1,22 +1,37 @@
-module( "util.LocalMap", {
-  setup: function() {
-    //No setup required.
-  },
-  teardown: function() {
-    LocalMap('test-namespace').deleteNamespace();
-  }
+module("util.LocalMap", {
+    setup: function () {
+        "use strict";
+        fixture.localStorageBackup = {};
+        var key;
+        for (key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+                fixture.localStorageBackup[key] = localStorage[key];
+            }
+        }
+    },
+    teardown: function () {
+        "use strict";
+        LocalMap('test-namespace').deleteNamespace();
+        var key;
+        for (key in fixture.localStorageBackup) {
+            if (fixture.localStorageBackup.hasOwnProperty(key)) {
+                localStorage[key] = fixture.localStorageBackup[key];
+            }
+        }
+    }
 });
 
-test( "Test LocalMap()", function() {
-
+test("Test LocalMap()", function () {
+    "use strict";
     ///
     var map = LocalMap('test-namespace');
     ///
 
-    ok((typeof(map) !== "undefined"), "Should be able to construct an instance of LocalMap. Check your library paths." );
+    ok(map !== undefined, "Should be able to construct an instance of LocalMap. Check your library paths.");
 });
 
-test( "Test set()", function() {
+test("Test set()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     ///
@@ -30,7 +45,8 @@ test( "Test set()", function() {
     ok(map.isSet("var-3"), "A variable should be successful set.");
 });
 
-test( "Test get()", function() {
+test("Test get()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     map.set("var-1", "val-1");
@@ -44,13 +60,14 @@ test( "Test get()", function() {
     var var4 = map.get("var-4");
     //
 
-    equal(var1, "val-1", "A set variable should be succesfully retreived.");
-    equal(var2, "val-2", "A set variable should be succesfully retreived.");
-    equal(var3, "val-3", "A set variable should be succesfully retreived.");
-    equal(var4, null, "A variable that was not set should not be retreived.");
+    equal(var1, "val-1", "A set variable should be successfully retrieved.");
+    equal(var2, "val-2", "A set variable should be successfully retrieved.");
+    equal(var3, "val-3", "A set variable should be successfully retrieved.");
+    equal(var4, null, "A variable that was not set should not be retrieved.");
 });
 
-test( "Test getMap()", function() {
+test("Test getMap()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     map.set("var-1", "val-1");
@@ -61,12 +78,13 @@ test( "Test getMap()", function() {
     var obj = map.getMap();
     //
 
-    ok(typeof(obj["var-1"]) !== "undefined", "Returned object should include the set variables.");
-    ok(typeof(obj["var-2"]) !== "undefined", "Returned object should include the set variables.");
-    ok(typeof(obj["var-3"]) !== "undefined", "Returned object should include the set variables.");
+    ok(obj["var-1"] !== undefined, "Returned object should include the set variables.");
+    ok(obj["var-2"] !== undefined, "Returned object should include the set variables.");
+    ok(obj["var-3"] !== undefined, "Returned object should include the set variables.");
 });
 
-test( "Test length()", function() {
+test("Test length()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     map.set("var-1", "val-1");
@@ -80,7 +98,8 @@ test( "Test length()", function() {
     equal(length, 3, "The function length() should return the number of set elements.");
 });
 
-test( "Test release()", function() {
+test("Test release()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     map.set("var-1", "val-1");
@@ -96,7 +115,8 @@ test( "Test release()", function() {
     ok(map.isSet('var-2'), "Not released variables should still be set.");
 });
 
-test( "Test exists()", function() {
+test("Test exists()", function () {
+    "use strict";
     LocalMap('test-namespace');
 
     ///
@@ -106,7 +126,8 @@ test( "Test exists()", function() {
     ok(namespaceExists, "Constructed map namespace should exist.");
 });
 
-test( "Test deleteNamespace()", function() {
+test("Test deleteNamespace()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     ///
@@ -116,7 +137,8 @@ test( "Test deleteNamespace()", function() {
     ok(!LocalMap.exists('test-namespace'), "Deleted namespace should not exist.");
 });
 
-test( "Test erase()", function() {
+test("Test erase()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
 
     map.set("var-1", "val-1");
@@ -132,7 +154,8 @@ test( "Test erase()", function() {
     ok(!map.isSet('var-2'), "Erased map should not have any set variables.");
 });
 
-test( "Test importMap()", function() {
+test("Test importMap()", function () {
+    "use strict";
     var map = LocalMap('test-namespace');
     map.erase();
 
@@ -151,7 +174,9 @@ test( "Test importMap()", function() {
     ok(map.isSet('var2'), "An imported variable var2 should be set.");
 });
 
-test( "Test destroy()", function() {
+
+test("Test destroy()", function () {
+    "use strict";
     LocalMap('test-namespace-1');
     LocalMap('test-namespace-2');
 
@@ -161,4 +186,5 @@ test( "Test destroy()", function() {
 
     ok(!LocalMap.exists('test-namespace-1'), "Destroyed localStorage should not have any namespaces.");
     ok(!LocalMap.exists('test-namespace-1'), "Destroyed localStorage should not have any namespaces.");
+
 });

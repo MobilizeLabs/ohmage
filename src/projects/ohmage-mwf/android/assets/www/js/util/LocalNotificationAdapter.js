@@ -1,51 +1,52 @@
-var LocalNotificationAdapter = (function(){
+var LocalNotificationAdapter = (function () {
+    "use strict";
+    var that = {};
 
-    var self = {};
-
-    var isLocalNotificationAvailable = function(){
-        return typeof plugins !== "undefined" && typeof(plugins.localNotification) !== "undefined";
+    var isLocalNotificationAvailable = function () {
+        return typeof plugins !== "undefined" && plugins.localNotification !== undefined;
     };
 
-    self.add = function(options){
+    that.add = function (options) {
         if (isLocalNotificationAvailable()) {
-            if(DeviceDetection.isDeviceAndroid()){
+            if (DeviceDetection.isDeviceAndroid()) {
                 plugins.localNotification.add({
                     date        : options.date,
-                    message     : "You have a pending survey.",//options.message,
+                    message     : "You have a pending survey.",
                     ticker      : "You have a pending survey.",
                     repeatDaily : options.repeatDaily,
                     id          : options.id
                 });
-            }else if(DeviceDetection.isDeviceiOS()){
+            } else if (DeviceDetection.isDeviceiOS()) {
                 plugins.localNotification.add({
                     date        : options.date,
                     message     : options.message,
                     background  : "goToPendingSurveys",
-                    badge       : 1,
+                    badge       : 0,
                     id          : options.id,
-                    sound       :'horn.caf'
+                    sound       : 'horn.caf'
                 });
             }
         }
     };
 
-    self.cancel = function(id){
+    that.cancel = function (id) {
         if (isLocalNotificationAvailable()) {
             console.log("LocalNotificationAdapter: cancel(" + id + ")");
             plugins.localNotification.cancel(id);
         }
     };
 
-    self.cancelAll = function(){
+    that.cancelAll = function () {
         if (isLocalNotificationAvailable()) {
             console.log("LocalNotificationAdapter: cancelAll()");
             plugins.localNotification.cancelAll();
         }
     };
 
-    return self;
-})();
+    return that;
+}());
 
-function goToPendingSurveys(){
+function goToPendingSurveys() {
+    "use strict";
     window.location = "pending-surveys.html";
 }

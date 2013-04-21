@@ -24,8 +24,13 @@ var mwf = mwf || function (){};
 //Create a namespace for mwf.decorator.
 mwf.decorator = function(){};
 
+
 /**
- * Returns true if the current device suppor touch events.
+ * TODO: TOUCH RELATED STUFF SHOULD BE REMOVED!
+ */
+
+/**
+ * Returns true if the current device supports touch events.
  */
 mwf.decorator.touchEnabled = function(){
     return navigator.userAgent.match(/(iPhone)/) !== null;
@@ -46,7 +51,17 @@ mwf.decorator.attachTouchHandler = function(obj, callback){
         obj.onclick = _callback;
     }
 
-}
+};
+
+mwf.decorator.removeEmptyAttributes = function( obj ) {
+    for( var i = 0; i < obj.attributes.length; i++ ) {
+        if( obj.attributes[i].nodeValue === "" ) {
+            obj.removeAttribute( obj.attributes[i].nodeName );
+        }
+    }
+    return obj;
+};
+
 /**
  * Sets or unsets CSS classes for an object. Here, definition of 'set' is a
  * logical equivalent of add a class and 'unset' is equivalent to remove a

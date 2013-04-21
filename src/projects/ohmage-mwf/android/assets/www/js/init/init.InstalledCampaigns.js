@@ -1,13 +1,24 @@
-invokeOnReady(function(){
+Init.invokeOnReady(function () {
+    "use strict";
 
-    var onSuccess = function(){
-        $('#campaigns').append(Campaigns.render(true));
-    };
+    var pageModel = PageModel("installedCampaigns", "My Campaigns");
+    pageModel.setTopButton("Add Campaign", function () {
+        PageController.openAvailableCampaigns();
+    });
 
-    var onError = function(){
-        showMessage("Unable to download campaigns. Please try again later.")
-    }
+    pageModel.setNavigationButton("Dashboard", function () {
+        PageController.openDashboard();
+    });
 
-    Campaigns.download(false, onSuccess, onError);
+    pageModel.setPageInitializer(function (onSuccessCallback) {
+        if (CampaignsModel.getInstalledCampaignsCount() === 0) {
+            PageController.replaceCurrentPage("availableCampaigns");
+        } else {
+            onSuccessCallback();
+        }
+    });
+
+    pageModel.setView(CampaignsController.getInstalledCampaignsView());
+    PageController.registerPage(pageModel);
 
 });

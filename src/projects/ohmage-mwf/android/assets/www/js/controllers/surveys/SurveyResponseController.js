@@ -1,14 +1,16 @@
-var SurveyResponseController = function(surveyResponseModel){
-    var self = {};
-    
-    
-    var campaign = new Campaign(surveyResponseModel.getCampaignURN());
-    var survey = campaign.getSurvey(surveyResponseModel.getSurveyID());
-    
-    
-    self.render = function(){
-        return new SurveyResponseView(self).render();
-    };
+/**
+ * @author Zorayr Khalapyan
+ * @version 4/15/13
+ */
+var SurveyResponseController = function (surveyResponseKey) {
+    "use strict";
+    var that = {};
+
+    var surveyResponseModel = SurveyResponseStoreModel.restoreSurveyResponse(surveyResponseKey);
+
+    var campaignModel = CampaignsModel.getCampaign(surveyResponseModel.getCampaignURN());
+
+    var surveyModel = campaignModel.getSurvey(surveyResponseModel.getSurveyID());
 
     /**
      * Button callback that will initialize a survey response upload. If the
@@ -16,44 +18,51 @@ var SurveyResponseController = function(surveyResponseModel){
      * the entire queue is displayed. If unsuccessful, an error message is
      * displayed and the user has the option to retry.
      */
-    self.uploadSurveyResponseCallback = function() {
-        var onSuccess = function(response){
-            showMessage("Successfully uploaded your survey response.", function(){
-                SurveyResponseModel.deleteSurveyResponse(surveyResponseModel);
-                PageNavigation.openUploadQueueView();
+    var uploadSurveyResponseCallback = function () {
+        var onSuccess = function (response) {
+            MessageDialogController.showMessage("Successfully uploaded your survey response.", function () {
+                SurveyResponseStoreModel.deleteSurveyResponse(surveyResponseModel);
+                PageController.openQueue();
             });
-        };
-        var onError = function(error){
-            showMessage("Unable to upload survey response at this time. Please try again later.");
-        };
-        (new SurveyResponseUploader(survey, surveyResponseModel)).upload(onSuccess, onError);
+        },
+            onError = function (error) {
+                MessageDialogController.showMessage("Unable to upload survey response at this time. Please try again later.");
+            };
+        (SurveyResponseUploadService(surveyModel, surveyResponseModel)).upload(onSuccess, onError, ConfigManager.getGpsEnabled());
     };
 
     /**
      * Button handler for deleting an individual survey response. The user
      * will be prompted for confirmation before deleting the survey response.
      */
-    self.deleteSurveyResponseCallback = function(){
+    var deleteSurveyResponseCallback = function () {
         var message = "Are you sure you would like to delete your response?";
-        showConfirm(message, function(yes){
-            if(yes){
-                SurveyResponseModel.deleteSurveyResponse(surveyResponseModel);
-                PageNavigation.openUploadQueueView();
+        MessageDialogController.showConfirm(message, function (yesDeleteSurveyResponse) {
+            if (yesDeleteSurveyResponse) {
+                SurveyResponseStoreModel.deleteSurveyResponse(surveyResponseModel);
+                PageController.openQueue();
             }
         }, "Yes,No");
     };
-    
-    self.getSurvey = function(){
-        return survey;
+
+    that.getSurvey = function () {
+        return surveyModel;
     };
-    
-    self.getSurveyResponseModel = function(){
+
+    that.getSurveyResponseModel = function () {
         return surveyResponseModel;
     };
-    
-    self.getCampaign = function(){
-        return campaign;
+
+    that.getCampaign = function () {
+        return campaignModel;
     };
-    
-    return self;
+
+    that.getView = function () {
+        var surveyResponseView = SurveyResponseView(that);
+        surveyResponseView.deleteSurveyResponseCallback = deleteSurveyResponseCallback;
+        surveyResponseView.uploadSurveyResponseCallback = uploadSurveyResponseCallback;
+        return surveyResponseView;
+    };
+
+    return that;
 };

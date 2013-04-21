@@ -1,5 +1,13 @@
-invokeOnReady(function(){
-    var controller = new ReminderController(PageNavigation.getPageParameter('uuid'));
-    $("#view-container").append(controller.render());
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
+Init.invokeOnReady(function () {
+    "use strict";
+
+    var pageModel = PageModel("reminder");
+    pageModel.setTopButton("Dashboard", PageController.openDashboard);
+    pageModel.setPageInitializer(function (onSuccessCallback) {
+        var reminderModelUUID = PageController.getPageParameter('reminderModelUUID');
+        pageModel.setView(ReminderController(reminderModelUUID).getView());
+        onSuccessCallback();
+    });
+    PageController.registerPage(pageModel);
+
 });

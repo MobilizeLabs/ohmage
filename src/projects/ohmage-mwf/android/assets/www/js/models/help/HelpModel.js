@@ -1,12 +1,13 @@
-var HelpModel = function(){
-    var self = {};
+var HelpModel = function () {
+    "use strict";
+    var that = {};
     var helpSections = [
         {
-         title:'Using the Dashboard',
-         text: 'Dashboard is the main page of the application. It allows \n\
-                quick access to campaigns, surveys, the upload queue, help \n\
-                tutorials and also allows users to log out.',
-         img:  'img/screenshots/dashboard.png'
+            title : 'Using the Dashboard',
+            text  : 'Dashboard is the main page of the application. It allows \n\
+                    quick access to campaigns, surveys, the upload queue, help \n\
+                    tutorials and also allows users to log out.',
+            img   : 'img/screenshots/dashboard.png'
         },
 
         {
@@ -44,15 +45,15 @@ var HelpModel = function(){
         }
 
     ];
-    
-    self.getAllSections = function(){
+
+    that.getAllSections = function () {
         return helpSections;
     };
-    
-    self.getHelpSection = function(index){
+
+    that.getHelpSection = function (index) {
         return helpSections[index];
     };
-    
-    return self;
-    
+
+    return that;
+
 };
