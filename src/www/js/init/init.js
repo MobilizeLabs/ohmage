@@ -11,6 +11,8 @@ var Init = (function () {
 
     var that = {};
 
+    var log = Logger("Init");
+
     /**
      * After the first successful vote, this flag will be set to true, and
      * remaining invocations to invokeOnReady will automatically be invoked
@@ -26,18 +28,29 @@ var Init = (function () {
         }
     };
 
+    /**
+     * If the user is not authorized to view this page (pages that do not required authentication are set by the
+     * ConfigManager), then opens the authentication page.
+     */
     var authCheckpoint = function () {
+        log.info("Hit authentication checkpoint: checking to see if the user is allowed to see this page.");
         var pageName = PageController.getCurrentPageName();
         if (!ConfigManager.isOpenPage(pageName) && PageController.getCurrentPageName() !== "auth" && !AuthenticationModel.isUserAuthenticated()) {
+            log.info("User did not pass authentication checkpoint - redirecting to login page.");
             PageController.openAuth();
+        } else {
+            log.info("User passed checkpoint for this page [$1].", pageName);
         }
     };
 
     var initializeCheckpoint = function () {
+        log.info("Initializing authentication checkpoint. Authentication checkpoint will be triggered on each page load.");
         PageController.subscribeToPageLoadedEvent(function () {
             if (PageController.isPageRegistered("auth")) {
+                log.info("Authentication page is already registered, so jumping to authentication checkpoint.");
                 authCheckpoint();
             } else {
+                log.info("Authentication page is not registered, so waiting until authentication page is loaded to jump to the checkpoint.");
                 PageController.subscribeToPageRegisteredEvent(function (pageName) {
                     if (pageName === "auth") {
                         authCheckpoint();
