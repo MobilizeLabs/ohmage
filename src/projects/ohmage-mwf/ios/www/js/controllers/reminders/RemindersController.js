@@ -1,11 +1,30 @@
-var RemindersController = function(){
-    var self = {};
-    
-    self.render = function(){
-        var reminders = ReminderModel.getCurrentReminders();
-        var view = new RemindersView(reminders);
-        return view.render();
+/**
+ * @author Zorayr Khalapyan
+ * @version 4/16/13
+ * @constructor
+ */
+var RemindersController = (function () {
+    "use strict";
+    var that = {};
+
+    var remindersView = null;
+
+    var newReminderCallback = function () {
+        PageController.openReminder();
     };
-    
-    return self;
-};
+
+    var editReminderCallback = function (reminderModel) {
+        PageController.openReminder({reminderModelUUID : reminderModel.getUUID()});
+    };
+
+    that.getView = function () {
+        if (remindersView === null) {
+            remindersView = RemindersView();
+            remindersView.newReminderCallback = newReminderCallback;
+            remindersView.editReminderCallback = editReminderCallback;
+            return remindersView;
+        }
+    };
+
+    return that;
+}());

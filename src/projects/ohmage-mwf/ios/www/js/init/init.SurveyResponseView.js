@@ -1,8 +1,18 @@
-invokeOnReady(function(){
-    var surveyKey = PageNavigation.getPageParameter('survey-key');
-    if(surveyKey === null){ PageNavigation.goBack(); }
-    var surveyResponse = SurveyResponseModel.restoreSurveyResponse(surveyKey);
-    var surveyResponseController = new SurveyResponseController(surveyResponse);
-    document.getElementById("survey-response-view").appendChild(surveyResponseController.render());
-    mwf.decorator.TopButton("Upload Queue", null, PageNavigation.openUploadQueueView, true);
+Init.invokeOnReady(function () {
+    "use strict";
+
+    var pageModel = PageModel("surveyResponse", "Survey Response View");
+    pageModel.setTopButton("Upload Queue", function () {
+        PageController.openQueue();
+    });
+    pageModel.setPageInitializer(function (onSuccessCallback) {
+        var surveyResponseKey = PageController.getPageParameter('surveyResponseKey'),
+            surveyResponseController = SurveyResponseController(surveyResponseKey);
+        pageModel.setView(surveyResponseController.getView());
+        onSuccessCallback();
+    });
+
+    PageController.registerPage(pageModel);
+
 });
+

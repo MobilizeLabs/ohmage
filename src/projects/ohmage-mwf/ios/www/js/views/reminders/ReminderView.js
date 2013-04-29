@@ -1,170 +1,170 @@
-var ReminderView = function(reminder, controller){
-   
-    var self = this;
-    
-    var createSuppressionWindowSelectInput = function(){
-        var select = document.createElement('select');
-        for(var i = 1; i <= 24; i++){
+/**
+ * @author Zorayr Khalapyan
+ * @version 4/16/13
+ * @constructor
+ */
+var ReminderView = function (reminderModel) {
+    "use strict";
+    var that = AbstractView();
+
+    var createSuppressionWindowSelectInput = function () {
+        var select = document.createElement('select'),
+            i;
+        select.className = "suppression-window-select";
+        for (i = 1; i <= 24; i += 1) {
             var option = document.createElement('option');
             option.value = i;
-            option.innerHTML = i + " hour" + ((i != 1) ? "s" : "");
+            option.innerHTML = i + " hour" + ((i !== 1) ? "s" : "");
             select.appendChild(option);
-            
-            if(i === reminder.getSupressionWindow()){
+
+            if (i === reminderModel.getSuppressionWindow()) {
                 option.selected = "selected";
             }
         }
-        select.getInput = function(){
+        select.getInput = function () {
             return select.options[select.selectedIndex].value;
         };
         return select;
     };
 
-    var createReminderRecurrenceSelectInput = function(){
-        var select = document.createElement('select');
-        for(var i = 1; i < 31; i++){
-            var option = document.createElement('option');
+    var createReminderRecurrenceSelectInput = function () {
+        var select = document.createElement('select'),
+            option,
+            i;
+        select.className = "recurrence-select";
+        for (i = 1; i < 31; i += 1) {
+            option = document.createElement('option');
             option.value = i;
             option.innerHTML = i;
-            select.appendChild(option);     
-            
-            if(i === reminder.getRecurrence()){
+            select.appendChild(option);
+
+            if (i === reminderModel.getRecurrence()) {
                 option.selected = "selected";
             }
         }
-        select.getInput = function(){
+        select.getInput = function () {
             return select.options[select.selectedIndex].value;
         };
         return select;
     };
-    
-   
-    var createSurveySelectInput = function(){
-        
-       var createOption = function(title, surveyID, campaignURN){
-            var option = document.createElement('option');
-            option.survey = {title: title, surveyID: surveyID, campaignURN: campaignURN};
-            option.innerHTML = title;
-            return option;
-        };
-        
-        var select = document.createElement('select');
-        var campaigns = Campaigns.getInstalledCampaigns();
+
+    var createOption = function (title, surveyID, campaignURN) {
+        var option = document.createElement('option');
+        option.survey = {title: title, surveyID: surveyID, campaignURN: campaignURN};
+        option.innerHTML = title;
+        return option;
+    };
+
+    var createSurveySelectInput = function () {
+
+        var select = document.createElement('select'),
+            campaignModels,
+            campaignURN,
+            surveys,
+            surveyID,
+            survey,
+            option,
+            i,
+            j;
+        select.className = "reminder-survey-select";
+
+        campaignModels = CampaignsModel.getInstalledCampaigns();
+
         select.appendChild(createOption("Select a Survey to Continue"));
 
-        for(var i = 0; i < campaigns.length; i++){
-            if(campaigns[i].isRunning()){
-                var surveys = campaigns[i].getSurveys();
-                var campaignURN = campaigns[i].getURN();
-                for(var j = 0; j < surveys.length; j++){
-                    var survey = surveys[j];
-                    var option = createOption(survey.title, survey.id, campaignURN);
-                    if(reminder.getCampaignURN() === campaignURN && reminder.getSurveyID() === survey.id){
-                        option.selected = "selected";
+        for (campaignURN in campaignModels) {
+            if (campaignModels.hasOwnProperty(campaignURN)) {
+                if (campaignModels[campaignURN].isRunning()) {
+                    surveys = campaignModels[campaignURN].getSurveys();
+                    for (surveyID in surveys) {
+                        if (surveys.hasOwnProperty(surveyID)) {
+                            survey = surveys[surveyID];
+                            option = createOption(survey.getTitle(), surveyID, campaignURN);
+                            if (reminderModel.getCampaignURN() === campaignURN && reminderModel.getSurveyID() === surveyID) {
+                                option.selected = "selected";
+                            }
+                            select.appendChild(option);
+                        }
+
                     }
-                    select.appendChild(option);
                 }
             }
+
         }
-        
-        select.getInput = function(){
+
+        select.getInput = function () {
             return select.options[select.selectedIndex].survey;
         };
         return select;
     };
 
-    var createTimePickerInput = function(){
-        var date = reminder.getDate();
-        if(date === null){
+    var createTimePickerInput = function () {
+        var date = reminderModel.getDate(),
+            dateTimePicker,
+            timePicker;
+        if (date === null) {
             date = new Date();
             date.setTime(date.getTime() + 10 * 60 * 1000);
         }
-        var dateTimePicker = new DateTimePicker();
-        var timePicker = dateTimePicker.createTimePicker(date);
+        dateTimePicker = new DateTimePicker();
+        timePicker = dateTimePicker.createTimePicker(date);
+        timePicker.className = timePicker.className + " time-picker-input";
         return timePicker;
     };
-    
-    var createExcludeWeekendsChecbkoxInput = function(){
-        
-        
+
+    var createExcludeWeekendsCheckboxInput = function () {
+
         var checkbox = document.createElement('input');
         var id = UUIDGen.generate();
         checkbox.setAttribute('type', 'checkbox');
         checkbox.setAttribute('id', id);
-        if(reminder.excludeWeekends()){
+        if (reminderModel.excludeWeekends()) {
             checkbox.checked = "checked";
         }
-        
+
         var label = document.createElement('label');
         label.innerHTML = "Exclude Weekends: ";
         label.setAttribute("for", id);
-        
+
         var container = document.createElement('div');
         container.style.textAlign = "center";
         container.appendChild(label);
         container.appendChild(checkbox);
-        container.excludeWeekends = function(){
+        container.excludeWeekends = function () {
             return checkbox.checked;
         };
         return container;
     };
-    
-    var cancel = function(){
-        PageNavigation.openRemindersView();
-    };
-    
-    var save = function(surveySelect, timePicker, suppressionSelect, recurrenceSelect, weekendsCheckbox){
-       return function(){
-            if(surveySelect.selectedIndex === 0){
-                alert("Please select a survey to add a reminder.");
+
+    var saveCallbackClosure = function (surveySelect, timePicker, suppressionSelect, recurrenceSelect, weekendsCheckbox) {
+        return function () {
+
+            if (surveySelect.selectedIndex === 0) {
+                MessageDialogController.showMessage("Please select a survey to add a reminder.");
                 return;
             }
-            
-            var survey = surveySelect.getInput();            
-            var date = new Date();
+
+            var survey = surveySelect.getInput(),
+                date = new Date(),
+                suppression = suppressionSelect.getInput(),
+                recurrences = recurrenceSelect.getInput(),
+                excludeWeekends = weekendsCheckbox.excludeWeekends();
+
             date.setHours(timePicker.getHours());
             date.setMinutes(timePicker.getMinutes());
-            console.log("time picker getMinutes() -- " + timePicker.getMinutes());
-            console.log("date getMinutes() -- " + date.getMinutes());
-            var supression = suppressionSelect.getInput();
-            var recurrences = recurrenceSelect.getInput();
-            var excludeWeekends = weekendsCheckbox.excludeWeekends();
-            
-            controller.save( survey.campaignURN, 
-                             survey.surveyID, 
-                             survey.title, 
-                             date, 
-                             supression, 
-                             recurrences,
-                             excludeWeekends
-                           );
-            
-            PageNavigation.openRemindersView();
 
-       };
-
-    };
-    
-    
-    var deleteReminderCallback = function(){        
-        var confirmMessage = "Are you sure you would like to delete the reminder for " + reminder.getTitle() + "?";
-        var callback = function(yes){
-            if(yes){
-                reminder.deleteReminder();
-                PageNavigation.openRemindersView();
-            }
+            that.saveReminderButtonCallback(survey.campaignURN, survey.surveyID, survey.title, date, suppression, recurrences, excludeWeekends);
         };
-        showConfirm(confirmMessage, callback, "Yes,No");
+
     };
-    
-    self.render = function(){
-        var timePicker = createTimePickerInput();
-        var surveySelect = createSurveySelectInput();    
-        var suppressionSelect = createSuppressionWindowSelectInput();
-        var recurrenceSelect = createReminderRecurrenceSelectInput();
-        var weekendsCheckbox = createExcludeWeekendsChecbkoxInput();
-        
-        var inputs = mwf.decorator.Form("Create New Reminder");
+
+    that.render = function () {
+        var timePicker = createTimePickerInput(),
+            surveySelect = createSurveySelectInput(),
+            suppressionSelect = createSuppressionWindowSelectInput(),
+            recurrenceSelect = createReminderRecurrenceSelectInput(),
+            weekendsCheckbox = createExcludeWeekendsCheckboxInput(),
+            inputs = mwf.decorator.Form("Create New Reminder");
         inputs.addLabel("Reminder Survey");
         inputs.addItem(surveySelect);
         inputs.addLabel("Select Time");
@@ -175,21 +175,24 @@ var ReminderView = function(reminder, controller){
         inputs.addItem(recurrenceSelect);
         inputs.addLabel("Preferences");
         inputs.addItem(weekendsCheckbox);
-        
-        var saveCallback = save(surveySelect, timePicker, suppressionSelect, recurrenceSelect, weekendsCheckbox);
+
+        var saveCallback = saveCallbackClosure(surveySelect, timePicker, suppressionSelect, recurrenceSelect, weekendsCheckbox);
         var actions = document.createElement('div');
-        actions.appendChild(mwf.decorator.DoubleClickButton("Cancel", cancel, "Save", saveCallback));
-        
-        if(reminder.isSaved()){
-            actions.appendChild(mwf.decorator.SingleClickButton("Delete Reminder", deleteReminderCallback));    
+        actions.appendChild(mwf.decorator.DoubleClickButton("Cancel", that.cancelButtonCallback, "Save", saveCallback));
+
+        if (reminderModel.isSaved()) {
+            actions.appendChild(mwf.decorator.SingleClickButton("Delete Reminder", that.deleteReminderButtonCallback));
         }
-        
+
         var container = document.createElement('div');
         container.appendChild(inputs);
         container.appendChild(actions);
         return container;
-        
+
     };
-   
-    return self;
+
+    that.cancelButtonCallback = function () {};
+    that.saveReminderButtonCallback = function (campaignURN, surveyID, title, date, suppressionWindow, recurrences, excludeWeekends) {};
+    that.deleteReminderButtonCallback = function () {};
+    return that;
 };

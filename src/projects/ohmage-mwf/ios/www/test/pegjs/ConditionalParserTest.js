@@ -14,11 +14,28 @@ module( "pegjs.ConditionalParser", {
           'number2' : 2
 
       };
+      
+      fixture.complexData = {};
+      fixture.complexCondition = "((Sexacts == 1) and (Sexcasual > 1)) or ((Sexacts == 2) and (Sexcasual > 2)) or ((Sexacts == 3) and (Sexcasual > 3)) or ((Sexacts == 4) and (Sexcasual > 4)) or ((Sexacts == 5) and (Sexcasual > 5))";// or ((Sexacts == 6) and (Sexcasual > 6));// or ((Sexacts == 7) and (Sexcasual > 7)) or ((Sexacts == 8) and (Sexcasual > 8)) or ((Sexacts == 9) and (Sexcasual > 9)) or ((Sexacts == 10) and (Sexcasual > 10)) or ((Sexacts == 11) and (Sexcasual > 11)) or ((Sexacts == 12) and (Sexcasual > 12)) or ((Sexacts == 13) and (Sexcasual > 13)) or ((Sexacts == 14) and (Sexcasual > 14)) or ((Sexacts == 15) and (Sexcasual > 15)) or ((Sexacts == 16) and (Sexcasual > 16)) or ((Sexacts == 17) and (Sexcasual > 17)) or ((Sexacts == 18) and (Sexcasual > 18)) or ((Sexacts == 19) and (Sexcasual > 19)) or ((Sexacts == 20) and (Sexcasual > 20)) or ((Sexacts == 21) and (Sexcasual > 21)) or ((Sexacts == 22) and (Sexcasual > 22)) or ((Sexacts == 23) and (Sexcasual > 23)) or ((Sexacts == 24) and (Sexcasual > 24)) or ((Sexacts == 25) and (Sexcasual > 25)) or ((Sexacts == 26) and (Sexcasual > 26)) or ((Sexacts == 27) and (Sexcasual > 27)) or ((Sexacts == 28) and (Sexcasual > 28)) or ((Sexacts == 29) and (Sexcasual > 29)) or ((Sexacts == 30) and (Sexcasual > 30)) or ((Sexacts == 31) and (Sexcasual > 31)) or ((Sexacts == 32) and (Sexcasual > 32)) or ((Sexacts == 33) and (Sexcasual > 33)) or ((Sexacts == 34) and (Sexcasual > 34)) or ((Sexacts == 35) and (Sexcasual > 35)) or ((Sexacts == 36) and (Sexcasual > 36)) or ((Sexacts == 37) and (Sexcasual > 37)) or ((Sexacts == 38) and (Sexcasual > 38)) or ((Sexacts == 39) and (Sexcasual > 39)) or ((Sexacts == 40) and (Sexcasual > 40)) or ((Sexacts == 41) and (Sexcasual > 41)) or ((Sexacts == 42) and (Sexcasual > 42)) or ((Sexacts == 43) and (Sexcasual > 43)) or ((Sexacts == 44) and (Sexcasual > 44)) or ((Sexacts == 45) and (Sexcasual > 45)) or ((Sexacts == 46) and (Sexcasual > 46)) or ((Sexacts == 47) and (Sexcasual > 47)) or ((Sexacts == 48) and (Sexcasual > 48)) or ((Sexacts == 49) and (Sexcasual > 49)) or ((Sexacts == 50) and (Sexcasual > 50))";
+      
   },
   teardown: function() {
       delete fixture.data;
+      delete fixture.complexData;
+      delete fixture.complexCondition;
   }
 });
+
+test( "Test complex conditional statement with empty data set.", function() {
+   
+   ///
+   var result = ConditionalParser.parse( fixture.complexCondition, { Sexacts : 1, Sexcasual : 3} );
+   ///
+   
+   ok (!result);
+   
+});
+
 
 test( "Test a == a, with text : true", function() {
 
@@ -426,3 +443,4 @@ test( "Test (((a == a) and ((b == b) or (c == d))) or (c == c)) and (((a == a) a
 
     ok(result, "Long expressions with nested parenthetical expressions should be allowed." );
 });
+

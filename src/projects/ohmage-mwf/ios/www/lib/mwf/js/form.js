@@ -14,8 +14,7 @@
  *
  */
 
-mwf.decorator.Form = function(title)
-{
+mwf.decorator.Form = function (title) {
 
     /**
      * A CSS class name that indicates the first element in a list of elements.
@@ -37,30 +36,40 @@ mwf.decorator.Form = function(title)
     mwf.decorator.addAttributes(form, attributes);
 
     /**
+     * Disables the default submit behavior and invokes the specified callback.
+     * @param onSubmitCallback The callback to be invoked
+     */
+    form.setOnSubmitCallback = function (onSubmitCallback) {
+        form.onsubmit = function (e) {
+            e.preventDefault();
+            if (onSubmitCallback) {
+                onSubmitCallback();
+            }
+            return false;
+        };
+    };
+
+    /**
      * Sets the title of this form. If the specified title is null or
      * undefined, then the form's title, if it exists, will be removed.
      *
      * @param title The title to set.
      */
-    form.setTitle = function( title ) {
+    form.setTitle = function (title) {
         //If current element has a title, then unset it.
-        if(this._title)
-        {
+        if (this._title) {
             mwf.decorator.remove(this, this._title, FIRST_MARKER, LAST_MARKER);
             this._title = null;
         }
 
         //Set title, if specified.
-        if(title)
-        {
+        if (title) {
             //Create a new title to add to the element, and save it in a member
             //variable.
             this._title = mwf.decorator.Title(title);
 
             //Prepend the new title to the content.
             mwf.decorator.prepend(this, this._title, FIRST_MARKER, LAST_MARKER);
-
-
         }
     };
 
@@ -68,8 +77,7 @@ mwf.decorator.Form = function(title)
      * Returns the current elements title if it's set; null otherwise.
      * @return The current elements title if it's set; null otherwise.
      */
-    form.getTitle = function()
-    {
+    form.getTitle = function () {
         return (this._title)? this._title : null;
     };
 
@@ -79,22 +87,20 @@ mwf.decorator.Form = function(title)
      *
      * @return This form element.
      */
-    form.addItem = function(item){
+    form.addItem = function (item) {
         mwf.decorator.append(this, item, FIRST_MARKER, LAST_MARKER);
         return this;
     };
-
 
     /**
      * Appends a new text block element to the current content.
      *
      * @return This form.
      */
-    form.addTextBlock = function(text){
+    form.addTextBlock = function (text) {
         var textBlock = document.createElement('p');
         textBlock.innerHTML = text || "";
         return this.addItem(textBlock);
-
     };
 
     /**
@@ -106,8 +112,7 @@ mwf.decorator.Form = function(title)
      *
      * @return This form.
      */
-    form.addTextBox = function(name, id)
-    {
+    form.addTextBox = function (name, id) {
         var textBox = document.createElement('input');
 
         textBox.name = name || null;
@@ -116,8 +121,7 @@ mwf.decorator.Form = function(title)
         return this.addItem(textBox);
     };
 
-    form.addLabel = function(text, forID)
-    {
+    form.addLabel = function (text, forID) {
         var label = document.createElement('label');
 
         label['for'] = forID || null;
@@ -135,14 +139,13 @@ mwf.decorator.Form = function(title)
      *
      * @return This form.
      */
-    form.addSubmitButton = function(text, callback)
-    {
+    form.addSubmitButton = function (text, callback) {
         var submitButton = document.createElement('input');
 
         submitButton.type = 'submit';
         submitButton.value = text;
 
-        if( callback ){
+        if (callback) {
             TouchEnabledItemModel.bindTouchEvent(submitButton, submitButton, callback);
         }
 
@@ -158,13 +161,12 @@ mwf.decorator.Form = function(title)
      *
      * @return This form.
      */
-    form.addInputButton = function(text, callback)
-    {
+    form.addInputButton = function (text, callback) {
         var submitButton = document.createElement('input');
         submitButton.type = 'button';
         submitButton.value = text;
 
-        if( callback ) {
+        if (callback) {
             TouchEnabledItemModel.bindTouchEvent(submitButton, submitButton, callback);
         }
 

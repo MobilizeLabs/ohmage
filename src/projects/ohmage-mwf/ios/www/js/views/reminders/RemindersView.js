@@ -1,48 +1,74 @@
-var RemindersView = function(reminders){
+var RemindersView = function () {
+    "use strict";
+    var that = AbstractView();
 
-    var self = {};
-    
-    var newReminderCallback = function(){
-        PageNavigation.openNewReminderView();
-    };
-    
-    var editReminderCallback = function(reminder){
-        return function(){
-            PageNavigation.openReminderView(reminder.getUUID());
+    var reminders = null;
+
+    that.newReminderCallback = function () {};
+    that.editReminderCallback = function (reminderModel) {};
+
+    var editReminderCallbackClosure = function (reminderModel) {
+        return function () {
+            that.editReminderCallback(reminderModel);
         };
     };
-    
-    self.render = function(){
-        
-        var numInstalledCampaigns = Campaigns.getInstalledCampaignsCount();
-        var menu = mwf.decorator.Menu("Available Reminders");
-        
-        if(numInstalledCampaigns === 0){
-            var noAvailableSurveysMenuItem = menu.addMenuLinkItem("No Available Surveys", null, "Please install a campaign, to create custom reminders.");
-            TouchEnabledItemModel.bindTouchEvent(noAvailableSurveysMenuItem, noAvailableSurveysMenuItem, PageNavigation.openAvailableCampaignsView, "menu-highlight"); 
-        }else if(reminders.length > 0){
-            var title, date, time, reminderMenuItem;
-            for(var i = 0; i < reminders.length; i++){   
-                title = reminders[i].getTitle();
-                date  = reminders[i].getDate();
-                time   = "Reminder set for " + DateTimePicker.getPaddedTime(date) + ".";
-                reminderMenuItem = menu.addMenuLinkItem(title, null, time);
-                TouchEnabledItemModel.bindTouchEvent(reminderMenuItem, reminderMenuItem, editReminderCallback(reminders[i]), "menu-highlight");
-            }
-        }else{
-            var noReminderFoundMenuItem = menu.addMenuLinkItem("No Reminder Found", null, "Click to add a new reminder.");
-            TouchEnabledItemModel.bindTouchEvent(noReminderFoundMenuItem, noReminderFoundMenuItem, newReminderCallback, "menu-highlight");
-        }
-        
-        var container = document.createElement('div');
-        container.appendChild(menu);
-        if(numInstalledCampaigns > 0){
-            container.appendChild(mwf.decorator.SingleClickButton("Add Reminder", newReminderCallback));
-        }
-        return container;
-        
+
+    var renderNoCampaignsInstalled = function (remindersMenu) {
+        var noAvailableSurveysMenuItem = remindersMenu.addMenuLinkItem("No Available Surveys", null, "Please install a campaign, to create custom reminders.");
+        TouchEnabledItemModel.bindTouchEvent(noAvailableSurveysMenuItem, noAvailableSurveysMenuItem, PageController.openAvailableCampaigns, "menu-highlight");
     };
-    
-    return self;
+
+    var renderNoRemindersFound = function (remindersMenu) {
+        var noReminderFoundMenuItem = remindersMenu.addMenuLinkItem("No Reminder Found", null, "Click to add a new reminder.");
+        TouchEnabledItemModel.bindTouchEvent(noReminderFoundMenuItem, noReminderFoundMenuItem, that.newReminderCallback, "menu-highlight");
+    };
+
+    var renderAvailableReminders = function (remindersMenu) {
+        var title,
+            date,
+            time,
+            reminderMenuItem,
+            i;
+        for (i = 0; i < reminders.length; i += 1) {
+            title = reminders[i].getTitle();
+            date  = reminders[i].getDate();
+            time  = "Reminder set for " + DateTimePicker.getPaddedTime(date) + ".";
+            reminderMenuItem = remindersMenu.addMenuLinkItem(title, null, time);
+            TouchEnabledItemModel.bindTouchEvent(reminderMenuItem, reminderMenuItem, editReminderCallbackClosure(reminders[i]), "menu-highlight");
+        }
+        return remindersMenu;
+    };
+
+    that.initializeView = function (onSuccessCallback) {
+        reminders = RemindersModel.getAllReminders();
+        onSuccessCallback();
+    };
+
+    that.render = function () {
+
+        var numInstalledCampaigns = CampaignsModel.getInstalledCampaignsCount(),
+            remindersMenu = mwf.decorator.Menu("Available Reminders");
+
+        if (numInstalledCampaigns === 0) {
+            renderNoCampaignsInstalled(remindersMenu);
+
+        } else if (reminders.length > 0) {
+            renderAvailableReminders(remindersMenu);
+        } else {
+            renderNoRemindersFound(remindersMenu);
+        }
+
+        var container = document.createElement('div');
+        container.appendChild(remindersMenu);
+
+        if (numInstalledCampaigns > 0) {
+            container.appendChild(mwf.decorator.SingleClickButton("Add Reminder", that.newReminderCallback));
+        }
+
+        return container;
+
+    };
+
+    return that;
 };
 

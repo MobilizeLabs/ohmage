@@ -1,6 +1,19 @@
-invokeOnReady(function(){
-    var helpController = new HelpController();
-    var sectionIndex = PageNavigation.getPageParameter('help-section-index');
-    if(sectionIndex === null){ PageNavigation.goBack(); }
-    $('#help-container').append(helpController.renderHelpSection(sectionIndex));
+Init.invokeOnReady(function () {
+    "use strict";
+
+    var helpController = HelpController();
+
+    var pageModel = PageModel("helpSection", "Help Section");
+    pageModel.setTopButton("Help Menu", PageController.openHelp);
+    pageModel.setPageInitializer(function (onSuccessCallback) {
+        var helpSectionIndex = PageController.getPageParameter('helpSectionIndex');
+        if (helpSectionIndex !== null) {
+            pageModel.setView(helpController.getHelpSectionView(helpSectionIndex));
+            onSuccessCallback();
+        } else {
+            PageController.goBack();
+        }
+    });
+
+    PageController.registerPage(pageModel);
 });

@@ -1,35 +1,35 @@
-invokeOnReady(function(){
+Init.invokeOnReady(function() {
 
     var isInputValid = function(){
 
         if($('#current-password').val().length == 0){
-            showMessage('Please enter your current password.');
+            MessageDialogController.showMessage('Please enter your current password.');
             $('#current-password').focus();
 
             return false;
         }
 
         if($('#new-password').val().length == 0){
-            showMessage('Please enter your new password.');
+            MessageDialogController.showMessage('Please enter your new password.');
             $('#new-password').focus();
             return false;
         }
 
 
         if($('#confirm-password').val().length == 0){
-            showMessage('Please confirm your password.');
+            MessageDialogController.showMessage('Please confirm your password.');
             $('#confirm-password').focus();
             return false;
         }
 
         if($('#new-password').val() != $('#confirm-password').val()){
-            showMessage('New password and password confirmation do not match.');
+            MessageDialogController.showMessage('New password and password confirmation do not match.');
             $('#confirm-password').focus();
             return false;
         }
 
         if(!auth.isPasswordValid($('#new-password').val())){
-            showMessage(auth.getPasswordRequirements());
+            MessageDialogController.showMessage(auth.getPasswordRequirements());
             $('#new-password').focus();
             return false;
         }
@@ -49,7 +49,7 @@ invokeOnReady(function(){
         var onSuccess = function() {
             Spinner.hide(function(){
                 auth.setAuthErrorState(true);
-                showMessage('Your password has been successfully changed. Please login to continue.');
+                MessageDialogController.showMessage('Your password has been successfully changed. Please login to continue.');
                 PageNavigation.openAuthenticationPage();
             });
 
@@ -59,9 +59,9 @@ invokeOnReady(function(){
         var onError = function(response){
             Spinner.hide(function(){
                 if(response){
-                    showMessage(response.errors[0].text);
+                    MessageDialogController.showMessage(response.errors[0].text);
                 }else{
-                    showMessage('Network error occured. Please try again.');
+                    MessageDialogController.showMessage('Network error occured. Please try again.');
                 }
 
                 $('#current-password').focus();
@@ -73,12 +73,12 @@ invokeOnReady(function(){
 
         Spinner.show();
 
-        api(
+        ServiceController.serviceCall(
              "POST",
-             PASSWORD_CHANGE_URL,
+             ConfigManager.getPasswordChangeUrl(),
              {
                  auth_token:   auth.getHashedPassword(),
-                 client:       'MWoC',
+                 client:       ConfigManager.getClientName(),
                  user:         auth.getUsername(),
                  password:     currentPassword,
                  new_password: newPassword
