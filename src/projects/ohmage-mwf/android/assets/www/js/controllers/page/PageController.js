@@ -226,11 +226,8 @@ var PageController = (function () {
         }
         PageStackModel.push(pageName, pageParams);
 
-        that.triggerPageLoadedEvent(pageName);
-
         //Finally render the page on the screen.
         that.render(pageModel);
-
 
 
         //Return true to indicate that the page has been successfully
@@ -274,7 +271,8 @@ var PageController = (function () {
      * @param pageModel The page model to render.
      */
     that.render = function (pageModel) {
-        log.info("Initializing [$1] page.", pageModel.getPageName());
+        var pageName = pageModel.getPageName();
+        log.info("Initializing [$1] page.", pageName);
 
         pageModel.initialize(function () {
             clearScreen();
@@ -282,7 +280,8 @@ var PageController = (function () {
                 renderedView = pageView.render();
             if (renderedView) {
                 screen.appendChild(pageView.render());
-                log.info("Rendered [$1] page.", pageModel.getPageName());
+                log.info("Rendered [$1] page.", pageName);
+                that.triggerPageLoadedEvent(pageName);
             } else {
                 log.error("Unable to render page [$1] because the rendered object is invalid.", pageModel.getPageName());
             }

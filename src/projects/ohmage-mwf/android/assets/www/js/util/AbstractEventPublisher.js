@@ -9,7 +9,7 @@ var AbstractEventPublisher = function (eventPublisherName) {
 
     var events = {};
 
-    var log = Logger(eventPublisherName || "AbstractEventPublisher");
+    var log = Logger(eventPublisherName + "[event]" || "AbstractEventPublisher[event]");
 
     var addSubscriptionFunction = function (eventName) {
         that["subscribeTo" + eventName + "Event"] = function (onEventTriggeredCallback) {

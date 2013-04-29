@@ -7,6 +7,8 @@ var PageStackModel = (function () {
 
     var that = {};
 
+    var log = Logger("PageStackModel");
+
     /**
      * The object stores a stack of visited pages and can be used to navigated
      * backwards. The top page of the stack is the current page.
@@ -65,6 +67,7 @@ var PageStackModel = (function () {
      */
     that.push = function (pageName, pageParams) {
         pageStack.push(constructPageObject(pageName, pageParams));
+        log.info("Pushed [$1] on top of page stack.", pageName);
     };
 
     /**
