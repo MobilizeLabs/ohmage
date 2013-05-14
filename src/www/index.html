@@ -3,8 +3,6 @@
 <html>
     <head>
 
-        <script type="text/javascript"> var checkpoint = true; </script>
-
         <meta name="viewport" content="height=device-height,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <title>Ohmage | Dashboard</title>
@@ -16,6 +14,7 @@
             @import url("css/grid.css");
             @import url("css/spinner.css");
             @import url("css/PromptStyles.css");
+            @import url("lib/mobiscroll/css/mobiscroll-1.5.3.css");
         </style>
 
         <!-- IMPORT PHONEGAP LIBRARY -->
@@ -35,8 +34,13 @@
         <script type="text/javascript" src="lib/jquery/jquery.js"></script>
         <script type="text/javascript" src="lib/jquery/jquery.extensions.js"></script>
 
+        <!-- IMPORT MOBISCROLL 1.5.3 -->
+        <script type="text/javascript" src="lib/mobiscroll/js/mobiscroll-1.5.3.js"></script>
+
+        <!-- IMPORT PEG.JS CONDITIONAL STATEMENT PARSER -->
         <script type="text/javascript" src="js/pegjs/ConditionalParser.js"></script>
 
+        <!-- IMPORT CORE APPLICATION SCRIPTS -->
         <script type="text/javascript" src="js/util/Spinner.js"></script>
         <script type="text/javascript" src="js/util/LocalMap.js"></script>
         <script type="text/javascript" src="js/util/Logger.js"></script>
