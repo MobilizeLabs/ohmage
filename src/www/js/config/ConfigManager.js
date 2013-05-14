@@ -81,7 +81,13 @@ var ConfigManager = (function () {
         /**
          * A list of pages that don't require the user to be authenticated.
          */
-        OPEN_PAGES : ['auth', 'changeServer']
+        OPEN_PAGES : ['auth', 'changeServer'],
+
+        /**
+         * If set to true, password change feature will only be available on
+         * native applications.
+         */
+        PASS_CHANGE_NATIVE_ONLY : true
     };
 
     /**
