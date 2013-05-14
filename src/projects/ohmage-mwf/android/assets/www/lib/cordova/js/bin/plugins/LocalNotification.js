@@ -1,14 +1,14 @@
 /*-
- * Phonegap LocalNotification Plugin for Android.
- *
+ * Phonegap LocalNotification Plugin for Android
+ * 
  * Created by Daniel van 't Oever 2012 MIT Licensed
- *
- * Usage:
- *
+ * 
+ * Usage: 
+ * 
  * plugins.localNotification.add({ date: new Date(), message: 'This is an Android alarm using the statusbar', id: 123 });
- * plugins.localNotification.cancel(123);
+ * plugins.localNotification.cancel(123); 
  * plugins.localNotification.cancelAll();
- *
+ * 
  * This interface is similar to the existing iOS LocalNotification plugin created by Greg Allen
  */
 if (typeof PhoneGap !== "undefined") {
@@ -21,7 +21,7 @@ if (typeof PhoneGap !== "undefined") {
 
 	/**
 	 * Register a notification message for a specific date / time
-	 *
+	 * 
 	 * @param successCB
 	 * @param failureCB
 	 * @param options
@@ -53,7 +53,7 @@ if (typeof PhoneGap !== "undefined") {
 
 	/**
 	 * Cancel an existing notification using its original ID.
-	 *
+	 * 
 	 * @param id
 	 *            The ID that was used when creating the notification using the
 	 *            'add' method.

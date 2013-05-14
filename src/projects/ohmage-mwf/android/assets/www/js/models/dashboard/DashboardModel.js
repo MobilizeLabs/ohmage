@@ -28,6 +28,12 @@ var DashboardModel = function () {
      * @returns {{campaigns: string, surveys: string, queue: string, profile: string, help: string, reminders: string}}
      */
     that.getDashboardItems = function () {
+        //Update the queue dashboard icon label with the number of pending
+        //uploads.
+        var queueSize = SurveyResponseStoreModel.getUploadQueueSize(),
+            queueLabel = "Queue (" + queueSize + ")";
+        dashboardItems.queue = queueLabel;
+
         return dashboardItems;
     };
 

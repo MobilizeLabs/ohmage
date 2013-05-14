@@ -33,9 +33,11 @@ var Init = (function () {
      * ConfigManager), then opens the authentication page.
      */
     var authCheckpoint = function () {
-        log.info("Hit authentication checkpoint: checking to see if the user is allowed to see this page.");
         var pageName = PageController.getCurrentPageName();
-        if (!ConfigManager.isOpenPage(pageName) && PageController.getCurrentPageName() !== "auth" && !AuthenticationModel.isUserAuthenticated()) {
+        log.info("Hit authentication checkpoint: checking to see if the user is allowed to see this page [$1] (is open page? $2) .", pageName, ConfigManager.isOpenPage(pageName));
+        if (!ConfigManager.isOpenPage(pageName)
+                && PageController.getCurrentPageName() !== "auth"
+                && !AuthenticationModel.isUserAuthenticated()) {
             log.info("User did not pass authentication checkpoint - redirecting to login page.");
             PageController.openAuth();
         } else {

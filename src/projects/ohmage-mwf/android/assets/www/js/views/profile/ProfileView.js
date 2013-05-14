@@ -11,7 +11,7 @@ var ProfileView = function () {
     that.render = function () {
         var menu = mwf.decorator.Menu(AuthenticationModel.getUsername());
 
-        if (DeviceDetection.isNativeApplication()) {
+        if (DeviceDetection.isNativeApplication() || !ConfigManager.getPassChangeNativeOnly()) {
             var changePasswordMenuItem = menu.addMenuLinkItem('Change Password', null, 'Easily change your password.');
             TouchEnabledItemModel.bindTouchEvent(changePasswordMenuItem, changePasswordMenuItem, that.changePasswordHandler, "menu-highlight");
         }

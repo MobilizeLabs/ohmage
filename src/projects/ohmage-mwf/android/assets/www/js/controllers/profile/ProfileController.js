@@ -6,7 +6,7 @@ var ProfileController = function () {
     var profileView = ProfileView();
 
     profileView.changePasswordHandler = function () {
-        PageNavigation.openChangePasswordPage();
+        PageController.openChangePassword();
     };
 
     profileView.enableGpsHandler = function () {
