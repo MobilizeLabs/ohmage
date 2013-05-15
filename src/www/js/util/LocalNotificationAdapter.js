@@ -1,9 +1,15 @@
+/**
+ * The object encapsulates common functionality between the different plugin
+ * implementations for creating and deleting reminders on the local device.
+ *
+ * @author Zorayr Khalapyan
+ */
 var LocalNotificationAdapter = (function () {
     "use strict";
     var that = {};
 
     var isLocalNotificationAvailable = function () {
-        return typeof plugins !== "undefined" && plugins.localNotification !== undefined;
+        return plugins !== undefined && plugins.localNotification !== undefined;
     };
 
     that.add = function (options) {
@@ -46,7 +52,10 @@ var LocalNotificationAdapter = (function () {
     return that;
 }());
 
+/**
+ * This method is invoked when the user taps on a triggered reminder
+ */
 function goToPendingSurveys() {
     "use strict";
-    window.location = "pending-surveys.html";
+    PageController.openPendingSurveys();
 }

@@ -1,16 +1,22 @@
-var PendingSurveysController = function(){
-    var self = {};
 
-    self.render = function(){
-        var pendingSurveys = ReminderModel.getPendingSurveys();
-        var onSurveyClickCallback = function(survey){
-            PageNavigation.openSurveyView(survey.getCampaign().getURN(), survey.getID());
-        };
-        var surveyListView = new SurveyListView(pendingSurveys, "Pending Surveys", onSurveyClickCallback);
-        surveyListView.setEmptyListViewParameters("You have no pending surveys.", "Please navigate to the reminders to set new notifications.", PageNavigation.openRemindersView);
-        return surveyListView.render();
+var PendingSurveysController = function () {
+    "use strict";
+    var that = {};
+
+    var onSurveyClickCallback = function (surveyModel) {
+        PageController.openSurvey({
+            campaignURN : surveyModel.getCampaign().getURN(),
+            surveyID : surveyModel.getID()
+        });
     };
 
-    return self;
+    that.getView = function () {
+        var pendingSurveys = RemindersModel.getPendingSurveys(),
+            pendingSurveysView = PendingSurveysView(pendingSurveys);
+        pendingSurveysView.onSurveyClickCallback = onSurveyClickCallback;
+        return pendingSurveysView;
+    };
+
+    return that;
 
 };

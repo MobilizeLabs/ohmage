@@ -1,7 +1,16 @@
 
-Init.invokeOnReady(function() {
-    $("#pending-surveys").append(new PendingSurveysController().render());
-    $("#pending-surveys").append(mwf.decorator.SingleClickButton("Dashboard",  PageNavigation.openDashboard));
-    mwf.decorator.TopButton("All Campaigns", null, PageNavigation.openInstalledCampaignsView, true);
-    $(document).unbind("backbutton");
+Init.invokeOnReady(function () {
+    "use strict";
+
+    var pendingSurveysController = PendingSurveysController();
+
+    var pageModel = PageModel("pendingSurveys", "Pending Surveys");
+    pageModel.setPageInitializer(function (onSuccessCallback) {
+        pageModel.setTopButton("Dashboard", PageController.openDashboard);
+        pageModel.setView(pendingSurveysController.getView());
+        onSuccessCallback();
+    });
+
+    PageController.registerPage(pageModel);
+
 });

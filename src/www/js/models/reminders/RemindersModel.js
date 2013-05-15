@@ -77,17 +77,31 @@ var RemindersModel = (function () {
         }
     };
 
+    /**
+     * Returns an array of currently pending surveys.
+     * @returns {Array}
+     */
     that.getPendingSurveys = function () {
-        var currentDate = new Date().getTime();
-        var reminders = that.getAllReminders();
-        var campaign, surveys = [], i = 0;
+        var currentDate = new Date().getTime(),
+            reminders = that.getAllReminders(),
+            campaign,
+            surveys = [],
+            i = 0;
         for (i; i < reminders.length; i += 1) {
             if (reminders[i].getDate().getTime() < currentDate) {
-                campaign = new Campaign(reminders[i].getCampaignURN());
+                campaign = CampaignsModel.getCampaign(reminders[i].getCampaignURN());
                 surveys.push(campaign.getSurvey(reminders[i].getSurveyID()));
             }
         }
         return surveys;
+    };
+
+    /**
+     * Returns true if there are currently pending surveys.
+     * @returns {boolean}
+     */
+    that.hasPendingSurveys = function () {
+        return that.getPendingSurveys().length > 0;
     };
 
     /**
