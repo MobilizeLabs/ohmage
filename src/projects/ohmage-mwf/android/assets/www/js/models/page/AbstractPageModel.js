@@ -1,6 +1,7 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/3/13
+ * @constructor
  */
 
 var AbstractPageModel = function () {

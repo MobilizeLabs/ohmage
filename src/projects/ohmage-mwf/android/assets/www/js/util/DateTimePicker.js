@@ -1,4 +1,7 @@
-
+/**
+ * @author Zorayr Khalapyan
+ * @constructor
+ */
 var DateTimePicker = function () {
     "use strict";
     /**

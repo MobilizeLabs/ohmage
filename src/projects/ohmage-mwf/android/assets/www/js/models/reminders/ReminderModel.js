@@ -1,7 +1,8 @@
 /**
- * @class ReminderModel
+ * Encapsulates functionality for manipulating a single reminder.
  * @author Zorayr Khalapyan
  * @version 8/13/2012
+ * @constructor
  */
 var ReminderModel = function (reminderUUID) {
     "use strict";

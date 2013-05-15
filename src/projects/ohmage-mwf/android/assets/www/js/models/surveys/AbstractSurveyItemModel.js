@@ -1,6 +1,7 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/12/13
+ * @constructor
  */
 var AbstractSurveyItemModel = function (itemData, surveyModel, campaignModel) {
     "use strict";

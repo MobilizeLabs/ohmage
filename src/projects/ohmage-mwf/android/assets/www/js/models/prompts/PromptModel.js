@@ -10,6 +10,7 @@
  * @param promptData {*}
  * @param surveyModel {SurveyModel}
  * @param campaignModel {CampaignModel}
+ * @constructor
  */
 var PromptModel = function (promptData, surveyModel, campaignModel) {
     "use strict";

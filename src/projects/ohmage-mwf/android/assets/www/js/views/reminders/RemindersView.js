@@ -1,3 +1,7 @@
+/**
+ * @author Zorayr Khalapyan
+ * @version 4/5/13
+ */
 var RemindersView = function () {
     "use strict";
     var that = AbstractView();
@@ -63,6 +67,14 @@ var RemindersView = function () {
 
         if (numInstalledCampaigns > 0) {
             container.appendChild(mwf.decorator.SingleClickButton("Add Reminder", that.newReminderCallback));
+        }
+
+        //Only display a link to view pending surveys when there is at least one
+        //pending survey. Otherwise, it's useless.
+        if (RemindersModel.hasPendingSurveys()) {
+            container.appendChild(mwf.decorator.SingleClickButton("View Pending Surveys", function () {
+                PageController.openPendingSurveys();
+            }));
         }
 
         return container;

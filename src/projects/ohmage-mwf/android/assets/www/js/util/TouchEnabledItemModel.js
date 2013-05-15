@@ -4,11 +4,11 @@
  * @version 8/9/2012
  */
 var TouchEnabledItemModel = (function() {
-    var self = {};
+    var that = {};
 
     var TOUCH_MOVE_SENSITIVITY = 15;
 
-    self.bindClickEvents = function(item, highlightItem, onClickCallback, onMouseoverHighlightClass){
+    that.bindClickEvents = function(item, highlightItem, onClickCallback, onMouseoverHighlightClass){
         if(typeof(onClickCallback) === "function"){
             $(item).mouseover(function(){
                 $(highlightItem).addClass(onMouseoverHighlightClass);
@@ -18,9 +18,9 @@ var TouchEnabledItemModel = (function() {
         }
     };
 
-    self.bindTouchEvents = function(item, highlightItem, onTouchCallback, onTouchHighlightClass){
+    that.bindTouchEvents = function(item, highlightItem, onTouchCallback, onTouchHighlightClass){
 
-        self.bindClickEvents(item, function(e){
+        that.bindClickEvents(item, function(e){
             e.preventDefault();
             return false;
         });
@@ -55,15 +55,15 @@ var TouchEnabledItemModel = (function() {
         });
     };
 
-    self.bindTouchEvent = function(item, highlightItem, onTouchCallback, highlightClass){
+    that.bindTouchEvent = function(item, highlightItem, onTouchCallback, highlightClass){
         highlightItem = highlightItem || item;
         highlightClass = highlightClass || "pressed";
         if(DeviceDetection.isOnDevice()){
-            self.bindTouchEvents(item, highlightItem, onTouchCallback, highlightClass);
+            that.bindTouchEvents(item, highlightItem, onTouchCallback, highlightClass);
         }else{
-            self.bindClickEvents(item, highlightItem, onTouchCallback, highlightClass);
+            that.bindClickEvents(item, highlightItem, onTouchCallback, highlightClass);
         }
     };
 
-    return self;
+    return that;
 }());

@@ -1,11 +1,8 @@
 /**
- * Created with JetBrains WebStorm.
- * User: root
- * Date: 4/9/13
- * Time: 5:25 AM
- * To change this template use File | Settings | File Templates.
+ * @author Zorayr Khalapyan
+ * @version 4/5/13
+ * @constructor
  */
-
 var AvailableCampaignsView = function () {
     "use strict";
     var that = AbstractView();

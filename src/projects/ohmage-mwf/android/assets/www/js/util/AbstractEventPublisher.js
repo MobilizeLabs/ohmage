@@ -1,6 +1,7 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/16/13
+ * @constructor
  */
 
 var AbstractEventPublisher = function (eventPublisherName) {
