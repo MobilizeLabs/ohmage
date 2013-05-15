@@ -4,6 +4,7 @@
  *
  * @param pageName The name is used as a unique identifier of the current page.
  * @param pageTitle The title of the current page.
+ * @constructor
  */
 var PageModel = function (pageName, pageTitle) {
     "use strict";

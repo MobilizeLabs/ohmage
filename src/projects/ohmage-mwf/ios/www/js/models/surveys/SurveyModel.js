@@ -1,3 +1,11 @@
+/**
+ *
+ * @author Zorayr Khalapyan
+ * @param surveyData The JSON survey data.
+ * @param campaignModel Campaign model associated with the survey.
+ * @returns {{}}
+ * @constructor
+ */
 var SurveyModel = function (surveyData, campaignModel) {
     "use strict";
 

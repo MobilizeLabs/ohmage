@@ -3,6 +3,7 @@
  *
  * @author Zorayr Khalapyan
  * @version 4/8/13
+ * @constructor
  */
 
 var PageViewService = (function () {

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <meta name="viewport" content="height=device-height,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        <title>Ohmage | Dashboard</title>
+
+        <style type="text/css">
+            @import url("css/mwoc.css");
+            @import url("lib/mwf/css/mwf.css");
+            @import url("css/highlight-styles.css");
+            @import url("css/grid.css");
+            @import url("css/spinner.css");
+            @import url("css/PromptStyles.css");
+            @import url("lib/mobiscroll/css/mobiscroll-1.5.3.css");
+        </style>
+
+        <!-- IMPORT PHONEGAP LIBRARY -->
+        <script type="text/javascript" src="lib/cordova/js/bin/core/cordova.js"></script>
+        <script type="text/javascript" src="lib/cordova/js/bin/plugins/LocalNotification.js"></script>
+
+        <!-- IMPORT MWF JAVASCRIPT LIBRARY -->
+        <script type="text/javascript" src="lib/mwf/js/mwf.js"></script>
+        <script type="text/javascript" src="lib/mwf/js/decorator.js"> </script>
+        <script type="text/javascript" src="lib/mwf/js/content.js"> </script>
+        <script type="text/javascript" src="lib/mwf/js/button.js"> </script>
+        <script type="text/javascript" src="lib/mwf/js/form.js"> </script>
+        <script type="text/javascript" src="lib/mwf/js/menu.js"> </script>
+        <script type="text/javascript" src="js/util/TouchEnabledItemModel.js"></script>
+
+        <!-- IMPORT JQUERY AND EXTENSIONS -->
+        <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="lib/jquery/jquery.extensions.js"></script>
+
+        <!-- IMPORT MOBISCROLL 1.5.3 -->
+        <script type="text/javascript" src="lib/mobiscroll/js/mobiscroll-1.5.3.js"></script>
+
+        <!-- IMPORT PEG.JS CONDITIONAL STATEMENT PARSER -->
+        <script type="text/javascript" src="js/pegjs/ConditionalParser.js"></script>
+
+        <!-- IMPORT CORE APPLICATION SCRIPTS -->
+        <script type="text/javascript" src="js/util/Spinner.js"></script>
+        <script type="text/javascript" src="js/util/LocalMap.js"></script>
+        <script type="text/javascript" src="js/util/Logger.js"></script>
+        <script type="text/javascript" src="js/util/DeviceDetection.js"></script>
+        <script type="text/javascript" src="js/util/ChecksumGen.js"></script>
+        <script type="text/javascript" src="js/util/UUIDGen.js"></script>
+        <script type="text/javascript" src="js/util/jstz.js"></script>
+        <script type="text/javascript" src="js/util/DateTimePicker.js"></script>
+        <script type="text/javascript" src="js/util/Base64.js"></script>
+        <script type="text/javascript" src="js/util/LocalNotificationAdapter.js"></script>
+        <script type="text/javascript" src="js/util/AbstractEventPublisher.js"></script>
+
+        <script type="text/javascript" src="js/config/ConfigManager.js"></script>
+
+        <script type="text/javascript" src="js/controllers/page/PageController.js"></script>
+        <script type="text/javascript" src="js/controllers/service/ServiceController.js"></script>
+        <script type="text/javascript" src="js/controllers/auth/AuthenticationController.js"></script>
+        <script type="text/javascript" src="js/controllers/messaging/MessageDialogController.js"></script>
+        <script type="text/javascript" src="js/controllers/profile/ProfileController.js"></script>
+        <script type="text/javascript" src="js/controllers/dashboard/DashboardController.js"></script>
+        <script type="text/javascript" src="js/controllers/help/HelpController.js"></script>
+        <script type="text/javascript" src="js/controllers/campaigns/CampaignsController.js"></script>
+        <script type="text/javascript" src="js/controllers/campaigns/CampaignController.js"></script>
+        <script type="text/javascript" src="js/controllers/surveys/SurveyController.js"></script>
+        <script type="text/javascript" src="js/controllers/surveys/SurveysController.js"></script>
+        <script type="text/javascript" src="js/controllers/surveys/UploadQueueController.js"></script>
+        <script type="text/javascript" src="js/controllers/config/ChangeServerController.js"></script>
+        <script type="text/javascript" src="js/controllers/surveys/SurveyResponseController.js"></script>
+        <script type="text/javascript" src="js/controllers/surveys/PendingSurveysController.js"></script>
+        <script type="text/javascript" src="js/controllers/password/ChangePasswordController.js"></script>
+        <script type="text/javascript" src="js/controllers/reminders/RemindersController.js"></script>
+        <script type="text/javascript" src="js/controllers/reminders/ReminderController.js"></script>
+
+        <script type="text/javascript" src="js/models/auth/AuthenticationModel.js"></script>
+        <script type="text/javascript" src="js/models/campaigns/CampaignModel.js"></script>
+        <script type="text/javascript" src="js/models/campaigns/CampaignsModel.js"></script>
+        <script type="text/javascript" src="js/models/prompts/CustomPromptPropertyVault.js"></script>
+        <script type="text/javascript" src="js/models/page/PageStackModel.js"></script>
+        <script type="text/javascript" src="js/models/page/PageModel.js"></script>
+        <script type="text/javascript" src="js/models/dashboard/DashboardModel.js"></script>
+        <script type="text/javascript" src="js/models/help/HelpModel.js"></script>
+        <script type="text/javascript" src="js/models/reminders/ReminderModel.js"></script>
+        <script type="text/javascript" src="js/models/surveys/SurveyModel.js"></script>
+        <script type="text/javascript" src="js/models/surveys/AbstractSurveyItemModel.js"></script>
+        <script type="text/javascript" src="js/models/surveys/SurveyResponseModel.js"></script>
+        <script type="text/javascript" src="js/models/prompts/PromptModel.js"></script>
+        <script type="text/javascript" src="js/models/surveys/SurveyResponseStoreModel.js"></script>
+        <script type="text/javascript" src="js/models/reminders/RemindersModel.js"></script>
+        <script type="text/javascript" src="js/models/surveys/ImageStoreModel.js"></script>
+
+        <script type="text/javascript" src="js/service/auth/AuthenticationService.js"></script>
+        <script type="text/javascript" src="js/service/page/PageViewService.js"></script>
+        <script type="text/javascript" src="js/service/campaigns/CampaignsMetadataService.js"></script>
+        <script type="text/javascript" src="js/service/campaigns/CampaignDownloadService.js"></script>
+        <script type="text/javascript" src="js/service/surveys/SurveyResponseUploadService.js"></script>
+
+        <script type="text/javascript" src="js/views/AbstractView.js"></script>
+        <script type="text/javascript" src="js/views/auth/AuthView.js"></script>
+        <script type="text/javascript" src="js/views/profile/ProfileView.js"></script>
+        <script type="text/javascript" src="js/views/dashboard/DashboardView.js"></script>
+        <script type="text/javascript" src="js/views/page/PageView.js"></script>
+        <script type="text/javascript" src="js/views/help/HelpMenuView.js"></script>
+        <script type="text/javascript" src="js/views/help/HelpSectionView.js"></script>
+        <script type="text/javascript" src="js/views/campaigns/CampaignsMenuView.js"></script>
+        <script type="text/javascript" src="js/views/campaigns/AvailableCampaignsView.js"></script>
+        <script type="text/javascript" src="js/views/campaigns/InstalledCampaignsView.js"></script>
+        <script type="text/javascript" src="js/views/campaigns/CampaignView.js"></script>
+        <script type="text/javascript" src="js/views/surveys/SurveyView.js"></script>
+        <script type="text/javascript" src="js/views/surveys/SurveyListView.js"></script>
+        <script type="text/javascript" src="js/views/surveys/UploadQueueView.js"></script>
+        <script type="text/javascript" src="js/views/reminders/RemindersView.js"></script>
+        <script type="text/javascript" src="js/views/reminders/ReminderView.js"></script>
+        <script type="text/javascript" src="js/views/config/ChangeServerView.js"></script>
+        <script type="text/javascript" src="js/views/surveys/SurveyResponseView.js"></script>
+        <script type="text/javascript" src="js/views/surveys/PendingSurveysView.js"></script>
+        <script type="text/javascript" src="js/views/privacy/PrivacyView.js"></script>
+        <script type="text/javascript" src="js/views/password/ChangePasswordView.js"></script>
+
+        <script type="text/javascript" src="js/views/prompts/PromptViewFactory.js"></script>
+        <script type="text/javascript" src="js/views/prompts/AbstractPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/choice/multi/MultiChoiceCustomPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/choice/multi/MultiChoicePromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/choice/single/SingleChoicePromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/choice/single/SingleChoiceCustomPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/choice/AbstractChoicePromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/choice/AbstractCustomChoicePromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/number/AbstractNumberPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/number/NumberInputView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/number/NumberPickerView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/number/NumberPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/photo/PhotoPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/text/TextPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/time/TimestampPromptView.js"></script>
+        <script type="text/javascript" src="js/views/prompts/unsupported/UnsupportedPromptView.js"></script>
+
+        <script type="text/javascript" src="js/init/init.js"></script>
+        <script type="text/javascript" src="js/init/init.Index.js"></script>
+        <script type="text/javascript" src="js/init/init.Profile.js"></script>
+        <script type="text/javascript" src="js/init/init.HelpMenu.js"></script>
+        <script type="text/javascript" src="js/init/init.HelpSection.js"></script>
+        <script type="text/javascript" src="js/init/init.Auth.js"></script>
+        <script type="text/javascript" src="js/init/init.AvailableCampaigns.js"></script>
+        <script type="text/javascript" src="js/init/init.InstalledCampaigns.js"></script>
+        <script type="text/javascript" src="js/init/init.Campaign.js"></script>
+        <script type="text/javascript" src="js/init/init.Survey.js"></script>
+        <script type="text/javascript" src="js/init/init.Surveys.js"></script>
+        <script type="text/javascript" src="js/init/init.UploadQueue.js"></script>
+        <script type="text/javascript" src="js/init/init.Reminders.js"></script>
+        <script type="text/javascript" src="js/init/init.Reminder.js"></script>
+        <script type="text/javascript" src="js/init/init.ChangeServer.js"></script>
+        <script type="text/javascript" src="js/init/init.SurveyResponseView.js"></script>
+        <script type="text/javascript" src="js/init/init.Privacy.js"></script>
+        <script type="text/javascript" src="js/init/init.ChangePassword.js"></script>
+        <script type="text/javascript" src="js/init/init.PendingSurveys.js"></script>
+
+
+    </head>
+
+    <body>
+
+        <h1 id="header">
+            <a id="header-home-link">
+                <img id="header-home-icon" src="img/home-icon.gif" alt="home"/>
+            </a>
+            <span id="header-title"></span>
+        </h1>
+
+        <div id="screen"></div>
+
+        <div id="footer">
+            <p>
+                <a id="footer-privacy-link">View Our Privacy Policy</a>
+            </p>
+        </div>
+
+    </body>
+</html>

@@ -1,6 +1,8 @@
 /**
+ * Object for generating checksum of an object.
  * @author Zorayr Khalapyan
  * @version 4/10/13
+ * @constructor
  */
 
 var ChecksumGen = (function () {

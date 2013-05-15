@@ -1,6 +1,7 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/15/13
+ * @constructor
  */
 var SurveyResponseStoreModel = (function () {
     "use strict";

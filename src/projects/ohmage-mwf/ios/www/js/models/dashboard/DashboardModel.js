@@ -1,6 +1,7 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/4/13
+ * @constructor
  */
 var DashboardModel = function () {
     "use strict";

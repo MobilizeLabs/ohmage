@@ -1,3 +1,8 @@
+/**
+ * @author Zorayr Khalapyan
+ * @returns {{}}
+ * @constructor
+ */
 var HelpModel = function () {
     "use strict";
     var that = {};

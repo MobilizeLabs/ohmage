@@ -1,12 +1,19 @@
-var SurveyListView = function (title) {
+/**
+ * Generic view that enables displaying a list of surveys in a menu.
+ *
+ * @author Zorayr Khalapyan
+ * @param title The title of the survey list menu UI.
+ * @param [surveyList] List of surveys to display. Default to all available.
+ * @returns {*}
+ * @constructor
+ */
+var SurveyListView = function (title, surveyList) {
     "use strict";
     var that = AbstractView();
 
     var emptyListText = "No Surveys Found";
     var emptyListDetails = null;
     var emptyListClickCallback = null;
-
-    var surveyList;
 
     var onSurveyClickCallbackClosure = function (surveyModel) {
         return function () {
@@ -15,7 +22,8 @@ var SurveyListView = function (title) {
     };
 
     that.initializeView = function (onSuccessCallback) {
-        surveyList = CampaignsModel.getAllSurveys();
+        //Don't override the survey list if one is already provided.
+        surveyList = surveyList || CampaignsModel.getAllSurveys();
         onSuccessCallback();
     };
 

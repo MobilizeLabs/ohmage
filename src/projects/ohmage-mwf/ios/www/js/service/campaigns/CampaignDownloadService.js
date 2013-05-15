@@ -5,6 +5,7 @@
  *
  * @author Zorayr Khalapyan
  * @version 4/5/13
+ * @constructor
  */
 var CampaignDownloadService = (function () {
     "use strict";
