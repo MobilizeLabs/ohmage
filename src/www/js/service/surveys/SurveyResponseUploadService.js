@@ -3,6 +3,7 @@
  * response data.
  * @author Zorayr Khalapyan
  * @version 4/15/13
+ * @constructor
  */
 var SurveyResponseUploadService = function (surveyModel, surveyResponseModel) {
     "use strict";

@@ -7,6 +7,7 @@
  *
  * @author Zorayr Khalapyan
  * @version 4/11/13
+ * @constructor
  */
 
 var CustomPromptPropertyVault = function (promptModel) {

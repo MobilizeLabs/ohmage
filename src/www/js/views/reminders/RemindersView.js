@@ -1,3 +1,7 @@
+/**
+ * @author Zorayr Khalapyan
+ * @version 4/5/13
+ */
 var RemindersView = function () {
     "use strict";
     var that = AbstractView();

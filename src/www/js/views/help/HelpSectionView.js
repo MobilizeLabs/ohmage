@@ -1,3 +1,7 @@
+/**
+ * @author Zorayr Khalapyan
+ * @version 4/5/13
+ */
 var HelpSectionView = function (helpSection) {
     "use strict";
     var that = AbstractView();
