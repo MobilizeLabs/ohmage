@@ -17,9 +17,6 @@ var DashboardView = function (dashboardModel) {
     };
 
     var createDashboardMenu = function () {
-        //var queueSize = SurveyResponseModel.getUploadQueueSize();
-        //var queueLabel = "Queue (";// + queueSize + ")";
-
         var dashboardMenu = mwf.decorator.Menu(),
             dashboardItems = dashboardModel.getDashboardItems(),
             dashboardItemKey,

@@ -8,7 +8,7 @@ Init.invokeOnReady(function () {
             pageModel.setTopButton("Switch User", AuthenticationController.logoutUser);
         } else {
             pageModel.setTopButton("Switch Server", function () {
-                PageController.openServerChange();
+                PageController.openChangeServer();
             });
         }
         onSuccessCallback();

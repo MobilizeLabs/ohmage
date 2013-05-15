@@ -157,7 +157,8 @@ var CampaignsModel = (function () {
 
     /**
      * Returns all those campaigns that are available but have not been
-     * installed.
+     * installed. Note that the returned value is a JavaScript object
+     * (key -> CampaignModel) and not an array list.
      * @returns {{}}
      */
     that.getAvailableCampaigns = function () {
