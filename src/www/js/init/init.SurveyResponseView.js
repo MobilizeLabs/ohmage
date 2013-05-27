@@ -1,7 +1,7 @@
 Init.invokeOnReady(function () {
     "use strict";
 
-    var pageModel = PageModel("surveyResponse", "Survey Response View");
+    var pageModel = PageModel("surveyResponse", "Response View");
     pageModel.setTopButton("Upload Queue", function () {
         PageController.openQueue();
     });
