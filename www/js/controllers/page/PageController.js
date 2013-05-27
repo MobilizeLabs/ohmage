@@ -1,13 +1,16 @@
 /**
  * @author Zorayr Khalapyan
  * @version 4/3/13
- * @param screen Visible DOM element.
  */
 var PageController = (function () {
     "use strict";
 
     var that = AbstractEventPublisher("PageController");
 
+    /**
+     * The main DOM entry point.
+     * @type {DOMElement}
+     */
     var screen = null;
 
     var log = Logger("PageController");
@@ -26,7 +29,8 @@ var PageController = (function () {
     var registeredPages = {};
 
     /**
-     * Clears the current working screen.
+     * Clears the current working screen. The method is used before redrawing
+     * the current page or drawing a new page.
      */
     var clearScreen = function () {
         if (screen !== null) {
@@ -36,6 +40,11 @@ var PageController = (function () {
         }
     };
 
+    /**
+     * The method is responsible for opening the root page once it has been
+     * registered.
+     * @param registeredPageName Newly registered page name.
+     */
     var openInitialPageOnPageRegistration = function (registeredPageName) {
         if (PageStackModel.isEmpty() && PageController.isRootPageName(registeredPageName)) {
             PageController.goToRootPage();
@@ -60,10 +69,20 @@ var PageController = (function () {
         }
     };
 
+    var getCurrentPageOnLeaveCallback = function () {
+        if (PageStackModel.isEmpty()) {
+            return function (onSuccessCallback) {
+                onSuccessCallback();
+            };
+        }
+        return that.getCurrentPageModel().onPageLeaveCallback;
+    };
+
     /**
      * Switches the first letter of the given string to upper case.
      * @param pageName The page name to capitalize.
-     * @returns {string}
+     * @returns {string} The name of the specified page with the first letter
+     *                   capitalized.
      */
     var capitalize = function (pageName) {
         return pageName.charAt(0).toUpperCase() + pageName.slice(1);
@@ -92,6 +111,11 @@ var PageController = (function () {
         rootPageName = newRootPageName;
     };
 
+    /**
+     * Set the DOM entry point. The screen is where the pages will be
+     * rendered. This should ideally be a DIV element in the body.
+     * @param newScreen {DOMElement}
+     */
     that.setScreen = function (newScreen) {
         screen = newScreen;
     };
@@ -100,12 +124,24 @@ var PageController = (function () {
      * Used for registering multiple page models with single invocation.
      */
     that.registerPages = function () {
-        var pageModel, i, numArgs;
-        for (i = 0, numArgs = arguments.length; i < numArgs; i += 1) {
+        var i,
+            numArgs = arguments.length;
+        for (i = 0; i < numArgs; i += 1) {
             that.registerPage(arguments[i]);
         }
     };
 
+    /**
+     * Replaces the current page without saving history. Under the hood, this
+     * just replaces the top fo the stack and then refreshes the page. Try not
+     * to use this function unless necessary - it bypasses the usual way the
+     * stack is handled and can disrupt normal flow i.e. the user expects to go
+     * to the page she came from, but ends up on a different page after hitting
+     * back.
+     *
+     * @param pageName The new page name.
+     * @param pageParams Any parameters for the new page.
+     */
     that.replaceCurrentPage = function (pageName, pageParams) {
         PageStackModel.replaceCurrentPage(pageName, pageParams);
         that.refresh();
@@ -189,6 +225,11 @@ var PageController = (function () {
         return that.isRootPageName(pageModel.getPageName());
     };
 
+    /**
+     * Returns true if the specified page name matches the root page name.
+     * @param pageName The page to check.
+     * @returns {boolean}
+     */
     that.isRootPageName = function (pageName) {
         return pageName === rootPageName;
     };
@@ -200,41 +241,44 @@ var PageController = (function () {
      * the function returns false, and no change takes place; otherwise, true.
      */
     that.goBack = function () {
-        if (PageStackModel.getStackSize() > 1) {
-            PageStackModel.pop();
-            that.render(that.getPageModel(that.getCurrentPageName()));
-            return true;
-        }
-        return false;
+        getCurrentPageOnLeaveCallback()(function () {
+            if (PageStackModel.getStackSize() > 1) {
+                PageStackModel.pop();
+                that.render(that.getPageModel(that.getCurrentPageName()));
+            }
+        });
     };
 
     that.goTo = function (pageName, pageParams) {
-        //If the page with the specified name has not been registered, return
-        //false indicating that the current page has not been changed.
-        if (!that.isPageRegistered(pageName)) {
-            log.error("Page [$1] is not registered!", pageName);
-            return false;
-        }
 
-        var pageModel = that.getPageModel(pageName);
+        getCurrentPageOnLeaveCallback()(function () {
 
-        //Update the page stack. If the user is visiting the root page, then
-        //clear out the stack and only leave the root page model name in the
-        //stack.
-        if (that.isRootPage(pageModel)) {
-            PageStackModel.clearPageStack();
-        }
-        PageStackModel.push(pageName, pageParams);
+            if (!that.isPageRegistered(pageName)) {
+                log.error("Page [$1] is not registered!", pageName);
+                return false;
+            }
 
-        //Finally render the page on the screen.
-        that.render(pageModel);
+            var pageModel = that.getPageModel(pageName);
 
+            //Update the page stack. If the user is visiting the root page, then
+            //clear out the stack and only leave the root page model name in the
+            //stack.
+            if (that.isRootPage(pageModel)) {
+                PageStackModel.clearPageStack();
+            }
+            PageStackModel.push(pageName, pageParams);
 
-        //Return true to indicate that the page has been successfully
-        //transitioned.
-        return true;
+            //Finally render the page on the screen.
+            that.render(pageModel);
+        });
     };
 
+    /**
+     * Returns the page parameter with the specified name for the current page.
+     * Returns null if page parameter is not found.
+     * @param pageParamName The name of the set page parameter.
+     * @returns {*}
+     */
     that.getPageParameter = function (pageParamName) {
         var pageParams = PageStackModel.getCurrentPageParams();
         return pageParams.hasOwnProperty(pageParamName) ? pageParams[pageParamName] : null;
@@ -250,11 +294,19 @@ var PageController = (function () {
     };
 
     /**
+     * Returns the current page model.
+     * @returns {PageModel}
+     */
+    that.getCurrentPageModel = function () {
+        return that.getPageModel(that.getCurrentPageName());
+    };
+
+    /**
      * Refreshes the current page. This should redraw the current page
      * reflecting any updates to the model.
      */
     that.refresh = function () {
-        that.render(that.getPageModel(that.getCurrentPageName()));
+        that.render(that.getCurrentPageModel());
     };
 
     /**

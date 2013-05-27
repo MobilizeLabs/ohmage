@@ -1,3 +1,10 @@
+/**
+ *
+ * @author Zorayr Khalapyan
+ * @param surveyModel
+ * @returns {{}}
+ * @constructor
+ */
 var SurveyController = function (surveyModel) {
     "use strict";
     var that = {};
@@ -170,6 +177,14 @@ var SurveyController = function (surveyModel) {
         return surveyModel;
     };
 
+    /**
+     * Returns current survey response model.
+     * @returns {SurveyResponseModel}
+     */
+    that.getSurveyResponseModel = function () {
+        return surveyResponse;
+    };
+
     that.isOnFirstItem = function () {
         return currentItemIndex === 0;
     };
@@ -186,38 +201,6 @@ var SurveyController = function (surveyModel) {
      */
     that.getCurrentItem = function () {
         return surveyItems[currentItemIndex] || null;
-    };
-
-    /**
-     * Aborts the current survey participation and deletes the users responses.
-     * This method should be called to do the clean up before the user navigates
-     * to another page without completing the survey.
-     */
-    var abort = function () {
-        if (surveyResponse !== null && !surveyResponse.isSubmitted()) {
-            SurveyResponseModel.deleteSurveyResponse(surveyResponse);
-        }
-    };
-
-    /**
-     * Method used for getting user's confirmation before exiting an incomplete
-     * survey. In case of a positive confirmation, the current survey response
-     * will be aborted response gets deleted from localStorage) and the
-     * specified callback is invoked.
-     *
-     * @param positiveConfirmationCallback A callback invoked when the user
-     *        confirms the current action.
-     */
-    var confirmSurveyExit = function (positiveConfirmationCallback) {
-        var confirmToLeaveMessage = "Data from your current survey response will be lost. Are you sure you would like to continue?";
-        MessageDialogController.showConfirm(confirmToLeaveMessage, function (isResponseYes) {
-            if (isResponseYes) {
-                abort();
-                if (typeof positiveConfirmationCallback === "function") {
-                    positiveConfirmationCallback();
-                }
-            }
-        }, "Yes,No");
     };
 
     return that;
