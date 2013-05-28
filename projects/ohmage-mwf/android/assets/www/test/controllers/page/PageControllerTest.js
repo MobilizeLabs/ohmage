@@ -74,15 +74,6 @@ test("Test visiting unregistered page.", function () {
     ok(!goToResult, "The user should not be able to visit an unregistered page");
 });
 
-test("Test visiting a registered page.", function () {
-    "use strict";
-    fixture.setPageController();
-    ///
-    var goToResult = PageController.goTo("PageName");
-    ///
-    ok(goToResult, "The user should be able to visit a registered page");
-});
-
 test("Test tracking the current page.", function () {
     "use strict";
     fixture.setPageController();
@@ -101,7 +92,6 @@ test("Test visiting the root page.", function () {
     ///
     var goToRootPageResult = PageController.goTo("RootPageName");
     ///
-    ok(goToRootPageResult, "The user should be able to visit the root page");
     ok(PageStackModel.getStackSize() === 1, "After visiting the root page, there should only be one page in the page stack.");
 });
 

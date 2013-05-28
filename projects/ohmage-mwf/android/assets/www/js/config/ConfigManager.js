@@ -87,7 +87,23 @@ var ConfigManager = (function () {
          * If set to true, password change feature will only be available on
          * native applications.
          */
-        PASS_CHANGE_NATIVE_ONLY : true
+        PASS_CHANGE_NATIVE_ONLY : true,
+
+        /**
+         * List of all local storage properties that will be deleted when the
+         * user logs out - the list is alphabetic order. 'credentials' is
+         * handled by AuthenticationModel, so don't include it this list.
+         */
+        ERASE_AFTER_LOGOUT : [
+            'all-campaigns',
+            'campaign-configurations',
+            'custom-properties-vault',
+            'images',
+            'installed-campaigns',
+            'reminders',
+            'reminders-metadata',
+            'survey-responses'
+        ]
     };
 
     /**
@@ -131,6 +147,18 @@ var ConfigManager = (function () {
      */
     that.getServers = function () {
         return SERVERS;
+    };
+
+    /**
+     * Resets local storage properties specified in the configuration map. The
+     * method should be called when the user logs out.
+     */
+    that.deleteUserData = function () {
+        var localStorageProperties = that.getProperty("ERASE_AFTER_LOGOUT"),
+            i;
+        for (i = 0; i < localStorageProperties.length; i += 1) {
+            localStorage.setItem(localStorageProperties[i], "{}");
+        }
     };
 
     that.updateLocalCopy = function () {

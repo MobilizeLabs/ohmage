@@ -102,5 +102,18 @@ var PageModel = function (pageName, pageTitle) {
         });
     };
 
+    /**
+     * The callback will be invoked before leaving the current page. Use this
+     * method to do cleanup, or to prevent the user from leaving the page. The
+     * first argument of the callback will be a function to call if the user
+     * should be allowed to go to the next page or when the cleanup is complete.
+     * If you don't call this function, the user will be stuck in the current
+     * page.
+     * @type {Function}
+     */
+    that.onPageLeaveCallback = function (onSuccessCallback) {
+        onSuccessCallback();
+    };
+
     return that;
 };

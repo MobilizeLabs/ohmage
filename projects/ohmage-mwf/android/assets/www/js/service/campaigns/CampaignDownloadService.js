@@ -32,10 +32,14 @@ var CampaignDownloadService = (function () {
          * both. Everything works fine on the desktop side, but once placed within
          * PhoneGap the bug comes up.
          * See GitHub issue #151 for more details.
+         *
+         * We also had to remove multi-line comments before parsing the XML into
+         * JSON - see issue #220.
          */
         var cleanXML = campaignXML.replace(/<default>/g, "<defaultValue>")
-            .replace(/<\/default>/g, "</defaultValue>")
-            .replace(/<default\/>/g, "<defaultValue/>");
+                                  .replace(/<\/default>/g, "</defaultValue>")
+                                  .replace(/<default\/>/g, "<defaultValue/>")
+                                  .replace(/<!--[\s\S]*?-->/g, "");
 
         //Convert the XML configuration to a JSON representation.
         var json = $.xml2json.parser(cleanXML);

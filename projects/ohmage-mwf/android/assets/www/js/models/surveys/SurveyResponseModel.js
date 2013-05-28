@@ -164,8 +164,6 @@ var SurveyResponseModel = (function () {
                     data.location = null;
                     data.location_status = LOCATION_STATUS.UNAVAILABLE;
 
-                    that.save();
-
                     if (onGPSAcquiredCallback) {
                         onGPSAcquiredCallback(false);
                     }
